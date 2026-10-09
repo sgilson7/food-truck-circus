@@ -21,10 +21,17 @@ Food Truck Circus is a Builder project built in one session on 2026-10-09 from `
 - Game: https://sgilson7.github.io/food-truck-circus/ (Actions run 37988796320: check and deploy passed). `BUILDER_ORIGIN=https://sgilson7.github.io/food-truck-circus tests/browser/check.py` passed in Chromium, Firefox and WebKit against the live site.
 - Scholar site: https://sgilson7.github.io/projects/food-truck-circus/, commit "Add Food Truck Circus to the games" in `~/Documents/website`; `make check` (56 pages, no findings), `make packet` (44 routes clean), `make gate` and `make gate-live` passed.
 
+## Milestone 2 (2026-10-09): the Circus Math Lab, and Sam's fixes
+
+`PLAN-M2.md` is the plan; `SECOND-ORDER.md` rows W5 and L1–L9 the notebook. New core modules: `expr` (formulas in fixed point), `plot` (the function table and the bounce planner), `lab` (the lab mode and the plotting lab), `fly` and `labfly` (popcorn under a flight), `siteswap` and `labjuggle` (juggling patterns). New page: `lab.html` with `lab.js` and `lab.css`; tabs at `#plot`, `#popcorn`, `#juggling`. Also: the Moves glossary (`how` in `data/tricks.json`), postcards (`tools/postcards.py` → `web/art/venue/`, TikZ in `tools/postcards/`), juggling made learnable, the map-click fix, and the near plane moved for the flicker.
+
+Live at https://sgilson7.github.io/food-truck-circus/lab.html; `./scripts/check.sh` passed in three engines, and the browser check passed against the live site in three engines. The scholar site's page describes the labs (`make gate-live` passed).
+
 ## What remains
 
 - Sam's playtest. Every feel number in `balance.rs` is the agent's guess (SECOND-ORDER T1, T2). Tests show the shows can be passed (the first by holding Space; the roof, the trapeze and a back tuck by scripted inputs), not that they are fun.
 - The routine, double back, rudy and full-in shows have not been passed by a scripted player; they rely on the same flight model as the back tuck.
+- Sam's eye on the high-bounce flicker (T3) and the labs' copy (T4).
 - The scenes are sketches built from boxes, cones and spheres. A venue looking like itself is Sam's call.
 
 ## What the next session must not assume
