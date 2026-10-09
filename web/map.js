@@ -59,6 +59,8 @@ export function makeMap(game, copy, onChange) {
     }
 
     const m = map.missions[map.selected];
+    el("b-art").src = m.art;
+    el("b-art").alt = `${m.venue}, ${m.city}`;
     el("b-when").textContent = m.when;
     el("b-name").textContent = m.name;
     el("b-venue").textContent = `${m.venue} · ${m.city}`;

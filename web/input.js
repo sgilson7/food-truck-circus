@@ -7,9 +7,10 @@ export function makeInput(canvas, controls, actions) {
   const state = { held: 0, tapped: 0, dx: 0, dy: 0, dragging: false };
   const bitOf = (code) => actions[controls[code]] || 0;
 
+  const typing = (e) => e.target && ["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName);
   window.addEventListener("keydown", (e) => {
     const bit = bitOf(e.code);
-    if (!bit) return;
+    if (!bit || typing(e)) return;
     state.held |= bit;
     state.tapped |= bit;
     // keeps Space off a focused button and the arrows off the page's scroll

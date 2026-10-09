@@ -12,10 +12,12 @@ export function makeHud() {
   const word = el("c-word");
   const trick = el("c-trick");
   const bubbles = el("bubbles");
+  const hands = el("hands");
 
+  // the lab page has no mission box: a missing element is skipped
   function text(id, value) {
     const node = el(id);
-    if (node.textContent !== value) node.textContent = value;
+    if (node && node.textContent !== value) node.textContent = value;
   }
 
   return {
@@ -33,8 +35,19 @@ export function makeHud() {
       text("h-peak", hud.peak);
       text("hint", hud.hint);
       const timer = el("h-timer");
-      timer.hidden = !hud.timer;
+      if (timer) timer.hidden = !hud.timer;
       if (hud.timer) text("h-timer", hud.timer);
+
+      // juggling's key badges, one per hand, lit when a ball is due
+      while (hands.children.length < hud.hands.length) hands.appendChild(document.createElement("div"));
+      while (hands.children.length > hud.hands.length) hands.lastChild.remove();
+      hud.hands.forEach((h, k) => {
+        const node = hands.children[k];
+        node.className = h.hot ? "hand hot" : "hand";
+        node.textContent = h.key;
+        node.style.left = `${h.x}%`;
+        node.style.top = `${h.y}%`;
+      });
 
       for (const s of hud.sfx) {
         if (s.seq <= lastSfx) continue;

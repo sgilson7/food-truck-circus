@@ -30,6 +30,12 @@
   "release": "Space: let go",
   "climb_back": "Back up to the bar…",
   "juggle_streak": "Streak {streak}",
+  "juggle_start": "Press A or D to throw the first ball",
+  "juggle_hint": "A: the hand on the left · D: the hand on the right · press as its ring lights",
+  "hand_keys": [
+    "A",
+    "D"
+  ],
   "goals": {
     "height": "Reach {metres} m above the bed {times} times",
     "tricks": "Land: {list}",
@@ -85,14 +91,167 @@
   "everything": "Open every show (for trying things out)",
   "controls_heading": "Controls",
   "controls": [
-    ["Space (hold)", "Push the bed: higher each bounce. Also: let go, bring a chair, handstand"],
-    ["C", "Stop bouncing"],
-    ["S / W", "Back flip / front flip: hold while the bed throws you up"],
-    ["A / D", "Twist left / right; in juggling, the left and right hands"],
-    ["J", "Tuck: spin faster"],
-    ["K", "Pike: land on your seat"],
-    ["Arrows", "Travel toward or away from the truck, turn; walk on the ground"],
-    ["Mouse drag", "Look around"],
-    ["R · Esc", "Start again · Pause"]
-  ]
+    [
+      "Space (hold)",
+      "Push the bed: higher each bounce. Also: let go, bring a chair, handstand"
+    ],
+    [
+      "C",
+      "Stop bouncing"
+    ],
+    [
+      "S / W",
+      "Back flip / front flip: hold while the bed throws you up"
+    ],
+    [
+      "A / D",
+      "Twist left / right; in juggling, the left and right hands"
+    ],
+    [
+      "J",
+      "Tuck: spin faster"
+    ],
+    [
+      "K",
+      "Pike: land on your seat"
+    ],
+    [
+      "Arrows",
+      "Travel toward or away from the truck, turn; walk on the ground"
+    ],
+    [
+      "Mouse drag",
+      "Look around"
+    ],
+    [
+      "R · Esc",
+      "Start again · Pause"
+    ]
+  ],
+  "lab": {
+    "title": "Graph Lab",
+    "subtitle": "Give the performer a function. The top of every bounce marks a point on its graph.",
+    "back": "Back to the tour",
+    "open": "Graph Lab: plot a function by bouncing",
+    "draw_heading": "1 · Draw it",
+    "draw_hint": "Drag a point up or down. The line through the points is your function.",
+    "table_heading": "2 · The function machine",
+    "table_hint": "Put x in, get f(x) out. Then look at how much f(x) changes from one row to the next.",
+    "col_x": "x in",
+    "col_y": "f(x) out",
+    "col_marked": "marked",
+    "col_off": "off by",
+    "col_change": "change",
+    "col_change2": "change of the change",
+    "write_heading": "3 · Write it",
+    "formula_label": "f(x) =",
+    "formula_hint": "Try x^2, 2x+1, |x|, (x-1)(x+1), sin(x), sqrt(x), floor(x)",
+    "drawn_formula": "drawn by hand",
+    "from": "x from",
+    "to": "to",
+    "points": "points",
+    "presets": [
+      "x^2",
+      "2x+1",
+      "-x^2+4",
+      "|x|",
+      "x^3",
+      "sin(x)",
+      "sqrt(x)",
+      "floor(x)",
+      "4-|x|",
+      "(x-1)(x+1)"
+    ],
+    "run_auto": "Watch the performer plot it",
+    "run_you": "You try",
+    "stop": "Start over",
+    "you_hint": "Hold Space to bounce higher, C to come down. Hold → while the bed throws you to lean right, ← to lean left. Every top you reach is marked.",
+    "speed": "speed",
+    "speeds": [
+      [
+        1,
+        "full"
+      ],
+      [
+        2,
+        "half"
+      ],
+      [
+        4,
+        "a quarter"
+      ]
+    ],
+    "venue": "stage",
+    "plan_heading": "How the performer decides",
+    "plan_hint": "A behaviour tree: the lit nodes are running. The performer presses only keys you could press, and chooses how long by imagining bounces first.",
+    "thinking_heading": "What the performer is thinking",
+    "ideas_heading": "For a math circle",
+    "ideas": [
+      "Watch the feet between two marks. What shape is every flight? Does it matter what function you asked for?",
+      "Look at the change column for x². Then the change of the change. Try 2x+1, and x³. What do you notice?",
+      "Draw a function the performer cannot plot. What makes it impossible?",
+      "Plot x² with 3 points, then 5, then 17. When does the line through the marks look like the curve?",
+      "Ask for |x|. Where does the performer have to work hardest, and why there?",
+      "The performer guesses a push, imagines it, and tries a number in between. How would you choose the next guess?"
+    ],
+    "done_call": "every point plotted",
+    "summary": "{n} points plotted. On average each mark was {cm} cm off on the bed, {units} on the graph.",
+    "domain_order": "The first number has to be smaller than the second.",
+    "tree": {
+      "plot": "Plot the function",
+      "next_point": "Next point",
+      "points_left": "Points left?",
+      "read_machine": "Ask the machine for f(x)",
+      "imagine_push": "Imagine pushes, interpolate",
+      "one_bounce": "Reach it in one bounce?",
+      "close_enough": "Close enough",
+      "imagine_lean": "Imagine leans, interpolate",
+      "mark": "Bounce and mark the point",
+      "set_up": "Set-up bounce toward it",
+      "bow": "Take a bow"
+    },
+    "log": {
+      "read": "Next: x = {x}. The machine says f({x}) = {y}.",
+      "imagine_push": "Imagine pushing for {beats} beats: the top would be at {y}.",
+      "imagine_stop": "Imagine stopping the bed for {beats} beats: the top would be at {y}.",
+      "between": "{y} is between {a} beats ({ya}) and {b} beats ({yb}), {pct}% of the way. Try {u}.",
+      "set_up": "{y} is too far for one bounce. A set-up bounce first.",
+      "imagine_lean": "Imagine leaning for {beats} beats: the top lands at x = {x}.",
+      "lean_between": "Aim for x = {x}: try leaning {w} beats.",
+      "go": "Go: push {push} beats, lean {lean}.",
+      "marked": "Marked ({x}, {y}). The machine said f({fx}) = {fy}: off by {off}.",
+      "no_value": "f({x}) has no value ({why}). Skip it.",
+      "bow": "Every point is marked. Come down and bow."
+    },
+    "expr": {
+      "empty": "Type a formula in x.",
+      "end": "The formula stops too soon. Something is missing at the end.",
+      "bracket": "A bracket is missing (at character {at}).",
+      "bar": "A | is missing to close the absolute value (at character {at}).",
+      "unexpected": "I can't read “{word}” at character {at}.",
+      "unknown": "I don't know the name “{word}”. Use x, and sin, cos, tan, abs, sqrt, floor, round, pi.",
+      "too_big": "That number is too long."
+    },
+    "undefined": {
+      "divide_by_zero": "no value: divides by 0",
+      "sqrt_negative": "no value: √ of a negative",
+      "fraction_power": "no value: only whole powers and ^0.5",
+      "too_big": "off the chart",
+      "drawn": "—"
+    }
+  },
+  "lab_link": "Graph Lab: plot a function by bouncing →",
+  "moves": "Moves",
+  "moves_heading": "Moves, and how to do them",
+  "moves_intro": "Every trick the crowd can name. A trick is named by where it starts and ends (feet, seat, back or front), how many times you turn over, how many times you twist, and the shape you hold: tucked, piked or straight.",
+  "close": "Close",
+  "glossary_from_to": "{from} to {to}",
+  "glossary_points": "{points} points",
+  "positions": {
+    "feet": "feet",
+    "seat": "seat",
+    "back": "back",
+    "front": "front"
+  },
+  "postcard_tag": "NEXT STOP ON THE TOUR"
 }

@@ -25,6 +25,8 @@ struct Row {
     value: i32,
     #[serde(default)]
     min_cm: i32,
+    #[serde(default)]
+    how: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -47,6 +49,7 @@ struct BookFile {
     roof: String,
     ground: String,
     trapeze: String,
+    roof_how: String,
     tricks: Vec<Row>,
 }
 
@@ -193,6 +196,29 @@ impl TrickBook {
             .unwrap_or_default()
     }
 
+    /// Every move once, in the file's order: id, name, how to do it, the
+    /// position it starts and ends in, and its points.
+    pub fn glossary(&self) -> Vec<(String, String, String, String, String, i32)> {
+        let mut out: Vec<(String, String, String, String, String, i32)> = Vec::new();
+        for r in &self.f.tricks {
+            if r.value > 0 && !out.iter().any(|g| g.0 == r.id) {
+                out.push((
+                    r.id.clone(),
+                    r.name.clone(),
+                    r.how.clone(),
+                    r.from.clone(),
+                    r.to.clone(),
+                    r.value,
+                ));
+            }
+        }
+        out
+    }
+
+    pub fn roof_how(&self) -> &str {
+        &self.f.roof_how
+    }
+
     pub fn names(&self) -> Vec<(String, String)> {
         let mut out: Vec<(String, String)> = Vec::new();
         for r in &self.f.tricks {
@@ -288,6 +314,20 @@ mod tests {
         assert_eq!(b.plain_word(44), "miss");
         l.off = 200;
         assert_eq!(b.grade(&l), 0);
+    }
+
+    #[test]
+    fn every_move_in_the_glossary_says_how_to_do_it() {
+        let b = book();
+        let g = b.glossary();
+        assert!(g.len() >= 30);
+        for (id, name, how, ..) in &g {
+            assert!(how.len() > 20, "{id} ({name}) has no how-to");
+        }
+        assert!(
+            !g.iter().any(|m| m.0 == "to_feet"),
+            "a move between positions is not a trick"
+        );
     }
 
     #[test]

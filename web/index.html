@@ -31,7 +31,9 @@
       <div class="trick" id="c-trick"></div>
     </div>
     <div id="bubbles"></div>
+    <div id="hands"></div>
     <div id="hint"></div>
+    <button id="moves-hud" class="small open-moves" data-copy="moves"></button>
     <button id="help-toggle" class="small" data-copy="controls_heading"></button>
     <div id="help" hidden>
       <table class="controls"></table>
@@ -42,6 +44,7 @@
     <header>
       <h1 data-copy="title"></h1>
       <p class="subtitle" data-copy="subtitle"></p>
+      <a id="lab-link" href="lab.html" data-copy="lab_link"></a>
     </header>
     <div class="map-body">
       <section class="tour">
@@ -57,6 +60,7 @@
         </div>
       </section>
       <aside id="brief">
+        <img id="b-art" class="postcard" alt="">
         <div class="when" id="b-when"></div>
         <h3 id="b-name"></h3>
         <div class="venue" id="b-venue"></div>
@@ -65,6 +69,7 @@
         <div class="best" id="b-best"></div>
         <div class="unlock" id="b-unlock"></div>
         <button id="perform" class="big" data-copy="play"></button>
+        <button class="open-moves" data-copy="moves"></button>
         <div class="locked" id="b-locked" data-copy="locked" hidden></div>
         <h4 data-copy="costumes"></h4>
         <div id="costumes"></div>
@@ -84,11 +89,14 @@
     </div>
   </div>
 
+  <div id="intro" hidden><img id="intro-art" class="postcard" alt=""></div>
+
   <div id="paused" class="overlay center" hidden>
     <div class="panel">
       <h2 data-copy="paused"></h2>
       <button id="resume" class="big" data-copy="resume"></button>
       <button id="pause-map" data-copy="to_map"></button>
+      <button class="open-moves" data-copy="moves"></button>
       <table class="controls"></table>
     </div>
   </div>
@@ -100,11 +108,25 @@
       <div id="r-mission"></div>
       <div id="r-grade"></div>
       <div id="r-unlock" class="unlock"></div>
+      <figure id="r-next-card" hidden>
+        <img id="r-next-art" class="postcard" alt="">
+        <figcaption id="r-next-venue"></figcaption>
+      </figure>
       <div class="buttons">
         <button id="r-next" class="big" data-copy="next"></button>
         <button id="r-retry" data-copy="retry"></button>
         <button id="r-map" data-copy="to_map"></button>
       </div>
+    </div>
+  </div>
+
+  <div id="moves" class="overlay center" hidden>
+    <div class="panel moves-panel">
+      <h2 data-copy="moves_heading"></h2>
+      <p class="moves-intro" data-copy="moves_intro"></p>
+      <div id="move-list"></div>
+      <p id="move-roof" class="moves-intro"></p>
+      <button id="moves-close" class="big" data-copy="close"></button>
     </div>
   </div>
 

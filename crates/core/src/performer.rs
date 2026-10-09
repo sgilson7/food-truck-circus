@@ -212,7 +212,10 @@ impl Performer {
 
     /// Standing on the bed's centre, as at the start and after a crash.
     pub fn on_bed(def: &BodyDef, heading: i32) -> Performer {
-        let mut p = Performer::new(def, v3(0, BED_Y, BED_Z), heading);
+        // settled into the bed by its own weight (g / k), so a first push
+        // starts from rest rather than from a hop off an unpressed bed
+        let sag = fx::div(GRAVITY, BED_K);
+        let mut p = Performer::new(def, v3(0, BED_Y - sag, BED_Z), heading);
         p.phase = Phase::Bed(Posture::Feet);
         p
     }

@@ -110,11 +110,46 @@ async function start() {
     reset.textContent = copy.reset;
     go(() => game.reset())();
   });
+  // the glossary of moves: built once from the core, opened from the map,
+  // the HUD and the pause screen; it pauses a show while it is open
+  const glossary = JSON.parse(game.glossary());
+  for (const m of glossary.moves) {
+    const card = document.createElement("div");
+    card.className = "move";
+    const h = document.createElement("h4");
+    h.textContent = m.name;
+    const meta = document.createElement("span");
+    meta.className = "meta";
+    meta.textContent = `${m.from_to} · ${m.points}`;
+    const p = document.createElement("p");
+    p.textContent = m.how;
+    card.append(h, meta, p);
+    el("move-list").appendChild(card);
+  }
+  el("move-roof").textContent = glossary.roof;
+  for (const b of document.querySelectorAll(".open-moves")) {
+    b.addEventListener("click", () => {
+      game.pause();
+      el("moves").hidden = false;
+      b.blur();
+    });
+  }
+  el("intro").addEventListener("animationend", () => {
+    el("intro").hidden = true;
+  });
+  el("moves-close").addEventListener("click", () => {
+    el("moves").hidden = true;
+    el("moves-close").blur();
+  });
   el("help-toggle").addEventListener("click", () => {
     el("help").hidden = !el("help").hidden;
     el("help-toggle").blur();
   });
   window.addEventListener("keydown", (e) => {
+    if (e.code === "Escape" && !el("moves").hidden) {
+      el("moves").hidden = true;
+      return;
+    }
     if (e.code === "Escape") {
       const mode = document.body.dataset.mode;
       if (mode === "play") game.pause();
@@ -141,6 +176,15 @@ async function start() {
     el("paused").hidden = mode !== "paused";
     el("result").hidden = mode !== "result";
     if (mode === "map") map.render();
+    // a show opens on the venue's postcard, which fades as the show starts
+    if (mode === "play" && shownMode !== "paused") {
+      el("intro-art").src = h.art;
+      el("intro-art").alt = `${h.venue}, ${h.city}`;
+      el("intro").hidden = false;
+      el("intro").classList.remove("go");
+      void el("intro").offsetWidth;
+      el("intro").classList.add("go");
+    }
     if (mode === "result" && h.result) {
       const r = h.result;
       el("r-word").textContent = r.shown;
@@ -148,6 +192,11 @@ async function start() {
       el("r-mission").textContent = `${h.mission} · ${h.venue}, ${h.city}`;
       el("r-grade").textContent = copy.result_grade.replace("{grade}", r.grade);
       el("r-unlock").textContent = r.unlocked ? copy.result_unlock.replace("{costume}", r.unlocked) : "";
+      el("r-next-card").hidden = !h.next_art;
+      if (h.next_art) {
+        el("r-next-art").src = h.next_art;
+        el("r-next-venue").textContent = h.next_venue;
+      }
       const next = el("r-next");
       next.hidden = r.next === null;
       if (r.next !== null) next.dataset.next = r.next;
@@ -160,8 +209,8 @@ async function start() {
     game.advance(now, bits, dx, dy);
     const h = JSON.parse(game.hud());
     if (h.mode !== shownMode) {
-      shownMode = h.mode;
       showMode(h.mode, h);
+      shownMode = h.mode;
     }
     hud.update(h, h.mode === "play");
     if (renderer) {

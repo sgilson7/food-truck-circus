@@ -129,9 +129,14 @@ impl Crowd {
         p.at.add(v3(0, h * p.size / 100 + ratio(3, 10), 0))
     }
 
-    pub fn draw(&self, b: &mut Batch, tick: i64) {
+    /// `clear_middle` leaves out the people straight in front of the stage,
+    /// where the Graph Lab's camera sits.
+    pub fn draw(&self, b: &mut Batch, tick: i64, clear_middle: bool) {
         let t = (tick as i32).wrapping_mul(deg(9)) & (TURN - 1);
         for p in &self.people {
+            if clear_middle && p.at.x.abs() < int(6) {
+                continue;
+            }
             let fwd = v3(-fx::sin(p.yaw), 0, -fx::cos(p.yaw));
             let side = v3(fx::cos(p.yaw), 0, -fx::sin(p.yaw));
             let s = p.size;

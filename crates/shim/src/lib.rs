@@ -95,6 +95,10 @@ impl Game {
         self.inner.hud_json()
     }
 
+    pub fn glossary(&self) -> String {
+        self.inner.glossary_json()
+    }
+
     pub fn map(&self) -> String {
         self.inner.map_json()
     }
@@ -133,6 +137,50 @@ impl Game {
 
     pub fn open_everything(&mut self) {
         self.inner.open_everything()
+    }
+
+    // ---- the Graph Lab ----
+
+    pub fn lab_open(&mut self) {
+        self.inner.lab_open()
+    }
+
+    pub fn lab(&self) -> String {
+        self.inner.lab_json()
+    }
+
+    /// What went wrong reading it, or an empty string.
+    pub fn lab_formula(&mut self, src: &str) -> String {
+        self.inner.lab_formula(src)
+    }
+
+    pub fn lab_domain(&mut self, from: &str, to: &str) -> String {
+        self.inner.lab_domain(from, to)
+    }
+
+    pub fn lab_points(&mut self, n: u32) {
+        self.inner.lab_points(n as usize)
+    }
+
+    /// A point of the small graph dragged to `y_px` of `h_px` CSS pixels from its top.
+    pub fn lab_drag(&mut self, i: u32, y_px: f64, h_px: f64) {
+        self.inner.lab_drag(i as usize, y_px as i32, h_px as i32)
+    }
+
+    pub fn lab_run(&mut self, auto: bool) {
+        self.inner.lab_run(auto)
+    }
+
+    pub fn lab_reset(&mut self) {
+        self.inner.lab_reset()
+    }
+
+    pub fn lab_speed(&mut self, scale: u32) {
+        self.inner.lab_speed(scale)
+    }
+
+    pub fn lab_venue(&mut self, venue: u32) {
+        self.inner.lab_venue(venue as usize)
     }
 }
 

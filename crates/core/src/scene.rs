@@ -71,8 +71,8 @@ fn ground_and_sky(b: &mut Batch, v: &Venue) {
     // a darker apron of trodden ground round the stage
     b.shape(
         Mesh::Cyl,
-        v3(0, ONE / 200, int(1)),
-        v3(m(26), ONE / 100, m(22)),
+        v3(0, ONE / 40, int(1)),
+        v3(m(26), ONE / 40, m(22)),
         shade(ground, 88),
     );
     // a band of the horizon's colour all round, far off, so the sky deepens
@@ -293,8 +293,8 @@ fn bed_frame(b: &mut Batch) {
     // the shadow under the bed
     b.shape(
         Mesh::Cube,
-        v3(0, ONE / 100, BED_Z),
-        v3(2 * hx, ONE / 100, 2 * hz),
+        v3(0, ONE / 25, BED_Z),
+        v3(2 * hx, ONE / 50, 2 * hz),
         c("#1f2a1c"),
     );
 }
@@ -399,16 +399,16 @@ fn prop(b: &mut Batch, rng: &mut Rng, p: &Prop) {
             let (x0, z0, x1, z1) = (m(a[0]), m(a[1]), m(a[2]), m(a[3]));
             b.shape(
                 Mesh::Cube,
-                v3((x0 + x1) / 2, ONE / 100, (z0 + z1) / 2),
-                v3(x1 - x0, ONE / 100, z1 - z0),
+                v3((x0 + x1) / 2, ONE / 20, (z0 + z1) / 2),
+                v3(x1 - x0, ONE / 20, z1 - z0),
                 c(&p.colour),
             );
             let mut x = x0 + m(1);
             while x < x1 {
                 b.shape(
                     Mesh::Cube,
-                    v3(x, ONE / 50, (z0 + z1) / 2),
-                    v3(ONE / 10, ONE / 100, (z1 - z0) * 3 / 4),
+                    v3(x, ONE / 12, (z0 + z1) / 2),
+                    v3(ONE / 10, ONE / 50, (z1 - z0) * 3 / 4),
                     c(WHITE),
                 );
                 x += m(3);
@@ -749,8 +749,8 @@ fn prop(b: &mut Batch, rng: &mut Rng, p: &Prop) {
             b.push(
                 Mesh::Cube,
                 &crate::render::boxed(
-                    v3((x0 + x1) / 2, ONE / 40, (z0 + z1) / 2),
-                    v3(x1 - x0, ONE / 40, z1 - z0),
+                    v3((x0 + x1) / 2, ONE / 8, (z0 + z1) / 2),
+                    v3(x1 - x0, ONE / 8, z1 - z0),
                 ),
                 c(&p.colour),
                 ONE / 10,
@@ -776,8 +776,8 @@ fn prop(b: &mut Batch, rng: &mut Rng, p: &Prop) {
             // the reflecting pool's edge and plaza paving
             b.shape(
                 Mesh::Cube,
-                v3(ax, ONE / 60, az + m(12)),
-                v3(total + m(10), ONE / 60, m(10)),
+                v3(ax, ONE / 20, az + m(12)),
+                v3(total + m(10), ONE / 20, m(10)),
                 shade(col, 95),
             );
         }

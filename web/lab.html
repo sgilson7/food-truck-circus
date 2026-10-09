@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Graph Lab · Food Truck Circus</title>
+  <meta name="description" content="Give a circus performer a function and watch them plot it on a trampoline, one bounce per point, planning each bounce with a behaviour tree. A math-circle toy.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="lab.css">
+</head>
+<body class="lab" data-ready="false" data-mode="loading">
+  <div id="stage">
+    <canvas id="view"></canvas>
+    <div id="hud">
+      <div id="callout"><div class="word" id="c-word"></div><div class="trick" id="c-trick"></div></div>
+      <div id="bubbles"></div>
+      <div id="hands"></div>
+      <div id="lab-summary" hidden></div>
+    </div>
+  </div>
+
+  <aside id="panel">
+    <header>
+      <h1 data-copy="lab.title"></h1>
+      <p class="subtitle" data-copy="lab.subtitle"></p>
+      <a id="back" href="index.html" data-copy="lab.back"></a>
+    </header>
+
+    <section class="runbar">
+      <button id="run-auto" class="big" data-copy="lab.run_auto"></button>
+      <button id="run-you" data-copy="lab.run_you"></button>
+      <button id="stop" data-copy="lab.stop"></button>
+      <label><span data-copy="lab.speed"></span> <select id="speed"></select></label>
+      <label><span data-copy="lab.venue"></span> <select id="venue"></select></label>
+      <p id="you-hint" class="hint" data-copy="lab.you_hint" hidden></p>
+    </section>
+
+    <section>
+      <h2 data-copy="lab.draw_heading"></h2>
+      <p class="hint" data-copy="lab.draw_hint"></p>
+      <div id="graph-box">
+        <svg id="graph" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <div id="graph-labels"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 data-copy="lab.table_heading"></h2>
+      <p class="hint" data-copy="lab.table_hint"></p>
+      <table id="machine">
+        <thead><tr>
+          <th data-copy="lab.col_x"></th><th data-copy="lab.col_y"></th><th data-copy="lab.col_change"></th>
+          <th data-copy="lab.col_change2"></th><th data-copy="lab.col_marked"></th><th data-copy="lab.col_off"></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2 data-copy="lab.write_heading"></h2>
+      <form id="formula-form">
+        <label class="formula"><span data-copy="lab.formula_label"></span> <input id="formula" autocomplete="off" spellcheck="false"></label>
+      </form>
+      <p class="hint" data-copy="lab.formula_hint"></p>
+      <div id="presets"></div>
+      <div class="domain">
+        <label><span data-copy="lab.from"></span> <input id="from" size="5"></label>
+        <label><span data-copy="lab.to"></span> <input id="to" size="5"></label>
+        <label><select id="points"></select> <span data-copy="lab.points"></span></label>
+      </div>
+      <p id="error" class="error"></p>
+    </section>
+
+    <section>
+      <h2 data-copy="lab.plan_heading"></h2>
+      <p class="hint" data-copy="lab.plan_hint"></p>
+      <ol id="tree"></ol>
+      <h3 data-copy="lab.thinking_heading"></h3>
+      <ol id="log"></ol>
+    </section>
+
+    <section>
+      <h2 data-copy="lab.ideas_heading"></h2>
+      <ul id="ideas"></ul>
+    </section>
+    <div id="build" class="build"></div>
+  </aside>
+  <div id="message"></div>
+  <script type="module" src="lab.js"></script>
+</body>
+</html>

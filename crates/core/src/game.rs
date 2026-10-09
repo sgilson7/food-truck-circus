@@ -74,6 +74,8 @@ pub enum Mode {
     Play,
     Paused,
     Result,
+    /// The Graph Lab (lab.rs).
+    Lab,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -100,7 +102,7 @@ pub struct Sfx {
 }
 
 #[derive(Debug, Clone, Serialize)]
-struct ResultInfo {
+pub(crate) struct ResultInfo {
     passed: bool,
     grade: i32,
     word: String,
@@ -109,7 +111,7 @@ struct ResultInfo {
     next: Option<usize>,
 }
 
-enum Act {
+pub(crate) enum Act {
     None,
     Popcorn(Popcorn),
     Tower(Tower),
@@ -119,50 +121,51 @@ enum Act {
 }
 
 pub struct Game {
-    tour: Tour,
-    def: BodyDef,
-    book: TrickBook,
-    copy: Value,
-    progress: Progress,
-    mode: Mode,
-    selected: usize,
-    fit: Fittings,
-    venue: usize,
-    perf: Performer,
-    run: Run,
-    act: Act,
-    cloth: Cloth,
-    crowd: Crowd,
-    rng: Rng,
-    tick: i64,
-    acc: i64,
-    last_us: Option<i64>,
-    tick_bits: u32,
-    latched: u32,
-    frame_bits: u32,
-    cam_yaw: i32,
-    cam_pitch: i32,
-    cam: Camera,
-    cam_target: V3,
-    orbit: i32,
-    alpha: i32,
-    callouts: Vec<Callout>,
-    sfx: Vec<Sfx>,
-    seq: u32,
-    scene: (Vec<i32>, Vec<u32>),
-    scene_version: u32,
-    aspect: i32,
-    css: (i32, i32),
-    pixels: (i32, i32),
-    end_in: i32,
-    result: Option<ResultInfo>,
-    peak: i32,
-    demo_n: i32,
-    demo_peak: i32,
-    frame: (Vec<i32>, Vec<u32>),
+    pub(crate) tour: Tour,
+    pub(crate) def: BodyDef,
+    pub(crate) book: TrickBook,
+    pub(crate) copy: Value,
+    pub(crate) progress: Progress,
+    pub(crate) mode: Mode,
+    pub(crate) selected: usize,
+    pub(crate) fit: Fittings,
+    pub(crate) venue: usize,
+    pub(crate) perf: Performer,
+    pub(crate) run: Run,
+    pub(crate) act: Act,
+    pub(crate) cloth: Cloth,
+    pub(crate) crowd: Crowd,
+    pub(crate) rng: Rng,
+    pub(crate) tick: i64,
+    pub(crate) acc: i64,
+    pub(crate) last_us: Option<i64>,
+    pub(crate) tick_bits: u32,
+    pub(crate) latched: u32,
+    pub(crate) frame_bits: u32,
+    pub(crate) cam_yaw: i32,
+    pub(crate) cam_pitch: i32,
+    pub(crate) cam: Camera,
+    pub(crate) cam_target: V3,
+    pub(crate) orbit: i32,
+    pub(crate) alpha: i32,
+    pub(crate) callouts: Vec<Callout>,
+    pub(crate) sfx: Vec<Sfx>,
+    pub(crate) seq: u32,
+    pub(crate) scene: (Vec<i32>, Vec<u32>),
+    pub(crate) scene_version: u32,
+    pub(crate) aspect: i32,
+    pub(crate) css: (i32, i32),
+    pub(crate) pixels: (i32, i32),
+    pub(crate) end_in: i32,
+    pub(crate) result: Option<ResultInfo>,
+    pub(crate) peak: i32,
+    pub(crate) demo_n: i32,
+    pub(crate) demo_peak: i32,
+    pub(crate) frame: (Vec<i32>, Vec<u32>),
+    pub(crate) lab: Option<crate::lab::LabState>,
 }
 
-fn fill(template: &str, pairs: &[(&str, String)]) -> String {
+pub(crate) fn fill(template: &str, pairs: &[(&str, String)]) -> String {
     let mut s = template.to_string();
     for (k, v) in pairs {
         s = s.replace(&format!("{{{k}}}"), v);
@@ -260,12 +263,13 @@ impl Game {
             demo_n: 0,
             demo_peak: 0,
             frame: (Vec::new(), Vec::new()),
+            lab: None,
         };
         g.select(selected);
         Ok(g)
     }
 
-    fn copy_str(&self, path: &[&str]) -> String {
+    pub(crate) fn copy_str(&self, path: &[&str]) -> String {
         let mut v = &self.copy;
         for p in path {
             v = &v[*p];
@@ -307,7 +311,7 @@ impl Game {
         if self.mode == Mode::Paused {
             return;
         }
-        self.acc += dt * TICKS_PER_SECOND as i64;
+        self.acc += dt * TICKS_PER_SECOND as i64 / self.time_scale();
         let mut n = 0;
         while self.acc >= TICK_UNITS && n < MAX_TICKS_PER_FRAME {
             let held = bits | self.latched;
@@ -334,7 +338,7 @@ impl Game {
         self.run = Run::new(self.tour.missions[i].goal.clone());
     }
 
-    fn set_stage(&mut self, venue: usize, fit: Fittings) {
+    pub(crate) fn set_stage(&mut self, venue: usize, fit: Fittings) {
         if venue != self.venue || fit != self.fit || self.scene_version == 0 {
             self.venue = venue;
             self.fit = fit;
@@ -471,7 +475,7 @@ impl Game {
         }
     }
 
-    fn say(&mut self, word: &str, text: String, shout: usize) {
+    pub(crate) fn say(&mut self, word: &str, text: String, shout: usize) {
         self.seq += 1;
         let until = self.tick + SHOUT_TICKS;
         let shouters = self.crowd.shouters(&mut self.rng, shout, until);
@@ -489,7 +493,7 @@ impl Game {
         }
     }
 
-    fn sound(&mut self, kind: &'static str, level: i32) {
+    pub(crate) fn sound(&mut self, kind: &'static str, level: i32) {
         self.seq += 1;
         self.sfx.push(Sfx {
             seq: self.seq,
@@ -554,7 +558,13 @@ impl Game {
         }
     }
 
-    fn step(&mut self, bits: u32) {
+    pub(crate) fn step(&mut self, bits: u32) {
+        if self.mode == Mode::Lab {
+            self.lab_step(bits);
+            self.tick += 1;
+            self.follow();
+            return;
+        }
         let edges = bits & !self.tick_bits;
         self.tick_bits = bits;
         let playing = self.mode == Mode::Play;
@@ -844,6 +854,14 @@ impl Game {
     // ---- the camera -------------------------------------------------------
 
     fn camera_goal(&self) -> (V3, i32, i32, i32) {
+        if self.mode == Mode::Lab {
+            return (
+                v3(0, ratio(29, 10), BED_Z),
+                self.cam_yaw,
+                -deg(4) + self.cam_pitch,
+                ratio(105, 10),
+            );
+        }
         if self.mode == Mode::Map {
             let a = self.orbit;
             let target = v3(0, ratio(28, 10), -int(1));
@@ -888,7 +906,7 @@ impl Game {
         }
     }
 
-    fn follow(&mut self) {
+    pub(crate) fn follow(&mut self) {
         if self.mode == Mode::Map || self.mode == Mode::Result {
             self.orbit += deg(1) / 6;
         }
@@ -902,7 +920,7 @@ impl Game {
         };
     }
 
-    fn snap_camera(&mut self) {
+    pub(crate) fn snap_camera(&mut self) {
         let (target, yaw, pitch, dist) = self.camera_goal();
         self.cam_target = target;
         self.cam = Camera {
@@ -946,7 +964,8 @@ impl Game {
         let shadow_y = if floor == BED_Y {
             floor - self.cloth_depth_at(centre) + ONE / 50
         } else {
-            floor + ONE / 60
+            // over the stage's raised apron (scene.rs), not into it
+            floor + ONE / 15
         };
         b.shape(
             Mesh::Cyl,
@@ -955,7 +974,10 @@ impl Game {
             rgb("#141414"),
         );
         self.draw_cloth(&mut b);
-        self.crowd.draw(&mut b, self.tick);
+        self.crowd.draw(&mut b, self.tick, self.mode == Mode::Lab);
+        if self.mode == Mode::Lab {
+            self.lab_draw(&mut b);
+        }
         match &self.act {
             Act::Popcorn(p) => {
                 for k in &p.kernels {
@@ -994,6 +1016,21 @@ impl Game {
             Act::Juggle(j) => {
                 let hands = [pos[body::HAND_R], pos[body::HAND_L]];
                 let colours = [rgb("#ef476f"), rgb("#06d6a0"), rgb("#ffd166")];
+                // a ring under each hand, lit while a ball is due there
+                for (k, h) in hands.iter().enumerate() {
+                    let ring = h.sub(v3(0, ratio(16, 100), 0));
+                    let (colour, glow) = if j.hot(k) {
+                        (rgb("#ffd166"), ONE)
+                    } else {
+                        (rgb("#9ca3af"), 0)
+                    };
+                    b.push(
+                        Mesh::Cyl,
+                        &render::boxed(ring, v3(ratio(3, 10), ONE / 40, ratio(3, 10))),
+                        colour,
+                        glow,
+                    );
+                }
                 for (i, ball) in j.balls.iter().enumerate() {
                     let at = j.ball_at(ball, hands);
                     b.push(
@@ -1259,6 +1296,7 @@ impl Game {
                 _ => String::new(),
             },
             Act::Trapeze(t, _) => self.copy_str(&[if t.holding { "release" } else { "climb_back" }]),
+            Act::Juggle(j) => self.copy_str(&[if j.started { "juggle_hint" } else { "juggle_start" }]),
             _ => self.copy_str(&["restart_hint"]),
         }
     }
@@ -1299,9 +1337,58 @@ impl Game {
             "sfx": self.sfx,
             "bubbles": bubbles,
             "result": self.result,
+            "hands": self.hand_badges(),
+            "art": postcard(&v.id),
+            "next_art": self.result.as_ref().and_then(|r| r.next).map(|i| postcard(&self.tour.missions[i].venue)),
+            "next_venue": self.result.as_ref().and_then(|r| r.next).map(|i| {
+                let nv = self.tour.venue(&self.tour.missions[i].venue);
+                format!("{} · {}", nv.name, nv.city)
+            }),
             "ending": self.end_in > 0,
         })
         .to_string()
+    }
+
+    /// Juggling's key badges: under each hand on screen, lit when a ball
+    /// is arriving there.
+    fn hand_badges(&self) -> Vec<Value> {
+        let Act::Juggle(j) = &self.act else {
+            return Vec::new();
+        };
+        let hands = [self.perf.body.pos[body::HAND_R], self.perf.body.pos[body::HAND_L]];
+        let mut out = Vec::new();
+        for (k, at) in hands.iter().enumerate() {
+            let below = at.sub(v3(0, ratio(28, 100), 0));
+            if let Some((x, y)) = self.cam.screen(self.aspect, below) {
+                out.push(json!({
+                    "x": pct(x),
+                    "y": pct(y),
+                    "key": self.copy["hand_keys"][k],
+                    "hot": j.hot(k),
+                }));
+            }
+        }
+        out
+    }
+
+    /// The glossary of moves: each trick, how to do it, and its points.
+    pub fn glossary_json(&self) -> String {
+        let pos = |p: &str| self.copy_str(&["positions", p]);
+        let moves: Vec<Value> = self
+            .book
+            .glossary()
+            .into_iter()
+            .map(|(id, name, how, from, to, value)| {
+                json!({
+                    "id": id,
+                    "name": name,
+                    "how": how,
+                    "from_to": fill(&self.copy_str(&["glossary_from_to"]), &[("from", pos(&from)), ("to", pos(&to))]),
+                    "points": fill(&self.copy_str(&["glossary_points"]), &[("points", value.to_string())]),
+                })
+            })
+            .collect();
+        json!({"moves": moves, "roof": self.book.roof_how()}).to_string()
     }
 
     pub fn map_json(&self) -> String {
@@ -1332,6 +1419,7 @@ impl Game {
                     "goal": self.goal_text(&m.goal),
                     "brief": m.brief,
                     "unlock": if m.unlock.is_empty() { String::new() } else { self.tour.costume(&m.unlock).name.clone() },
+                    "art": postcard(&v.id),
                 })
             })
             .collect();
@@ -1393,6 +1481,11 @@ impl Game {
     pub fn progress(&self) -> &Progress {
         &self.progress
     }
+}
+
+/// The postcard of a venue (tools/postcards.py draws them).
+pub fn postcard(venue_id: &str) -> String {
+    format!("art/venue/{venue_id}.png")
 }
 
 /// Where the juggler stands: on the grass between the bed and the crowd.
@@ -1616,29 +1709,37 @@ mod reachable {
 
     #[test]
     fn a_player_who_bounces_high_and_travels_lands_on_the_roof() {
-        let mut g = game_with("");
-        g.open_everything();
-        g.select(4);
-        g.start();
-        let mut landed_on = None;
-        for _ in 0..4000 {
-            let p = &g.perf;
-            let high = p.flight.peak - BED_Y > int(4);
-            let bits = if matches!(p.phase, Phase::Bed(_)) && high {
-                bit("drive") | bit("up")
-            } else {
-                bit("drive")
-            };
-            tick(&mut g, bits);
-            if let Phase::Stand(s) = g.perf.phase {
-                landed_on = Some(s);
-                break;
+        // a player tries the travel key at a few heights; at least some land
+        let mut found = Vec::new();
+        for quarter in 12..26 {
+            let mut g = game_with("");
+            g.open_everything();
+            g.select(4);
+            g.start();
+            let mut landed_on = None;
+            for _ in 0..4000 {
+                let p = &g.perf;
+                let high = p.flight.peak - BED_Y > int(quarter) / 4;
+                let bits = if matches!(p.phase, Phase::Bed(_)) && high {
+                    bit("drive") | bit("up")
+                } else {
+                    bit("drive")
+                };
+                tick(&mut g, bits);
+                if let Phase::Stand(s) = g.perf.phase {
+                    landed_on = Some(s);
+                    break;
+                }
+                if g.perf.bailed() {
+                    break;
+                }
             }
-            if g.perf.bailed() {
-                break;
-            }
+            found.push((quarter, landed_on));
         }
-        assert_eq!(landed_on, Some(Surface::Roof));
+        assert!(
+            found.iter().filter(|(_, s)| *s == Some(Surface::Roof)).count() >= 2,
+            "{found:?}"
+        );
     }
 
     #[test]

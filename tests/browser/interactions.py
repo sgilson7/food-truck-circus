@@ -91,3 +91,65 @@ def run(page, check, engine):
     check(page.is_visible("#paused"), "Escape pauses the show")
     click(page, "#resume")
     check(page.is_hidden("#paused"), "the show resumes")
+
+    run_more(page, check, engine)
+
+
+def run_more(page, check, engine):
+    """The postcards, the glossary, juggling's first throw and the Graph Lab.
+
+    By hand: tricks.json has 31 distinct trick ids with points (35 rows, of
+    which to_feet appears three times and seat_drop twice, and to_feet scores
+    nothing), so the glossary shows 31 moves. 2x+1 at x = -2 is -3. Juggling's
+    hint changes from copy.juggle_start to copy.juggle_hint on the first press.
+    """
+    page.keyboard.press("Escape")
+    page.wait_for_timeout(200)
+    click(page, "#pause-map")
+    page.wait_for_timeout(300)
+    loaded = page.evaluate("() => { const i = document.getElementById('b-art'); return i.complete && i.naturalWidth > 0; }")
+    check(loaded, "the selected show's postcard loads")
+
+    click(page, "#brief .open-moves")
+    cards = page.query_selector_all("#move-list .move")
+    check(len(cards) == 31, f"the glossary lists the 31 moves ({len(cards)})")
+    check(page.is_visible("#moves"), "Moves opens")
+    click(page, "#moves-close")
+    check(page.is_hidden("#moves"), "Moves closes")
+
+    # juggling: the balls wait for the first press
+    click(page, "#nodes .node:nth-child(6)")
+    click(page, "#perform")
+    page.wait_for_timeout(600)
+    check(page.text_content("#hint") == COPY["juggle_start"], "juggling waits for the first throw")
+    page.keyboard.press("KeyD")
+    page.wait_for_timeout(300)
+    check(page.text_content("#hint") == COPY["juggle_hint"], "the first press starts the juggling")
+    badges = page.query_selector_all("#hands .hand")
+    check(len(badges) == 2, f"a key badge under each hand ({len(badges)})")
+
+    # the Graph Lab
+    base = page.url.rsplit("/", 1)[0]
+    page.goto(base + "/lab.html")
+    page.wait_for_selector("body[data-ready='true']", state="attached", timeout=20000)
+    page.wait_for_timeout(500)
+    rows = page.query_selector_all("#machine tbody tr")
+    check(len(rows) == 9, f"the lab opens on nine rows of x² ({len(rows)})")
+    page.fill("#formula", "2x+1")
+    page.press("#formula", "Enter")
+    page.wait_for_timeout(300)
+    first = page.text_content("#machine tbody tr:nth-child(1) td:nth-child(2)")
+    check(first == "-3", f"2x+1 at x = -2 is -3 ({first!r})")
+    page.fill("#formula", "2x+")
+    page.press("#formula", "Enter")
+    page.wait_for_timeout(300)
+    check(page.text_content("#error") == COPY["lab"]["expr"]["end"], "a formula that stops short says so")
+    page.fill("#formula", "x^2")
+    page.press("#formula", "Enter")
+    click(page, "#run-auto")
+    # the first point of x² is its highest: a few set-up bounces come first
+    page.wait_for_timeout(18000)
+    marked = [c.text_content() for c in page.query_selector_all("#machine tbody td:nth-child(5)")]
+    check(sum(1 for m in marked if m) >= 1, f"the performer has marked a point after eighteen seconds ({marked})")
+    lit = page.query_selector_all("#tree li.lit")
+    check(len(lit) >= 1, "the tree shows what is running")

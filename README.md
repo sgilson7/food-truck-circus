@@ -11,6 +11,17 @@ It is a fan game after Cirque Kikasse's *SANTÉ!*, the Québec circus played on 
 - **The other acts.** A tower of chairs on the truck's roof to about thirty-five feet, then a handstand on top. Juggling two and three balls. The popcorn machine overflowing over the bed. A trapeze over the bed, which is the game's own addition: no listing of the show mentions one.
 - **The crowd** sits on blankets and lawn chairs, as the listings say to come, and shouts the grade: EXCELLENT, GREAT, NICE, OK, with Slushline's flair words. A fall is OH NO or DARN, in Sam's own voice.
 - **Costumes.** Twelve, earned on the tour.
+- **Postcards.** Every stop has a postcard, drawn as TikZ in the style of `Sam_Comm_final.png` by `tools/postcards.py` from the venue's own data, and shown on the map, as each show opens, and as the next stop when a show ends.
+
+## The Graph Lab
+
+**Open it:** https://sgilson7.github.io/food-truck-circus/lab.html
+
+A math-circle toy, after Natural Math's way into functions: draw a function by dragging its points, read it as a function machine (x in, f(x) out, with the change from row to row and the change of that change), or type a formula (`x^2`, `2x+1`, `|x|`, `sin(x)`, `(x-1)(x+1)`). Then the performer plots it on the trampoline: **the top of each bounce marks one point**. The performer plans each bounce with a behaviour tree whose leaves press only keys a player could press (Space for so many beats, an arrow for so many beats), choosing the beats by imagining bounces in the game's own physics and interpolating between two that bracket the target. The lab shows the tree with the running node lit and the planner's thinking in words. Between the marks, the feet draw parabolas of their own: gravity's. "You try" hands the keys to the player.
+
+## Moves
+
+The **Moves** button (on the map, in a show and on the pause screen) lists every trick the crowd can name and how to do it.
 
 ## Controls
 
@@ -32,6 +43,7 @@ Food Truck Circus is a [Builder](https://github.com/sgilson7/builder-setting) pr
 
 - **From Iron Vector:** the 3D engine. Q16.16 fixed-point maths with no floats in the core, one instanced draw per mesh, the core computing every matrix, the camera and the HUD, and the page's `gl.js` reused unchanged.
 - **From Vagrancy:** the body. The performer is particles joined by sticks, relaxed in a fixed order in integer maths. In control, a flight model places the particles: a centre of mass, a flip and a twist, and the angular momentum behind each, with the inertia read off the body's shape, so a tuck spins faster than a layout with nothing else said. On a bad landing the same particles go limp into the Verlet solver and tumble. As in Vagrancy, a held key adds a little momentum from nowhere.
+- **The Graph Lab's formulas** are read and evaluated by the core in fixed point too (`crates/core/src/expr.rs`), and its planner (`plot.rs`) imagines on a copy of the same performer the player drives.
 - **From Slushline:** the grade words, their thresholds and their flair, and the two recorded voice lines.
 
 The layers:

@@ -416,7 +416,8 @@ pub struct Ball {
     pub dropped: Option<i32>,
 }
 
-pub const CATCH_WINDOW: i32 = 12;
+/// How far either side of a ball's arrival a press still catches it, ticks.
+pub const CATCH_WINDOW: i32 = 15;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Juggle {
@@ -425,6 +426,8 @@ pub struct Juggle {
     pub tick: i32,
     pub catches: i32,
     pub streak: i32,
+    /// The balls wait in the hands until the first press throws one.
+    pub started: bool,
 }
 
 pub enum JuggleEvent {
@@ -434,14 +437,15 @@ pub enum JuggleEvent {
 
 impl Juggle {
     pub fn new(balls: usize) -> Juggle {
-        let flight = if balls >= 3 { 66 } else { 80 };
-        let gap = flight / balls as i32;
-        let start = 100;
+        // slow enough to learn: a catch every 0.8 s with two balls, every
+        // 0.47 s with three (Sam, 2026-10-09: "i cant figure out the
+        // controls or beat the level")
+        let flight = if balls >= 3 { 84 } else { 96 };
         Juggle {
             balls: (0..balls)
                 .map(|i| Ball {
                     from: (i + 1) % 2,
-                    thrown: start + gap * i as i32 - flight,
+                    thrown: i32::MAX / 2,
                     dropped: None,
                 })
                 .collect(),
@@ -449,7 +453,18 @@ impl Juggle {
             tick: 0,
             catches: 0,
             streak: 0,
+            started: false,
         }
+    }
+
+    /// Whether a ball is arriving at this hand now, inside the window.
+    pub fn hot(&self, hand: usize) -> bool {
+        self.started
+            && self.balls.iter().any(|b| {
+                b.dropped.is_none()
+                    && 1 - b.from == hand
+                    && (self.arrives(b) - self.tick).abs() <= CATCH_WINDOW
+            })
     }
 
     /// When a ball in the air reaches its hand.
@@ -462,6 +477,19 @@ impl Juggle {
         let mut ev = Vec::new();
         self.tick += 1;
         let now = self.tick;
+        if !self.started {
+            // the first press throws the first ball; the rest follow in turn
+            if press[0] || press[1] {
+                self.started = true;
+                let gap = self.flight / self.balls.len() as i32;
+                let first = if press[0] { 0 } else { 1 };
+                for (i, b) in self.balls.iter_mut().enumerate() {
+                    b.from = (first + i) % 2;
+                    b.thrown = now + gap * i as i32;
+                }
+            }
+            return ev;
+        }
         for hand in 0..2 {
             if !press[hand] {
                 continue;
@@ -508,6 +536,10 @@ impl Juggle {
     /// Where a ball is, given where the two hands are.
     pub fn ball_at(&self, b: &Ball, hands: [V3; 2]) -> V3 {
         let to = 1 - b.from;
+        if !self.started || self.tick < b.thrown {
+            // waiting in the hand to be thrown
+            return hands[b.from].add(v3(0, cm(8), 0));
+        }
         if let Some(t) = b.dropped {
             // it fell past the hand and keeps falling to the ground
             let since = self.tick - t;
@@ -609,6 +641,7 @@ mod tests {
     fn a_juggler_who_presses_on_time_never_drops() {
         let mut j = Juggle::new(3);
         let mut drops = 0;
+        j.step([true, false]);
         for _ in 0..1200 {
             let now = j.tick + 1;
             let mut press = [false; 2];
@@ -624,11 +657,18 @@ mod tests {
             }
         }
         assert_eq!(drops, 0);
-        assert!(j.catches > 40, "{}", j.catches);
+        assert!(j.catches > 35, "{}", j.catches);
         // and one who never presses drops every ball
         let mut j = Juggle::new(3);
         let mut drops = 0;
-        for _ in 0..160 {
+        for _ in 0..300 {
+            drops += j.step([false; 2]).len();
+        }
+        assert_eq!(drops, 0, "the balls wait in the hands until a press");
+        j.step([false, true]);
+        // the last ball arrives 2/3 of a flight after the first: 56 + 84,
+        // and drops a window later
+        for _ in 0..(56 + 84 + CATCH_WINDOW + 1) {
             drops += j.step([false; 2]).len();
         }
         assert_eq!(drops, 3);

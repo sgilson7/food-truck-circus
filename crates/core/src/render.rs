@@ -15,8 +15,13 @@ pub const STATIC_BUFFER: u32 = 0;
 pub const DYNAMIC_BUFFER: u32 = 1;
 
 pub const FOV: i32 = deg(62);
-pub const NEAR: i32 = ONE / 10;
-pub const FAR: i32 = int(3000);
+/// The near and far planes. A near plane of 10 cm left too little depth
+/// precision far off: when the camera rose with a high bounce, water, car
+/// parks and the stage's apron lying a few centimetres over the ground
+/// flickered through it (Sam, 2026-10-09). 40 cm in front of the camera is
+/// nearer than anything it is ever asked to show.
+pub const NEAR: i32 = ONE * 2 / 5;
+pub const FAR: i32 = int(2400);
 
 pub type Rgb = [i32; 3];
 

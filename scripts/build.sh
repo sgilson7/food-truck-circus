@@ -19,7 +19,7 @@ rm -rf dist
 mkdir -p dist/pkg
 wasm-bindgen --target web --no-typescript --out-dir dist/pkg \
   target/wasm32-unknown-unknown/release/ftc_shim.wasm
-cp web/* dist/
+cp -R web/* dist/
 cp -R data dist/data
 
 # Cache busting (from gear-master-2d by way of slushline). GitHub Pages serves
@@ -32,7 +32,10 @@ for js in dist/*.js; do
   perl -0777 -pi -e "s{from \"\./([A-Za-z0-9_/-]+\.js)\"}{from \"./\$1?v=$BUILD\"}g; s/__BUILD__/$BUILD/g" "$js"
 done
 perl -0777 -pi -e "s{new URL\('ftc_shim_bg\.wasm', import\.meta\.url\)}{new URL('ftc_shim_bg.wasm?v=$BUILD', import.meta.url)}g" dist/pkg/ftc_shim.js
-perl -0777 -pi -e "s{src=\"app\.js\"}{src=\"app.js?v=$BUILD\"}; s{href=\"style\.css\"}{href=\"style.css?v=$BUILD\"}" dist/index.html
+for page in dist/*.html; do
+  perl -0777 -pi -e "s{src=\"([a-z]+)\.js\"}{src=\"\$1.js?v=$BUILD\"}g; s{href=\"([a-z]+)\.css\"}{href=\"\$1.css?v=$BUILD\"}g" "$page"
+done
+grep -q "lab.js?v=$BUILD" dist/lab.html || { echo "cache busting did not apply to lab.html" >&2; exit 1; }
 grep -q "app.js?v=$BUILD" dist/index.html || { echo "cache busting did not apply to index.html" >&2; exit 1; }
 grep -q "ftc_shim_bg.wasm?v=$BUILD" dist/pkg/ftc_shim.js || { echo "wasm URL not stamped" >&2; exit 1; }
 if grep -nE 'from "\./[A-Za-z0-9_/-]+\.js"' dist/*.js; then
