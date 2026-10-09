@@ -1,0 +1,18 @@
+{
+  "_about": "Key codes (KeyboardEvent.code) to action names. The bits for each action come from the core (game::ACTIONS).",
+  "KeyW": "front",
+  "KeyS": "back",
+  "KeyA": "left",
+  "KeyD": "right",
+  "Space": "drive",
+  "KeyC": "kill",
+  "KeyJ": "tuck",
+  "ShiftLeft": "tuck",
+  "KeyK": "pike",
+  "ArrowUp": "up",
+  "ArrowDown": "down",
+  "ArrowLeft": "turn_l",
+  "ArrowRight": "turn_r",
+  "KeyE": "act",
+  "KeyR": "restart"
+}

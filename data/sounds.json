@@ -1,0 +1,77 @@
+{
+  "_about": "Every number the page's sound needs (the page holds none of its own). Each recipe is a list of layers: an oscillator sweeping `from` to `to` Hz, or the core's white noise through a filter. Times are seconds after the sound starts; `gain` is scaled by the event's level (0 to `percent`). `words` says which crowd sound goes with each called word; `clips` are Sam's recordings, from Slushline (LICENSES.md); every other word is said by the browser's own speech voice.",
+  "master": 0.6,
+  "percent": 100,
+  "floor": 0.0001,
+  "tail": 0.05,
+  "noise_seconds": 2,
+  "seed": 17,
+  "clip_gain": 1.1,
+  "voice": { "rate": 1.08, "pitch": 1.25, "volume": 1 },
+  "clips": { "oh_no": "data/voice/oh-no.wav", "darn": "data/voice/darn.wav" },
+  "recipes": {
+    "boing": [
+      { "type": "osc", "wave": "sine", "from": 150, "to": 430, "at": 0, "attack": 0.005, "dur": 0.22, "gain": 0.32 },
+      { "type": "osc", "wave": "triangle", "from": 300, "to": 860, "at": 0, "attack": 0.005, "dur": 0.12, "gain": 0.08 }
+    ],
+    "spring": [
+      { "type": "osc", "wave": "triangle", "from": 520, "to": 980, "at": 0, "attack": 0.004, "dur": 0.09, "gain": 0.07 }
+    ],
+    "thud": [
+      { "type": "noise", "filter": "lowpass", "freq": 260, "q": 0.8, "at": 0, "attack": 0.003, "dur": 0.18, "gain": 0.7 },
+      { "type": "osc", "wave": "sine", "from": 110, "to": 50, "at": 0, "attack": 0.003, "dur": 0.16, "gain": 0.4 }
+    ],
+    "crash": [
+      { "type": "noise", "filter": "lowpass", "freq": 700, "q": 0.6, "at": 0, "attack": 0.004, "dur": 0.45, "gain": 0.8 },
+      { "type": "osc", "wave": "sine", "from": 95, "to": 38, "at": 0, "attack": 0.004, "dur": 0.4, "gain": 0.5 }
+    ],
+    "pop": [
+      { "type": "osc", "wave": "square", "from": 900, "to": 1500, "at": 0, "attack": 0.002, "dur": 0.045, "gain": 0.07 },
+      { "type": "noise", "filter": "highpass", "freq": 2500, "q": 0.7, "at": 0, "attack": 0.002, "dur": 0.03, "gain": 0.2 }
+    ],
+    "catch": [
+      { "type": "osc", "wave": "sine", "from": 660, "to": 700, "at": 0, "attack": 0.003, "dur": 0.08, "gain": 0.18 },
+      { "type": "noise", "filter": "bandpass", "freq": 1800, "q": 1.5, "at": 0, "attack": 0.002, "dur": 0.04, "gain": 0.3 }
+    ],
+    "drop": [
+      { "type": "osc", "wave": "sine", "from": 320, "to": 110, "at": 0, "attack": 0.005, "dur": 0.3, "gain": 0.25 }
+    ],
+    "chair": [
+      { "type": "osc", "wave": "triangle", "from": 240, "to": 180, "at": 0, "attack": 0.003, "dur": 0.12, "gain": 0.25 },
+      { "type": "noise", "filter": "bandpass", "freq": 1200, "q": 2, "at": 0, "attack": 0.002, "dur": 0.06, "gain": 0.35 }
+    ],
+    "applause": [
+      { "type": "noise", "filter": "bandpass", "freq": 2400, "q": 0.6, "at": 0, "attack": 0.25, "dur": 3.2, "gain": 0.55 },
+      { "type": "noise", "filter": "bandpass", "freq": 900, "q": 0.9, "at": 0.05, "attack": 0.3, "dur": 2.6, "gain": 0.35 }
+    ],
+    "cheer_big": [
+      { "type": "noise", "filter": "bandpass", "freq": 1100, "q": 1.1, "at": 0, "attack": 0.12, "dur": 1.7, "gain": 0.55 },
+      { "type": "osc", "wave": "sawtooth", "from": 330, "to": 420, "at": 0, "attack": 0.1, "dur": 1.1, "gain": 0.03 },
+      { "type": "osc", "wave": "sawtooth", "from": 392, "to": 500, "at": 0.02, "attack": 0.1, "dur": 1.1, "gain": 0.03 }
+    ],
+    "cheer": [
+      { "type": "noise", "filter": "bandpass", "freq": 1000, "q": 1.2, "at": 0, "attack": 0.1, "dur": 1.1, "gain": 0.4 }
+    ],
+    "clap": [
+      { "type": "noise", "filter": "bandpass", "freq": 2200, "q": 0.8, "at": 0, "attack": 0.05, "dur": 0.8, "gain": 0.3 }
+    ],
+    "groan": [
+      { "type": "osc", "wave": "sawtooth", "from": 260, "to": 160, "at": 0, "attack": 0.08, "dur": 0.9, "gain": 0.05 },
+      { "type": "osc", "wave": "sawtooth", "from": 210, "to": 135, "at": 0.03, "attack": 0.08, "dur": 0.9, "gain": 0.05 },
+      { "type": "noise", "filter": "lowpass", "freq": 600, "q": 0.7, "at": 0, "attack": 0.1, "dur": 0.9, "gain": 0.25 }
+    ]
+  },
+  "words": {
+    "excellent": "cheer_big",
+    "groovy": "cheer_big",
+    "great": "cheer",
+    "funky": "cheer",
+    "nice": "cheer",
+    "smooth": "cheer",
+    "ok": "clap",
+    "chill": "clap",
+    "miss": "groan",
+    "oh_no": "groan",
+    "darn": "groan"
+  }
+}

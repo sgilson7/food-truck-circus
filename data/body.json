@@ -1,0 +1,64 @@
+{
+  "_about": "The performer's body, after Vagrancy's data/body.json: particles joined by sticks. Positions are centimetres, facing -z (toward the truck), y up, feet on the floor at y = 0. Each pose lists every point; the core recentres each pose on its own centre of mass, so blending two poses never moves the body. Stick lengths for a crash come from the stand pose. Masses are integers, as in Vagrancy; only their ratios matter.",
+  "points": ["head", "neck", "shoulder_l", "shoulder_r", "elbow_l", "elbow_r", "hand_l", "hand_r", "pelvis", "hip_l", "hip_r", "knee_l", "knee_r", "foot_l", "foot_r"],
+  "mass": { "head": 6, "neck": 3, "shoulder_l": 6, "shoulder_r": 6, "elbow_l": 2, "elbow_r": 2, "hand_l": 1, "hand_r": 1, "pelvis": 12, "hip_l": 6, "hip_r": 6, "knee_l": 5, "knee_r": 5, "foot_l": 2, "foot_r": 2 },
+  "radius": { "head": 12, "neck": 6, "shoulder_l": 7, "shoulder_r": 7, "elbow_l": 5, "elbow_r": 5, "hand_l": 5, "hand_r": 5, "pelvis": 12, "hip_l": 9, "hip_r": 9, "knee_l": 6, "knee_r": 6, "foot_l": 5, "foot_r": 5 },
+  "sticks": [
+    ["head", "neck"], ["neck", "shoulder_l"], ["neck", "shoulder_r"], ["shoulder_l", "shoulder_r"],
+    ["shoulder_l", "elbow_l"], ["elbow_l", "hand_l"], ["shoulder_r", "elbow_r"], ["elbow_r", "hand_r"],
+    ["shoulder_l", "hip_l"], ["shoulder_r", "hip_r"], ["shoulder_l", "hip_r"], ["shoulder_r", "hip_l"],
+    ["hip_l", "hip_r"], ["pelvis", "hip_l"], ["pelvis", "hip_r"], ["pelvis", "neck"], ["head", "shoulder_l"], ["head", "shoulder_r"],
+    ["hip_l", "knee_l"], ["knee_l", "foot_l"], ["hip_r", "knee_r"], ["knee_r", "foot_r"]
+  ],
+  "bones": [
+    ["shoulder_l", "elbow_l", "sleeve", 5], ["elbow_l", "hand_l", "skin", 4],
+    ["shoulder_r", "elbow_r", "sleeve", 5], ["elbow_r", "hand_r", "skin", 4],
+    ["hip_l", "knee_l", "pants", 7], ["knee_l", "foot_l", "pants", 6],
+    ["hip_r", "knee_r", "pants", 7], ["knee_r", "foot_r", "pants", 6],
+    ["neck", "head", "skin", 5]
+  ],
+  "poses": {
+    "stand": {
+      "head": [0, 168, 0], "neck": [0, 152, 0], "shoulder_l": [-19, 145, 0], "shoulder_r": [19, 145, 0],
+      "elbow_l": [-23, 118, 2], "elbow_r": [23, 118, 2], "hand_l": [-24, 93, -2], "hand_r": [24, 93, -2],
+      "pelvis": [0, 96, 0], "hip_l": [-10, 92, 0], "hip_r": [10, 92, 0],
+      "knee_l": [-10, 50, -2], "knee_r": [10, 50, -2], "foot_l": [-10, 5, -4], "foot_r": [10, 5, -4]
+    },
+    "layout": {
+      "head": [0, 168, 0], "neck": [0, 152, 0], "shoulder_l": [-18, 146, 0], "shoulder_r": [18, 146, 0],
+      "elbow_l": [-20, 174, 0], "elbow_r": [20, 174, 0], "hand_l": [-16, 201, 0], "hand_r": [16, 201, 0],
+      "pelvis": [0, 96, 0], "hip_l": [-9, 92, 0], "hip_r": [9, 92, 0],
+      "knee_l": [-7, 50, 1], "knee_r": [7, 50, 1], "foot_l": [-5, 6, 3], "foot_r": [5, 6, 3]
+    },
+    "tuck": {
+      "head": [0, 150, -30], "neck": [0, 140, -18], "shoulder_l": [-19, 134, -14], "shoulder_r": [19, 134, -14],
+      "elbow_l": [-24, 114, -26], "elbow_r": [24, 114, -26], "hand_l": [-14, 100, -44], "hand_r": [14, 100, -44],
+      "pelvis": [0, 96, 0], "hip_l": [-10, 92, 0], "hip_r": [10, 92, 0],
+      "knee_l": [-11, 120, -36], "knee_r": [11, 120, -36], "foot_l": [-10, 82, -42], "foot_r": [10, 82, -42]
+    },
+    "pike": {
+      "head": [0, 162, -20], "neck": [0, 149, -12], "shoulder_l": [-19, 142, -9], "shoulder_r": [19, 142, -9],
+      "elbow_l": [-20, 124, -34], "elbow_r": [20, 124, -34], "hand_l": [-15, 108, -58], "hand_r": [15, 108, -58],
+      "pelvis": [0, 96, 0], "hip_l": [-10, 92, 0], "hip_r": [10, 92, 0],
+      "knee_l": [-9, 92, -42], "knee_r": [9, 92, -42], "foot_l": [-8, 94, -84], "foot_r": [8, 94, -84]
+    },
+    "crouch": {
+      "head": [0, 140, -18], "neck": [0, 126, -10], "shoulder_l": [-20, 119, -8], "shoulder_r": [20, 119, -8],
+      "elbow_l": [-25, 96, 2], "elbow_r": [25, 96, 2], "hand_l": [-26, 74, -6], "hand_r": [26, 74, -6],
+      "pelvis": [0, 70, 8], "hip_l": [-10, 66, 8], "hip_r": [10, 66, 8],
+      "knee_l": [-11, 42, -22], "knee_r": [11, 42, -22], "foot_l": [-10, 5, -4], "foot_r": [10, 5, -4]
+    },
+    "juggle": {
+      "head": [0, 168, 0], "neck": [0, 152, 0], "shoulder_l": [-19, 145, 0], "shoulder_r": [19, 145, 0],
+      "elbow_l": [-24, 118, -4], "elbow_r": [24, 118, -4], "hand_l": [-22, 112, -30], "hand_r": [22, 112, -30],
+      "pelvis": [0, 96, 0], "hip_l": [-10, 92, 0], "hip_r": [10, 92, 0],
+      "knee_l": [-10, 50, -2], "knee_r": [10, 50, -2], "foot_l": [-10, 5, -4], "foot_r": [10, 5, -4]
+    },
+    "arch": {
+      "head": [0, 166, 10], "neck": [0, 151, 6], "shoulder_l": [-18, 145, 4], "shoulder_r": [18, 145, 4],
+      "elbow_l": [-21, 172, 14], "elbow_r": [21, 172, 14], "hand_l": [-17, 198, 22], "hand_r": [17, 198, 22],
+      "pelvis": [0, 96, -4], "hip_l": [-9, 92, -4], "hip_r": [9, 92, -4],
+      "knee_l": [-8, 52, 8], "knee_r": [8, 52, 8], "foot_l": [-6, 10, 18], "foot_r": [6, 10, 18]
+    }
+  }
+}

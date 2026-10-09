@@ -1,0 +1,251 @@
+{
+  "_about": "Every stop of the tour the game visits, from Cirque Kikasse's events page and the presenters' listings (PLAN.md, research). The Carolina Theatre of Durham run comes first, as the peer's link did. Scenes are drawn by the core from `props`: each kind is a rule in crates/core/src/scene.rs. Positions are metres: the truck is at z = -3.7, the bed at the origin, the crowd sits at z = 6 to 16 and the camera looks from the crowd toward the truck (-z), so the backdrop is mostly at negative z. Colours are hex. `seed` places the scattered things.",
+  "legs": [
+    { "id": "durham", "name": "Durham, North Carolina", "note": "Carolina Theatre of Durham, free Centennial shows, October 8–17, 2026" },
+    { "id": "east", "name": "Up the East Coast", "note": "Richmond, New York and Fairfield" },
+    { "id": "florida", "name": "Florida", "note": "Sarasota, Miami and Miami Beach" },
+    { "id": "desert", "name": "The desert and the mountains", "note": "Tucson and Salt Lake City" },
+    { "id": "west", "name": "The West Coast", "note": "San Francisco and Washington State" }
+  ],
+  "venues": [
+    {
+      "id": "rtp", "leg": "durham", "name": "RTP 800 Building", "city": "Durham, NC", "when": "Thursday, October 8, 2026 · 6:30 PM",
+      "sky": "#f2a66a", "sky_top": "#5a6fa8", "fog": "#e7b48b", "ground": "#6f9a4a", "light": [-35, 22], "seed": 11,
+      "crowd": { "count": 56, "seats": "lawn_chairs", "colours": ["#2f5d8a", "#c84b31", "#e9c46a", "#2a9d8f", "#f4f1de", "#3d405b"] },
+      "props": [
+        { "kind": "building", "at": [-6, -24], "size": [34, 14, 16], "colour": "#9fb4c7", "windows": "#d9ecf7", "bands": 4 },
+        { "kind": "containers", "at": [22, -16], "count": 9, "colours": ["#e76f51", "#2a9d8f", "#e9c46a", "#264653", "#f4a261"] },
+        { "kind": "lot", "area": [-30, -14, 30, -9], "colour": "#4a4e57" },
+        { "kind": "trees", "tree": "pine", "count": 40, "area": [-90, -90, 90, -30], "height": [12, 22] },
+        { "kind": "trees", "tree": "pine", "count": 14, "area": [-40, 20, 40, 40], "height": [10, 18] },
+        { "kind": "lights", "from": [-12, -11], "to": [12, -11], "colours": ["#fff1c1"] }
+      ]
+    },
+    {
+      "id": "golden_belt", "leg": "durham", "name": "Golden Belt, Green Space and Hi-Wire Brewing", "city": "Durham, NC", "when": "Friday, October 9, 2026 · 7:30 PM",
+      "sky": "#c7704e", "sky_top": "#2d2d5e", "fog": "#9a6050", "ground": "#5d8a3f", "light": [30, 12], "seed": 23,
+      "crowd": { "count": 64, "seats": "blankets", "colours": ["#7c2d12", "#fbbf24", "#1e3a8a", "#f5f5f4", "#166534", "#9d174d"] },
+      "props": [
+        { "kind": "building", "at": [0, -26], "size": [60, 12, 14], "colour": "#9a3b2a", "windows": "#ffd58a", "bands": 3, "roof": "saw" },
+        { "kind": "stack", "at": [18, -30], "height": 34, "colour": "#8a3324" },
+        { "kind": "water_tower", "at": [-22, -32], "height": 26, "colour": "#6b6f73" },
+        { "kind": "building", "at": [-34, -10], "size": [14, 9, 26], "colour": "#a8432f", "windows": "#ffd58a", "bands": 2 },
+        { "kind": "trees", "tree": "oak", "count": 16, "area": [-70, -60, 70, -40], "height": [10, 16] },
+        { "kind": "lights", "from": [-14, -11], "to": [14, -11], "colours": ["#ffe7a3", "#ffd06b"] },
+        { "kind": "lights", "from": [-14, -17], "to": [14, -17], "colours": ["#ffe7a3", "#ffd06b"] }
+      ]
+    },
+    {
+      "id": "woodcrest", "leg": "durham", "name": "Woodcrest Farm", "city": "Hillsborough, NC", "when": "Sunday, October 11, 2026 · 3:00 PM",
+      "sky": "#a9d3f0", "sky_top": "#4f8fd1", "fog": "#c6e0ef", "ground": "#7fae4f", "light": [-20, 48], "seed": 37,
+      "crowd": { "count": 50, "seats": "blankets", "colours": ["#b45309", "#1d4ed8", "#f9fafb", "#dc2626", "#65a30d", "#78350f"] },
+      "props": [
+        { "kind": "barn", "at": [-18, -30], "colour": "#a61e1e" },
+        { "kind": "silo", "at": [-6, -34], "height": 16, "colour": "#c0c4c8" },
+        { "kind": "fence", "from": [-40, -16], "to": [40, -16], "colour": "#f3efe6" },
+        { "kind": "hills", "count": 7, "colour": "#6e9a43", "distance": 220 },
+        { "kind": "trees", "tree": "oak", "count": 22, "area": [-120, -140, 120, -50], "height": [9, 15], "colours": ["#c2410c", "#d97706", "#65a30d", "#b91c1c"] },
+        { "kind": "bales", "count": 10, "area": [12, -40, 50, -20] }
+      ]
+    },
+    {
+      "id": "the_plant", "leg": "durham", "name": "The Plant", "city": "Pittsboro, NC", "when": "Thursday, October 15, 2026 · 7:00 PM",
+      "sky": "#e9965f", "sky_top": "#41507f", "fog": "#cc8c6c", "ground": "#82975a", "light": [40, 16], "seed": 41,
+      "crowd": { "count": 48, "seats": "lawn_chairs", "colours": ["#14532d", "#ca8a04", "#7f1d1d", "#e5e7eb", "#1e40af"] },
+      "props": [
+        { "kind": "building", "at": [-14, -24], "size": [26, 8, 12], "colour": "#8f9aa3", "windows": "#ffe2a8", "bands": 1, "roof": "gable" },
+        { "kind": "building", "at": [16, -28], "size": [20, 10, 14], "colour": "#7b5e45", "windows": "#ffe2a8", "bands": 2, "roof": "gable" },
+        { "kind": "silo", "at": [30, -20], "height": 13, "colour": "#9ca3af" },
+        { "kind": "silo", "at": [35, -24], "height": 13, "colour": "#9ca3af" },
+        { "kind": "trees", "tree": "pine", "count": 50, "area": [-100, -100, 100, -40], "height": [14, 24] },
+        { "kind": "lights", "from": [-12, -11], "to": [12, -11], "colours": ["#fff1c1"] }
+      ]
+    },
+    {
+      "id": "scrap", "leg": "durham", "name": "The Scrap Exchange", "city": "Durham, NC", "when": "Friday, October 16, 2026 · 7:00 PM",
+      "sky": "#de8b5d", "sky_top": "#3b3f73", "fog": "#bb8a72", "ground": "#58616b", "light": [-30, 15], "seed": 53,
+      "crowd": { "count": 60, "seats": "standing", "colours": ["#db2777", "#7c3aed", "#0891b2", "#facc15", "#16a34a", "#f97316"] },
+      "props": [
+        { "kind": "mural", "at": [0, -22], "size": [48, 9, 20], "colours": ["#ef4444", "#f97316", "#facc15", "#22c55e", "#3b82f6", "#a855f7"] },
+        { "kind": "piles", "count": 8, "area": [-30, -16, 30, -12], "colours": ["#f472b6", "#60a5fa", "#fbbf24", "#34d399"] },
+        { "kind": "trees", "tree": "oak", "count": 20, "area": [-90, -80, 90, -40], "height": [10, 16] },
+        { "kind": "lamps", "count": 8, "area": [-26, -12, 26, 22] }
+      ]
+    },
+    {
+      "id": "garland", "leg": "durham", "name": "Garland Hall and Salem Street, behind Claymakers", "city": "Durham, NC", "when": "Saturday, October 17, 2026 · 3:00 PM",
+      "sky": "#b3d4ee", "sky_top": "#5b8fcb", "fog": "#cfe0ec", "ground": "#6a6d70", "light": [-25, 40], "seed": 67,
+      "crowd": { "count": 70, "seats": "standing", "colours": ["#92400e", "#1e3a8a", "#f3f4f6", "#b91c1c", "#047857", "#ca8a04"] },
+      "props": [
+        { "kind": "street", "at": [0, -26], "count": 7, "colours": ["#9b4a35", "#b5653f", "#7d3a2c", "#c47f55", "#8a5a44"] },
+        { "kind": "trees", "tree": "oak", "count": 10, "area": [-50, -16, 50, -12], "height": [8, 13] },
+        { "kind": "trees", "tree": "oak", "count": 18, "area": [-90, -90, 90, -50], "height": [10, 16] },
+        { "kind": "lamps", "count": 10, "area": [-30, -14, 30, 24] }
+      ]
+    },
+    {
+      "id": "modlin", "leg": "east", "name": "Modlin Center for the Arts", "city": "Richmond, VA", "when": "Friday, September 18, 2026",
+      "sky": "#efb07a", "sky_top": "#4c5d9c", "fog": "#d8b396", "ground": "#6c9c46", "light": [30, 25], "seed": 71,
+      "crowd": { "count": 62, "seats": "lawn_chairs", "colours": ["#1e3a8a", "#991b1b", "#f8fafc", "#4b5563", "#b45309"] },
+      "props": [
+        { "kind": "gothic", "at": [0, -32], "size": [44, 13, 16], "colour": "#9c4f3c", "trim": "#e6dccb" },
+        { "kind": "gothic", "at": [-36, -18], "size": [18, 11, 26], "colour": "#a0533d", "trim": "#e6dccb" },
+        { "kind": "water", "area": [20, -70, 90, -36], "colour": "#4f7da3" },
+        { "kind": "trees", "tree": "oak", "count": 28, "area": [-100, -110, 100, -50], "height": [10, 18] }
+      ]
+    },
+    {
+      "id": "lincoln", "leg": "east", "name": "Hearst Plaza, Lincoln Center", "city": "New York, NY", "when": "October 25–26, 2025",
+      "sky": "#c7b2a2", "sky_top": "#3e4a6e", "fog": "#a79b95", "ground": "#cfc6b8", "light": [-40, 20], "seed": 83,
+      "crowd": { "count": 80, "seats": "standing", "colours": ["#111827", "#9ca3af", "#7f1d1d", "#1f2937", "#d1d5db", "#78350f"] },
+      "props": [
+        { "kind": "arches", "at": [0, -34], "count": 5, "width": 5, "height": 18, "colour": "#e8dfcf" },
+        { "kind": "water", "area": [-24, -20, -6, -11], "colour": "#6d8fa8" },
+        { "kind": "building", "at": [34, -22], "size": [20, 16, 30], "colour": "#ddd3c2", "windows": "#f7e6b8", "bands": 4 },
+        { "kind": "building", "at": [-38, -24], "size": [20, 14, 30], "colour": "#ddd3c2", "windows": "#f7e6b8", "bands": 3 },
+        { "kind": "skyline", "count": 18, "distance": 140, "colours": ["#6b7280", "#4b5563", "#9ca3af", "#374151"] },
+        { "kind": "trees", "tree": "plane", "count": 8, "area": [-30, -12, 30, -9], "height": [8, 11] }
+      ]
+    },
+    {
+      "id": "fairfield", "leg": "east", "name": "Quick Center for the Arts", "city": "Fairfield, CT", "when": "Friday, October 24, 2025",
+      "sky": "#f0b787", "sky_top": "#5568a3", "fog": "#d9b9a0", "ground": "#77a352", "light": [35, 18], "seed": 97,
+      "crowd": { "count": 54, "seats": "blankets", "colours": ["#7c2d12", "#0f766e", "#f3f4f6", "#1e3a8a", "#a16207"] },
+      "props": [
+        { "kind": "building", "at": [0, -30], "size": [36, 10, 16], "colour": "#ece7dc", "windows": "#fff3c4", "bands": 2, "roof": "gable" },
+        { "kind": "trees", "tree": "oak", "count": 36, "area": [-110, -110, 110, -42], "height": [10, 17], "colours": ["#dc2626", "#ea580c", "#f59e0b", "#b45309", "#84cc16"] },
+        { "kind": "trees", "tree": "oak", "count": 10, "area": [-50, 24, 50, 40], "height": [10, 15], "colours": ["#ea580c", "#f59e0b"] }
+      ]
+    },
+    {
+      "id": "ringling", "leg": "florida", "name": "Bayfront Gardens, The Ringling", "city": "Sarasota, FL", "when": "March 27–29, 2026",
+      "sky": "#f6c08a", "sky_top": "#3f7cc0", "fog": "#f0cfae", "ground": "#86ad55", "light": [-45, 25], "seed": 101,
+      "crowd": { "count": 66, "seats": "blankets", "colours": ["#be123c", "#f9a8d4", "#fef3c7", "#0e7490", "#4d7c0f"] },
+      "props": [
+        { "kind": "mansion", "at": [-8, -40], "colour": "#e7b9a0", "trim": "#f6eadf" },
+        { "kind": "water", "area": [-200, -300, 200, -60], "colour": "#3a86b8" },
+        { "kind": "trees", "tree": "banyan", "count": 5, "area": [-50, -36, 50, -18], "height": [10, 14] },
+        { "kind": "trees", "tree": "palm", "count": 12, "area": [-60, -56, 60, -40], "height": [9, 15] }
+      ]
+    },
+    {
+      "id": "mdc", "leg": "florida", "name": "Miami Dade College, Wolfson Campus", "city": "Miami, FL", "when": "March 31 – April 2, 2026",
+      "sky": "#f7c58f", "sky_top": "#2f7fd0", "fog": "#f0d0b0", "ground": "#b8b1a2", "light": [40, 30], "seed": 113,
+      "crowd": { "count": 72, "seats": "standing", "colours": ["#0ea5e9", "#f43f5e", "#facc15", "#10b981", "#f8fafc"] },
+      "props": [
+        { "kind": "skyline", "count": 22, "distance": 70, "colours": ["#93c5fd", "#e2e8f0", "#cbd5e1", "#7dd3fc", "#f1f5f9"] },
+        { "kind": "building", "at": [0, -28], "size": [30, 18, 14], "colour": "#e2e8f0", "windows": "#bae6fd", "bands": 6 },
+        { "kind": "trees", "tree": "palm", "count": 14, "area": [-40, -18, 40, -10], "height": [9, 14] }
+      ]
+    },
+    {
+      "id": "miami_beach", "leg": "florida", "name": "Miami Beach Family Picnic", "city": "Miami Beach, FL", "when": "Saturday, April 4, 2026",
+      "sky": "#9fd7f5", "sky_top": "#2b8be0", "fog": "#cfeaf7", "ground": "#e7d9b4", "light": [-30, 50], "seed": 127,
+      "crowd": { "count": 70, "seats": "blankets", "colours": ["#ec4899", "#8b5cf6", "#06b6d4", "#facc15", "#22c55e", "#ef4444"] },
+      "props": [
+        { "kind": "deco", "at": [0, -28], "count": 6, "colours": ["#f9c6d3", "#a7e3d8", "#fde68a", "#c4b5fd", "#fbcfe8", "#99f6e4"] },
+        { "kind": "water", "area": [-300, 60, 300, 400], "colour": "#2aa7c9" },
+        { "kind": "trees", "tree": "palm", "count": 20, "area": [-60, -40, 60, -14], "height": [9, 16] }
+      ]
+    },
+    {
+      "id": "ua_mall", "leg": "desert", "name": "University of Arizona Campus Mall", "city": "Tucson, AZ", "when": "Tuesday, April 14, 2026",
+      "sky": "#f3c08d", "sky_top": "#4d8ad6", "fog": "#e8c7a5", "ground": "#7da350", "light": [-35, 35], "seed": 131,
+      "crowd": { "count": 68, "seats": "blankets", "colours": ["#ab0520", "#0c234b", "#f8fafc", "#fbbf24", "#9ca3af"] },
+      "props": [
+        { "kind": "building", "at": [-20, -30], "size": [26, 12, 14], "colour": "#a7553a", "windows": "#ffe6b0", "bands": 3 },
+        { "kind": "building", "at": [20, -30], "size": [26, 12, 14], "colour": "#a7553a", "windows": "#ffe6b0", "bands": 3 },
+        { "kind": "trees", "tree": "palm", "count": 12, "area": [-60, -16, 60, -12], "height": [12, 18] },
+        { "kind": "mountains", "count": 9, "distance": 520, "height": 160, "colour": "#9a7a8f" },
+        { "kind": "trees", "tree": "saguaro", "count": 10, "area": [-90, -90, 90, -50], "height": [5, 9] }
+      ]
+    },
+    {
+      "id": "childrens_museum", "leg": "desert", "name": "Children's Museum Tucson", "city": "Tucson, AZ", "when": "Thursday, April 16, 2026",
+      "sky": "#f6c896", "sky_top": "#3f86d6", "fog": "#ebcca9", "ground": "#c49a6c", "light": [30, 40], "seed": 139,
+      "crowd": { "count": 58, "seats": "blankets", "colours": ["#f97316", "#06b6d4", "#a3e635", "#f43f5e", "#fde047"] },
+      "props": [
+        { "kind": "temple", "at": [0, -30], "colour": "#e8d8b8" },
+        { "kind": "trees", "tree": "paloverde", "count": 12, "area": [-50, -40, 50, -14], "height": [5, 8] },
+        { "kind": "mountains", "count": 9, "distance": 480, "height": 150, "colour": "#a07d88" },
+        { "kind": "trees", "tree": "saguaro", "count": 8, "area": [-80, -80, 80, -46], "height": [5, 9] }
+      ]
+    },
+    {
+      "id": "skyline", "leg": "desert", "name": "Skyline Country Club", "city": "Tucson, AZ", "when": "Friday, April 17, 2026",
+      "sky": "#f2a873", "sky_top": "#4a6cb3", "fog": "#e0b18e", "ground": "#6fae4a", "light": [45, 18], "seed": 149,
+      "crowd": { "count": 46, "seats": "lawn_chairs", "colours": ["#f8fafc", "#1e3a8a", "#f472b6", "#a3e635", "#fbbf24"] },
+      "props": [
+        { "kind": "building", "at": [0, -26], "size": [30, 7, 14], "colour": "#d9b48f", "windows": "#ffe9c2", "bands": 1, "roof": "gable" },
+        { "kind": "mountains", "count": 7, "distance": 260, "height": 190, "colour": "#8f6d7d" },
+        { "kind": "trees", "tree": "saguaro", "count": 26, "area": [-120, -150, 120, -40], "height": [5, 10] },
+        { "kind": "flag", "at": [30, -20] }
+      ]
+    },
+    {
+      "id": "corbetts", "leg": "desert", "name": "Corbett's", "city": "Tucson, AZ", "when": "Saturday, April 18, 2026",
+      "sky": "#c9694a", "sky_top": "#2e2f63", "fog": "#9e5f52", "ground": "#b48a62", "light": [-40, 12], "seed": 151,
+      "crowd": { "count": 60, "seats": "standing", "colours": ["#fde68a", "#fca5a5", "#93c5fd", "#86efac", "#f5f5f4"] },
+      "props": [
+        { "kind": "adobe", "at": [0, -24], "count": 5, "colours": ["#d6a77a", "#c98f62", "#e0b48a"] },
+        { "kind": "lights", "from": [-14, -11], "to": [14, -11], "colours": ["#ffe4a1", "#ffb86b", "#ff9f80"] },
+        { "kind": "lights", "from": [-14, -17], "to": [14, -17], "colours": ["#ffe4a1", "#ffb86b", "#ff9f80"] },
+        { "kind": "mountains", "count": 8, "distance": 420, "height": 150, "colour": "#6d4f6b" },
+        { "kind": "trees", "tree": "saguaro", "count": 10, "area": [-80, -80, 80, -40], "height": [5, 9] }
+      ]
+    },
+    {
+      "id": "slc", "leg": "desert", "name": "Marriott Library Plaza and the Gallivan Center", "city": "Salt Lake City, UT", "when": "April 22–23, 2026",
+      "sky": "#b6d2ee", "sky_top": "#4a7fc4", "fog": "#d3e2ee", "ground": "#8bb26a", "light": [-30, 35], "seed": 163,
+      "crowd": { "count": 64, "seats": "lawn_chairs", "colours": ["#be0000", "#f8fafc", "#1f2937", "#0369a1", "#ca8a04"] },
+      "props": [
+        { "kind": "building", "at": [0, -32], "size": [42, 14, 18], "colour": "#b9a38b", "windows": "#cfe6f5", "bands": 4 },
+        { "kind": "mountains", "count": 9, "distance": 380, "height": 260, "colour": "#6c7686", "snow": true },
+        { "kind": "trees", "tree": "oak", "count": 18, "area": [-80, -70, 80, -40], "height": [9, 14] }
+      ]
+    },
+    {
+      "id": "sf", "leg": "west", "name": "Cesar Chavez Elementary School Playground", "city": "San Francisco, CA", "when": "April 29 – May 1, 2026",
+      "sky": "#d6dde3", "sky_top": "#8aa2b8", "fog": "#dfe5ea", "ground": "#55606b", "light": [-20, 30], "seed": 173,
+      "crowd": { "count": 64, "seats": "standing", "colours": ["#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#a855f7", "#f8fafc"] },
+      "props": [
+        { "kind": "mural", "at": [0, -22], "size": [44, 9, 16], "colours": ["#f43f5e", "#f59e0b", "#84cc16", "#06b6d4", "#8b5cf6", "#ec4899"] },
+        { "kind": "playground", "at": [-24, -8] },
+        { "kind": "victorians", "at": [0, -48], "count": 10, "colours": ["#fbcfe8", "#bae6fd", "#fde68a", "#bbf7d0", "#ddd6fe", "#fecaca"] },
+        { "kind": "hills", "count": 6, "colour": "#7e8f6a", "distance": 260 }
+      ]
+    },
+    {
+      "id": "issaquah", "leg": "west", "name": "Aire Craft Festival", "city": "Issaquah, WA", "when": "Saturday, June 6, 2026",
+      "sky": "#bcd9ee", "sky_top": "#5b90cc", "fog": "#d2e3ee", "ground": "#5f9a46", "light": [30, 45], "seed": 181,
+      "crowd": { "count": 60, "seats": "blankets", "colours": ["#166534", "#1d4ed8", "#f59e0b", "#f8fafc", "#7c3aed"] },
+      "props": [
+        { "kind": "tents", "count": 6, "area": [-30, -22, 30, -14], "colours": ["#f8fafc", "#fde68a", "#bfdbfe"] },
+        { "kind": "hills", "count": 6, "colour": "#3f6b3a", "distance": 300 },
+        { "kind": "trees", "tree": "pine", "count": 60, "area": [-140, -160, 140, -40], "height": [16, 30] }
+      ]
+    },
+    {
+      "id": "clark", "leg": "west", "name": "Clark College", "city": "Vancouver, WA", "when": "June 8–9, 2026",
+      "sky": "#c3dcef", "sky_top": "#5d93cf", "fog": "#d8e6ef", "ground": "#6da34d", "light": [-35, 40], "seed": 191,
+      "crowd": { "count": 58, "seats": "lawn_chairs", "colours": ["#1e3a8a", "#f8fafc", "#b91c1c", "#65a30d", "#f59e0b"] },
+      "props": [
+        { "kind": "building", "at": [0, -30], "size": [34, 9, 14], "colour": "#9a6a52", "windows": "#e8f1f8", "bands": 2 },
+        { "kind": "peak", "at": [120, -700], "height": 300, "colour": "#7a8496" },
+        { "kind": "trees", "tree": "pine", "count": 36, "area": [-120, -120, 120, -42], "height": [16, 28] }
+      ]
+    },
+    {
+      "id": "port_angeles", "leg": "west", "name": "Downtown Port Angeles", "city": "Port Angeles, WA", "when": "Saturday, June 13, 2026",
+      "sky": "#f1b98e", "sky_top": "#4a6aa8", "fog": "#dcc0a8", "ground": "#6c7378", "light": [40, 14], "seed": 199,
+      "crowd": { "count": 74, "seats": "standing", "colours": ["#0f766e", "#f8fafc", "#1e3a8a", "#ca8a04", "#9f1239"] },
+      "props": [
+        { "kind": "water", "area": [-300, -400, 300, -40], "colour": "#3c6f8f" },
+        { "kind": "mountains", "count": 10, "distance": 160, "height": 140, "colour": "#59677a", "snow": true },
+        { "kind": "street", "at": [0, 28], "count": 6, "colours": ["#8a6f5a", "#a3836a", "#6d5a4c", "#b49a80"] },
+        { "kind": "trees", "tree": "pine", "count": 12, "area": [-60, -30, -30, -16], "height": [12, 20] },
+        { "kind": "lights", "from": [-12, -11], "to": [12, -11], "colours": ["#fff1c1"] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "_about": "What the performer can wear. Colours are hex; `hat` is none, cap, chef, top, beanie or crown. A costume with no mission naming it in `unlock` (missions.json) is worn from the start.",
+  "costumes": [
+    { "id": "cook", "name": "Line cook", "skin": "#c98f6b", "shirt": "#f5f5f0", "sleeve": "#f5f5f0", "pants": "#2b2b2b", "shoes": "#1a1a1a", "hat": "chef", "hat_colour": "#ffffff", "accent": "#d33f2f" },
+    { "id": "striped", "name": "Striped tee", "skin": "#e0ac85", "shirt": "#1f3b73", "sleeve": "#f2f2f2", "pants": "#3b5ea8", "shoes": "#d33f2f", "hat": "beanie", "hat_colour": "#d33f2f", "accent": "#f2f2f2" },
+    { "id": "popcorn", "name": "Popcorn stand", "skin": "#8d5a3b", "shirt": "#d62828", "sleeve": "#fcfcfc", "pants": "#d62828", "shoes": "#fcfcfc", "hat": "cap", "hat_colour": "#f7d354", "accent": "#f7d354" },
+    { "id": "overalls", "name": "Clean-up crew", "skin": "#f1c27d", "shirt": "#e9c46a", "sleeve": "#e9c46a", "pants": "#3a6ea5", "shoes": "#5b3a29", "hat": "cap", "hat_colour": "#3a6ea5", "accent": "#3a6ea5" },
+    { "id": "bowtie", "name": "Waiter", "skin": "#c68642", "shirt": "#ffffff", "sleeve": "#111111", "pants": "#111111", "shoes": "#111111", "hat": "none", "hat_colour": "#111111", "accent": "#b5179e" },
+    { "id": "tuxedo", "name": "Opening night", "skin": "#7d4b2a", "shirt": "#111827", "sleeve": "#111827", "pants": "#111827", "shoes": "#0b0b0b", "hat": "top", "hat_colour": "#111827", "accent": "#e5e7eb" },
+    { "id": "ringmaster", "name": "Ringmaster", "skin": "#e8b48f", "shirt": "#b3122e", "sleeve": "#b3122e", "pants": "#f5f5f5", "shoes": "#111111", "hat": "top", "hat_colour": "#111111", "accent": "#f2c14e" },
+    { "id": "flamingo", "name": "Flamingo", "skin": "#c98f6b", "shirt": "#ff7eb6", "sleeve": "#ff7eb6", "pants": "#ff9ecb", "shoes": "#ffffff", "hat": "cap", "hat_colour": "#ffffff", "accent": "#00b4d8" },
+    { "id": "desert", "name": "Desert sunset", "skin": "#a8693f", "shirt": "#f77f00", "sleeve": "#fcbf49", "pants": "#2a9d8f", "shoes": "#6d4c41", "hat": "beanie", "hat_colour": "#2a9d8f", "accent": "#fcbf49" },
+    { "id": "mural", "name": "Mural", "skin": "#e0ac85", "shirt": "#8b5cf6", "sleeve": "#06b6d4", "pants": "#f43f5e", "shoes": "#facc15", "hat": "cap", "hat_colour": "#84cc16", "accent": "#f59e0b" },
+    { "id": "sequins", "name": "Sequins", "skin": "#f1c27d", "shirt": "#5b7cfa", "sleeve": "#c0c8ff", "pants": "#5b7cfa", "shoes": "#c0c8ff", "hat": "none", "hat_colour": "#c0c8ff", "accent": "#ffffff" },
+    { "id": "gold", "name": "Finale gold", "skin": "#c68642", "shirt": "#d4a017", "sleeve": "#f5d76e", "pants": "#d4a017", "shoes": "#7a5c00", "hat": "crown", "hat_colour": "#f5d76e", "accent": "#fff4c2" }
+  ]
+}

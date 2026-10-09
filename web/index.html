@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Reference default. connect-src 'self' keeps fetches on this origin;
+       'wasm-unsafe-eval' lets the page compile its own WebAssembly module;
+       form-action 'none' blocks form posts. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Food Truck Circus</title>
+  <meta name="description" content="A 3D trampoline, tower, trapeze and juggling game on a food truck, played across the real venues of Cirque Kikasse's SANTÉ! tour. A fan game made in a day.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-ready="false" data-mode="loading">
+  <canvas id="view"></canvas>
+
+  <div id="hud" hidden>
+    <div id="mission-box">
+      <div class="mission-name" id="h-mission"></div>
+      <div class="venue" id="h-venue"></div>
+      <div class="objective" id="h-objective"></div>
+      <div class="progress" id="h-progress"></div>
+      <div class="timer" id="h-timer" hidden></div>
+    </div>
+    <div id="height-box">
+      <div class="height" id="h-height"></div>
+      <div class="peak" id="h-peak"></div>
+    </div>
+    <div id="callout">
+      <div class="word" id="c-word"></div>
+      <div class="trick" id="c-trick"></div>
+    </div>
+    <div id="bubbles"></div>
+    <div id="hint"></div>
+    <button id="help-toggle" class="small" data-copy="controls_heading"></button>
+    <div id="help" hidden>
+      <table class="controls"></table>
+    </div>
+  </div>
+
+  <div id="map" class="overlay" hidden>
+    <header>
+      <h1 data-copy="title"></h1>
+      <p class="subtitle" data-copy="subtitle"></p>
+    </header>
+    <div class="map-body">
+      <section class="tour">
+        <div class="tour-head">
+          <h2 data-copy="map_heading"></h2>
+          <span id="tour-count"></span>
+        </div>
+        <p class="hint" data-copy="map_hint"></p>
+        <div id="legs"></div>
+        <div id="hasse">
+          <svg id="edges" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+          <div id="nodes"></div>
+        </div>
+      </section>
+      <aside id="brief">
+        <div class="when" id="b-when"></div>
+        <h3 id="b-name"></h3>
+        <div class="venue" id="b-venue"></div>
+        <div class="goal" id="b-goal"></div>
+        <p class="brief" id="b-brief"></p>
+        <div class="best" id="b-best"></div>
+        <div class="unlock" id="b-unlock"></div>
+        <button id="perform" class="big" data-copy="play"></button>
+        <div class="locked" id="b-locked" data-copy="locked" hidden></div>
+        <h4 data-copy="costumes"></h4>
+        <div id="costumes"></div>
+        <details class="about">
+          <summary data-copy="controls_heading"></summary>
+          <table class="controls"></table>
+        </details>
+        <p class="about-text" data-copy="about"></p>
+        <p class="credit" data-copy="credit"></p>
+        <p class="save-note" data-copy="save_note"></p>
+        <div class="tools">
+          <button id="everything" class="small" data-copy="everything"></button>
+          <button id="reset" class="small" data-copy="reset"></button>
+        </div>
+        <div id="build" class="build"></div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="paused" class="overlay center" hidden>
+    <div class="panel">
+      <h2 data-copy="paused"></h2>
+      <button id="resume" class="big" data-copy="resume"></button>
+      <button id="pause-map" data-copy="to_map"></button>
+      <table class="controls"></table>
+    </div>
+  </div>
+
+  <div id="result" class="overlay center" hidden>
+    <div class="panel">
+      <div class="result-word" id="r-word"></div>
+      <h2 id="r-title"></h2>
+      <div id="r-mission"></div>
+      <div id="r-grade"></div>
+      <div id="r-unlock" class="unlock"></div>
+      <div class="buttons">
+        <button id="r-next" class="big" data-copy="next"></button>
+        <button id="r-retry" data-copy="retry"></button>
+        <button id="r-map" data-copy="to_map"></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="message"></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

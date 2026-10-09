@@ -1,0 +1,20 @@
+# Second-order notebook
+
+`B3 Build in self-questioning`. One row per assumption, surprise or divergence, written when it happened. *Divergence*: assumed, found, changed. *Finding*: something learned. *Worklist*: Sam's to do.
+
+| # | Kind | Row |
+|---|---|---|
+| P1 | divergence | The request names trapezes. No presenter's listing of SANTÉ! mentions one (they name the trampoline, the 30–35 ft table-and-chair tower, juggling, the clean-up comedy and the popcorn machine). The game keeps a trapeze over the bed and its copy calls it the game's own act, not the show's. |
+| P2 | finding | The company's events page lists 31 stops; 19 venues are in the US. The Carolina Theatre run is six venues over Oct 8–17, 2026, matching the peer's link. The company's site gives Oct 6–19 for the same run; the game uses the theatre's dates, which name each venue's day. |
+| P3 | divergence | Naming. The repository and title are "Food Truck Circus", a fan game "after Cirque Kikasse's SANTÉ!". A title using the company's name would read as their product. No logo, likeness or promotional text of theirs is used. |
+| B1 | divergence | Vagrancy drives each joint with a key. Here a flight model (centre of mass, flip and twist with conserved angular momentum, pose-set inertia) places Vagrancy-style particles while the performer is in control, and the Verlet solver takes them on a crash. Assumed: per-joint motors would make a first back tuck a long practice job, which suits a sword duel and not a trick game. |
+| B2 | finding | Kept from Vagrancy's D9 on purpose: a held flip or twist key adds a little angular momentum in the air, from nowhere. Real bodies cannot; the game is kinder. `AIR_FLIP`, `AIR_TWIST` in `balance.rs`. |
+| B3 | divergence | The bed's spring first read the depth from the body's visible lowest point, and the stand-to-crouch blend during contact moved that point by 20 cm, which drained the bounce: peaks stalled at 1.7 m with the drive held (test `holding_the_drive_key_bounces_higher_each_time_up_to_the_cap` failed with `top 115264`). The crouch is now shown only for the stop key. Peaks then climb 1.0, 1.4, 2.1, 3.1, 4.5, 5.9, 7.2 m. |
+| B4 | divergence | The first apex cap counted only the speed, not the energy still in the bed, and bounces overshot to 12.8 m. The cap now adds k·d²/2. |
+| B5 | finding | The first flip tuning (170 a tick to 2,000) gave 7.5 turns on one back tuck (`a_back_tuck...` failed, `flip 491933`). Retuned so a held push is about one tucked turn at three metres. A whole flight held in a tuck then over-rotates to 1¼ turns and lands on the back: the test now kicks out at three quarters, as a performer does. That is the skill the game is about. |
+| T1 | worklist | Every number marked *(guess)* in `crates/core/src/balance.rs` waits on Sam playing it. |
+| W1 | divergence | The page first started with every scene line drawn on top of the map's nodes: the SVG of the Hasse diagram's edges took the clicks. `pointer-events: none` on it. Found by the screenshot walk, not a test. |
+| W2 | finding | Playwright's pointer click on a map node failed in Chromium even after W1, reporting `#nodes` as intercepting, while `elementFromPoint` at the node's centre returned the node. The checks click through the page's own script instead; a person's click was never affected. |
+| W3 | divergence | The browser check said passing m01 opens three shows. It opens five: m02, m03, m04 and m06 all come only after m01. The test was wrong, not the game; corrected with the count written out. |
+| W4 | finding | A panic in the browser ("unreachable") after moving between venues: shouting crowd members were kept by index, and a smaller crowd at the next venue left the index past the end. `the_page_walk_through_every_act_does_not_panic` failed with `index out of bounds: the len is 72 but the index is 73` with the fix taken out, and passes with it. |
+| T2 | worklist | Whether the flip feels right (how much a held S turns, how fast a tuck spins) is for Sam to judge by playing. The tests pin that a held push and a kicked-out tuck land a back tuck from three metres. |
