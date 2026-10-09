@@ -129,8 +129,8 @@
     ]
   ],
   "lab": {
-    "title": "Graph Lab",
-    "subtitle": "Give the performer a function. The top of every bounce marks a point on its graph.",
+    "title": "Circus Math Lab",
+    "subtitle": "Three labs where a circus performer does the mathematics: a function plotted by bouncing, the area under a flight counted in popcorn, and juggling patterns written as numbers.",
     "back": "Back to the tour",
     "open": "Graph Lab: plot a function by bouncing",
     "draw_heading": "1 · Draw it",
@@ -192,7 +192,8 @@
       "Draw a function the performer cannot plot. What makes it impossible?",
       "Plot x² with 3 points, then 5, then 17. When does the line through the marks look like the curve?",
       "Ask for |x|. Where does the performer have to work hardest, and why there?",
-      "The performer guesses a push, imagines it, and tries a number in between. How would you choose the next guess?"
+      "The performer guesses a push, imagines it, and tries a number in between. How would you choose the next guess?",
+      "Join the marks with straight lines, then a smooth curve. Which is closer to x²? Is it closer for |x| too?"
     ],
     "done_call": "every point plotted",
     "summary": "{n} points plotted. On average each mark was {cm} cm off on the bed, {units} on the graph.",
@@ -208,7 +209,8 @@
       "imagine_lean": "Imagine leans, interpolate",
       "mark": "Bounce and mark the point",
       "set_up": "Set-up bounce toward it",
-      "bow": "Take a bow"
+      "bow": "Take a bow",
+      "trick": "Choose a trick for the flight"
     },
     "log": {
       "read": "Next: x = {x}. The machine says f({x}) = {y}.",
@@ -221,7 +223,10 @@
       "go": "Go: push {push} beats, lean {lean}.",
       "marked": "Marked ({x}, {y}). The machine said f({fx}) = {fy}: off by {off}.",
       "no_value": "f({x}) has no value ({why}). Skip it.",
-      "bow": "Every point is marked. Come down and bow."
+      "bow": "Every point is marked. Come down and bow.",
+      "imagine_flip": "Imagine holding {key} for {beats} beats: {deg}° of somersault by the landing.",
+      "flip_between": "One whole somersault is 360°: try {beats} beats.",
+      "trick": "A {trick} on the way up and down. The mark is where the feet would be standing, so the trick does not move it."
     },
     "expr": {
       "empty": "Type a formula in x.",
@@ -238,9 +243,118 @@
       "fraction_power": "no value: only whole powers and ^0.5",
       "too_big": "off the chart",
       "drawn": "—"
-    }
+    },
+    "join_heading": "How close is the performer's version?",
+    "join_hint": "The orange line joins the marks: the performer's version of f. The shaded gap is how far it is from f.",
+    "join_lines": "straight lines",
+    "join_smooth": "a smooth curve",
+    "join_label": "Join the marks with",
+    "error_lines": "Joined with straight lines, the performer's version is at most {max} from f (at x = {at}), and {mean} off on average.",
+    "error_smooth": "Joined with a smooth curve, the performer's version is at most {max} from f (at x = {at}), and {mean} off on average.",
+    "tabs": [
+      "Plot a function",
+      "Popcorn under a flight",
+      "Juggling patterns"
+    ],
+    "fly_heading": "Jump, draw, drop popcorn",
+    "fly_intro": "The performer jumps off the ledge, lands on the bed and bounces on to the grass. The flight draws a curve. In every strip of ground the performer drops a column of popcorn as tall as they are high at that moment: the piles add up the area under the curve.",
+    "fly_ledge": "Ledge height (m)",
+    "fly_speed": "Jump speed (m/s)",
+    "fly_angle": "Jump angle (°)",
+    "fly_jump": "Jump!",
+    "fly_strip": "Strip width",
+    "fly_strips": [
+      [
+        16,
+        "1 m"
+      ],
+      [
+        8,
+        "½ m"
+      ],
+      [
+        4,
+        "¼ m"
+      ]
+    ],
+    "fly_rule": "Drop the popcorn at",
+    "fly_rules": [
+      [
+        0,
+        "the start of each strip"
+      ],
+      [
+        1,
+        "the middle of each strip"
+      ],
+      [
+        2,
+        "the end of each strip"
+      ]
+    ],
+    "fly_arcs_heading": "Every flight is a parabola",
+    "fly_arcs_hint": "From where it leaves the ledge or the bed and how fast, each arc of the flight has an equation. The second form shows the top of the arc.",
+    "fly_arc": "Arc {n}",
+    "fly_kernel": "One kernel is a square ¼ m by ¼ m: 1/16 of a square metre.",
+    "fly_summary": "{kernels} kernels of popcorn: {popcorn} m². The Riemann sum (the piles' heights times {width} m) is {riemann} m². The area under the flight, worked out finely, is {fine} m².",
+    "fly_done_call": "the popcorn is down",
+    "fly_numbers": "Each of the three must be a number.",
+    "fly_no_start": "The curve has no value at the ledge (x = -4.6).",
+    "fly_ledge_moved": "The ledge only goes from 3 to 8 m, so it is set at {h} m.",
+    "fly_match_heading": "Match a curve",
+    "fly_match_hint": "Type a curve in x (metres along the ground, the ledge's edge at x = -4.6). The performer finds the jump whose flight fits it best: they imagine jumps and fit a parabola through how far off three of them are, to find the best one.",
+    "fly_match": "Find the jump",
+    "fly_log": {
+      "try_speed": "At {speed} m/s, the best angle is about {angle}°: off by {off} m.",
+      "parabola": "Fit a parabola through the misfits at {l}° and {r}°: its lowest point says try {next}°.",
+      "fit": "Best: {speed} m/s at {angle}°, off by {off} m on average."
+    },
+    "fly_ideas": [
+      "Jump at the same speed with a bigger angle. What happens to the number in front of (x + 4.6)²? Why does the angle not change it?",
+      "Make the strips narrower. Do the popcorn and the area under the flight get closer?",
+      "Drop at the start, the middle, then the end of each strip. Which comes closest? Which is always too much on the way down?",
+      "Type a curve that opens upward, like 0.3(x+1)^2+2. Can any jump draw it? Why not?",
+      "The second arc starts on the bed. Is its equation's first number always about 1?"
+    ],
+    "jug_heading": "Patterns as numbers",
+    "jug_intro": "A juggler throws on a steady beat, the hands taking turns. Each number says how many beats a ball stays up: a 3 comes down three beats later, a 5 five beats later and much higher. A 2 is a ball held, a 0 an empty hand. The pattern repeats.",
+    "jug_label": "Pattern",
+    "jug_presets": [
+      "3",
+      "441",
+      "531",
+      "51",
+      "423",
+      "4",
+      "720",
+      "52512",
+      "5",
+      "330",
+      "43",
+      "432"
+    ],
+    "jug_ok": "{digits} = {sum}, over {n} beats: an average of {balls}, so this pattern needs {balls} balls.",
+    "jug_average": "The throws add up to {sum} over {n} beats: an average of {avg}. No juggler has {avg} balls.",
+    "jug_collision": "The ball thrown on beat {a} and the ball thrown on beat {b} both come down on beat {lands}: two balls into one hand at once.",
+    "jug_digit": "Only the digits 0 to 9: “{ch}” at character {at}.",
+    "jug_empty": "Type a pattern of digits, like 441.",
+    "jug_diagram_hint": "Each dot is a beat. Each arc goes from a throw to the beat it comes down on, as high as the throw; each colour is one ball.",
+    "jug_ideas": [
+      "Why must the numbers average to a whole number? Try 43.",
+      "441 and 531 both use three balls. Find another three-number pattern for three balls.",
+      "Change one digit of 441. Which changes still work?",
+      "What does a 2 do? Try 330 and 423.",
+      "Find a pattern where one ball goes much higher than the rest.",
+      "Odd numbers cross from hand to hand and even numbers come back to the same hand. Why?"
+    ],
+    "anchors": [
+      "#plot",
+      "#popcorn",
+      "#juggling"
+    ],
+    "plot_intro": "Give the performer a function. The top of every bounce marks a point on its graph."
   },
-  "lab_link": "Graph Lab: plot a function by bouncing →",
+  "lab_link": "Circus Math Lab: plot functions, count popcorn, juggle numbers →",
   "moves": "Moves",
   "moves_heading": "Moves, and how to do them",
   "moves_intro": "Every trick the crowd can name. A trick is named by where it starts and ends (feet, seat, back or front), how many times you turn over, how many times you twist, and the shape you hold: tucked, piked or straight.",

@@ -13,11 +13,15 @@ It is a fan game after Cirque Kikasse's *SANTÉ!*, the Québec circus played on 
 - **Costumes.** Twelve, earned on the tour.
 - **Postcards.** Every stop has a postcard, drawn as TikZ in the style of `Sam_Comm_final.png` by `tools/postcards.py` from the venue's own data, and shown on the map, as each show opens, and as the next stop when a show ends.
 
-## The Graph Lab
+## The Circus Math Lab
 
 **Open it:** https://sgilson7.github.io/food-truck-circus/lab.html
 
-A math-circle toy, after Natural Math's way into functions: draw a function by dragging its points, read it as a function machine (x in, f(x) out, with the change from row to row and the change of that change), or type a formula (`x^2`, `2x+1`, `|x|`, `sin(x)`, `(x-1)(x+1)`). Then the performer plots it on the trampoline: **the top of each bounce marks one point**. The performer plans each bounce with a behaviour tree whose leaves press only keys a player could press (Space for so many beats, an arrow for so many beats), choosing the beats by imagining bounces in the game's own physics and interpolating between two that bracket the target. The lab shows the tree with the running node lit and the planner's thinking in words. Between the marks, the feet draw parabolas of their own: gravity's. "You try" hands the keys to the player.
+Three math-circle toys after Natural Math's way in: play first, formalize later, functions as machines before formulas, and "gentle calculus".
+
+- **Plot a function** (`lab.html`). Draw a function by dragging its points, read it as a function machine (x in, f(x) out, the change from row to row and the change of that change), or type a formula (`x^2`, `2x+1`, `|x|`, `sin(x)`). The performer plots it on the trampoline: **the top of each bounce marks one point**, with back tucks, back pikes and tuck jumps on the way. A behaviour tree chooses how many beats to hold Space and the arrow, and when to somersault, by imagining bounces in the game's own physics and interpolating between two that bracket the target; the lab shows the tree and its thinking in words. The marks are joined with straight lines or a smooth curve, drawn beside f with the gap shaded and the largest and average error stated.
+- **Popcorn under a flight** (`lab.html#popcorn`). The performer jumps off a tall ledge, lands on the bed and bounces on to the grass. Every arc of the flight is a parabola, and the lab writes its equation in two forms. In each strip of ground the performer drops a column of popcorn as tall as they are high, so the piles are a Riemann sum and counting kernels counts area; the lab compares the popcorn, the Riemann sum and the area worked out finely. Strip width and where in the strip the popcorn drops are yours to change. "Match a curve" finds the jump whose flight best fits a typed curve, by successive parabolic interpolation: a parabola through three misfits finds the best parabola.
+- **Juggling patterns** (`lab.html#juggling`). Patterns written as numbers (siteswap): each digit is how many beats a ball stays up, so a bigger number is a higher throw. The lab checks a pattern (the number of balls is the average of the digits; no two balls may come down on the same beat), says why one fails, draws the beat diagram, and the performer juggles it.
 
 ## Moves
 
@@ -43,7 +47,7 @@ Food Truck Circus is a [Builder](https://github.com/sgilson7/builder-setting) pr
 
 - **From Iron Vector:** the 3D engine. Q16.16 fixed-point maths with no floats in the core, one instanced draw per mesh, the core computing every matrix, the camera and the HUD, and the page's `gl.js` reused unchanged.
 - **From Vagrancy:** the body. The performer is particles joined by sticks, relaxed in a fixed order in integer maths. In control, a flight model places the particles: a centre of mass, a flip and a twist, and the angular momentum behind each, with the inertia read off the body's shape, so a tuck spins faster than a layout with nothing else said. On a bad landing the same particles go limp into the Verlet solver and tumble. As in Vagrancy, a held key adds a little momentum from nowhere.
-- **The Graph Lab's formulas** are read and evaluated by the core in fixed point too (`crates/core/src/expr.rs`), and its planner (`plot.rs`) imagines on a copy of the same performer the player drives.
+- **The lab's formulas** are read and evaluated by the core in fixed point too (`crates/core/src/expr.rs`), and its planner (`plot.rs`) imagines on a copy of the same performer the player drives.
 - **From Slushline:** the grade words, their thresholds and their flair, and the two recorded voice lines.
 
 The layers:

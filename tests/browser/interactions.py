@@ -153,3 +153,35 @@ def run_more(page, check, engine):
     check(sum(1 for m in marked if m) >= 1, f"the performer has marked a point after eighteen seconds ({marked})")
     lit = page.query_selector_all("#tree li.lit")
     check(len(lit) >= 1, "the tree shows what is running")
+
+    run_labs(page, check, base)
+
+
+def run_labs(page, check, base):
+    """The popcorn and juggling labs.
+
+    By hand: 441 adds to 9 over 3 beats, an average of 3. 43 adds to 7 over 2
+    beats, an average of 3.5. A jump off the 6 m ledge lands on the bed and
+    bounces on to the grass: two arcs.
+    """
+    lab = COPY["lab"]
+    # the same page: switch labs with the tabs, as a person would
+    click(page, "#tabs button:nth-child(3)")
+    page.wait_for_timeout(600)
+    want = lab["jug_ok"].replace("{digits}", "4 + 4 + 1").replace("{sum}", "9").replace("{n}", "3").replace("{balls}", "3")
+    check(page.text_content("#jug-explain") == want, f"441 is three balls ({page.text_content('#jug-explain')!r})")
+    page.fill("#jug-pattern", "43")
+    page.press("#jug-pattern", "Enter")
+    page.wait_for_timeout(300)
+    want = lab["jug_average"].replace("{sum}", "7").replace("{n}", "2").replace("{avg}", "3.5")
+    check(page.text_content("#jug-explain") == want, f"43 averages 3.5 balls ({page.text_content('#jug-explain')!r})")
+
+    click(page, "#tabs button:nth-child(2)")
+    page.wait_for_timeout(300)
+    check(page.is_visible("#fly-jump"), "the popcorn lab's tab shows its panel")
+    click(page, "#fly-jump")
+    page.wait_for_timeout(9000)
+    arcs = page.query_selector_all("#fly-arcs li")
+    check(len(arcs) >= 2, f"the flight has two arcs, off the ledge and off the bed ({len(arcs)})")
+    summary = page.text_content("#fly-summary")
+    check("kernels" in summary and "m²" in summary, f"the popcorn is counted ({summary!r})")

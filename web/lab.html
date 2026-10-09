@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <title>Graph Lab · Food Truck Circus</title>
+  <title>Circus Math Lab · Food Truck Circus</title>
   <meta name="description" content="Give a circus performer a function and watch them plot it on a trampoline, one bounce per point, planning each bounce with a behaviour tree. A math-circle toy.">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="lab.css">
@@ -25,27 +25,35 @@
       <h1 data-copy="lab.title"></h1>
       <p class="subtitle" data-copy="lab.subtitle"></p>
       <a id="back" href="index.html" data-copy="lab.back"></a>
+      <nav id="tabs"></nav>
     </header>
 
     <section class="runbar">
-      <button id="run-auto" class="big" data-copy="lab.run_auto"></button>
-      <button id="run-you" data-copy="lab.run_you"></button>
+      <button id="run-auto" class="big" data-kind="0" data-copy="lab.run_auto"></button>
+      <button id="run-you" data-kind="0" data-copy="lab.run_you"></button>
       <button id="stop" data-copy="lab.stop"></button>
       <label><span data-copy="lab.speed"></span> <select id="speed"></select></label>
       <label><span data-copy="lab.venue"></span> <select id="venue"></select></label>
-      <p id="you-hint" class="hint" data-copy="lab.you_hint" hidden></p>
+      <p id="you-hint" class="hint" data-kind="0" data-copy="lab.you_hint" hidden></p>
     </section>
 
-    <section>
+    <section data-kind="0">
+      <p class="hint" data-copy="lab.plot_intro"></p>
       <h2 data-copy="lab.draw_heading"></h2>
       <p class="hint" data-copy="lab.draw_hint"></p>
       <div id="graph-box">
         <svg id="graph" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
         <div id="graph-labels"></div>
       </div>
+      <h3 data-copy="lab.join_heading"></h3>
+      <p class="hint" data-copy="lab.join_hint"></p>
+      <label class="join"><span data-copy="lab.join_label"></span>
+        <select id="join"><option value="" data-copy="lab.join_lines"></option><option value="1" data-copy="lab.join_smooth"></option></select>
+      </label>
+      <p id="interp-error" class="interp-error"></p>
     </section>
 
-    <section>
+    <section data-kind="0">
       <h2 data-copy="lab.table_heading"></h2>
       <p class="hint" data-copy="lab.table_hint"></p>
       <table id="machine">
@@ -57,7 +65,7 @@
       </table>
     </section>
 
-    <section>
+    <section data-kind="0">
       <h2 data-copy="lab.write_heading"></h2>
       <form id="formula-form">
         <label class="formula"><span data-copy="lab.formula_label"></span> <input id="formula" autocomplete="off" spellcheck="false"></label>
@@ -72,7 +80,7 @@
       <p id="error" class="error"></p>
     </section>
 
-    <section>
+    <section data-kind="0">
       <h2 data-copy="lab.plan_heading"></h2>
       <p class="hint" data-copy="lab.plan_hint"></p>
       <ol id="tree"></ol>
@@ -80,9 +88,54 @@
       <ol id="log"></ol>
     </section>
 
-    <section>
+    <section data-kind="0">
       <h2 data-copy="lab.ideas_heading"></h2>
       <ul id="ideas"></ul>
+    </section>
+    <section data-kind="1">
+      <h2 data-copy="lab.fly_heading"></h2>
+      <p class="hint" data-copy="lab.fly_intro"></p>
+      <div class="sliders">
+        <label><span data-copy="lab.fly_ledge"></span> <input id="fly-ledge" type="range" min="3" max="8" step="0.5"> <b id="fly-ledge-v"></b></label>
+        <label><span data-copy="lab.fly_speed"></span> <input id="fly-speed" type="range" min="1" max="10" step="0.5"> <b id="fly-speed-v"></b></label>
+        <label><span data-copy="lab.fly_angle"></span> <input id="fly-angle" type="range" min="-20" max="70" step="5"> <b id="fly-angle-v"></b></label>
+      </div>
+      <div class="domain">
+        <label><span data-copy="lab.fly_strip"></span> <select id="fly-strip"></select></label>
+        <label><span data-copy="lab.fly_rule"></span> <select id="fly-rule"></select></label>
+      </div>
+      <button id="fly-jump" class="big" data-copy="lab.fly_jump"></button>
+      <div id="fly-box" class="graph-box">
+        <svg id="fly-graph" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <div id="fly-labels" class="graph-labels"></div>
+      </div>
+      <p class="hint" data-copy="lab.fly_kernel"></p>
+      <p id="fly-summary" class="interp-error"></p>
+      <h3 data-copy="lab.fly_arcs_heading"></h3>
+      <p class="hint" data-copy="lab.fly_arcs_hint"></p>
+      <ol id="fly-arcs"></ol>
+      <h3 data-copy="lab.fly_match_heading"></h3>
+      <p class="hint" data-copy="lab.fly_match_hint"></p>
+      <form id="fly-form"><input id="fly-target" autocomplete="off" spellcheck="false"> <button id="fly-match" data-copy="lab.fly_match"></button></form>
+      <p id="fly-error" class="error"></p>
+      <ol id="fly-log"></ol>
+      <h3 data-copy="lab.ideas_heading"></h3>
+      <ul id="fly-ideas"></ul>
+    </section>
+
+    <section data-kind="2">
+      <h2 data-copy="lab.jug_heading"></h2>
+      <p class="hint" data-copy="lab.jug_intro"></p>
+      <form id="jug-form"><label class="formula"><span data-copy="lab.jug_label"></span> <input id="jug-pattern" autocomplete="off" spellcheck="false"></label></form>
+      <div id="jug-presets" class="presets"></div>
+      <p id="jug-explain" class="interp-error"></p>
+      <p class="hint" data-copy="lab.jug_diagram_hint"></p>
+      <div id="jug-box" class="graph-box">
+        <svg id="jug-graph" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <div id="jug-labels" class="graph-labels"></div>
+      </div>
+      <h3 data-copy="lab.ideas_heading"></h3>
+      <ul id="jug-ideas"></ul>
     </section>
     <div id="build" class="build"></div>
   </aside>

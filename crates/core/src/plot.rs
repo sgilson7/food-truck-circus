@@ -8,10 +8,11 @@
 //! core's own physics on a copy of the performer, and interpolating between
 //! two imagined bounces that bracket the target (regula falsi).
 
-use crate::balance::GRAVITY;
+use crate::balance::{BED_Y, GRAVITY};
 use crate::body::BodyDef;
+use crate::body::Pose;
 use crate::expr::{self, Expr, ReadError, Undefined};
-use crate::fx::{int, ratio, ONE};
+use crate::fx::{self, int, ratio, ONE, QUARTER};
 use crate::performer::{Controls, Event, Performer, Phase, Posture};
 use serde::Serialize;
 
@@ -33,6 +34,9 @@ pub const TOL_X: i32 = ratio(6, 100);
 pub const REACH: i32 = ratio(12, 100);
 /// Snap for a dragged point, in the graph's units.
 pub const SNAP: i64 = (ONE / 4) as i64;
+/// Marks this high or higher get a somersault on the way; lower ones a tuck jump.
+pub const TRICK_FLIP_H: i32 = ratio(22, 10);
+pub const TRICK_JUMP_H: i32 = ratio(9, 10);
 
 const Q: i64 = ONE as i64;
 
@@ -224,6 +228,7 @@ pub enum Node {
     Mark,
     SetUp,
     Bow,
+    Trick,
 }
 
 /// Each node: its depth in the tree and its kind (selector, sequence,
@@ -237,6 +242,7 @@ pub const TREE: &[(Node, u8, &str)] = &[
     (Node::OneBounce, 2, "selector"),
     (Node::CloseEnough, 3, "condition"),
     (Node::ImagineLean, 3, "action"),
+    (Node::Trick, 3, "action"),
     (Node::Mark, 3, "action"),
     (Node::SetUp, 3, "action"),
     (Node::Bow, 1, "action"),
@@ -257,6 +263,15 @@ pub struct Choice {
     pub push: i32,
     pub lean: i32,
     pub marking: bool,
+    /// Beats of S (positive) or W (negative) from the start of the contact,
+    /// to set a somersault turning; then tuck, kicking out at three quarters.
+    pub flip: i32,
+    pub tuck: bool,
+    /// The somersault in a pike rather than a tuck (released at three
+    /// quarters too: a pike held to the landing is a seat drop).
+    pub pike: bool,
+    /// Knees to chest at the top of a straight bounce.
+    pub tuck_jump: bool,
 }
 
 /// Beats counted through one contact, so a choice becomes keys.
@@ -278,9 +293,61 @@ impl Choice {
             } else {
                 0
             },
+            flip: if b.contact < self.flip.abs() {
+                self.flip.signum()
+            } else {
+                0
+            },
             ..Controls::default()
         }
     }
+
+    /// The keys in the air: the tuck, held until three quarters of the turn.
+    pub fn air_keys(&self, p: &Performer) -> Controls {
+        let turned = (p.flip - p.flight.flip0).abs();
+        let spinning = p.flip_l != 0 && turned < 3 * QUARTER;
+        Controls {
+            tuck: (self.tuck && !self.pike && spinning) || (self.tuck_jump && p.vel.y.abs() < GRAVITY * 12),
+            pike: self.tuck && self.pike && spinning,
+            ..Controls::default()
+        }
+    }
+}
+
+/// The pen's height at the top of a bounce: where the feet would be if the
+/// performer were standing straight, so a somersault does not move the mark.
+pub fn pen_height(def: &BodyDef, p: &Performer) -> i32 {
+    p.com.y - BED_Y - Performer::reach(def, Pose::Stand, 0)
+}
+
+/// How a choice's flight ends: the turn of the flip by the landing, and
+/// whether it came down on the feet.
+pub fn imagine_landing(def: &BodyDef, p: &Performer, c: Choice) -> Option<(i32, bool)> {
+    let mut q = p.clone();
+    let mut beats = Beats::default();
+    let mut flew = false;
+    for _ in 0..600 {
+        let keys = match q.phase {
+            Phase::Bed(_) => {
+                let k = c.keys(&q, &beats);
+                beats.count(&q);
+                k
+            }
+            Phase::Air => {
+                flew = true;
+                c.air_keys(&q)
+            }
+            _ => Controls::default(),
+        };
+        for e in q.step(def, &keys) {
+            match e {
+                Event::Landed(l) if flew => return Some((l.quarters * QUARTER, l.to == Posture::Feet)),
+                Event::Crashed(_) => return Some((0, false)),
+                _ => {}
+            }
+        }
+    }
+    None
 }
 
 impl Beats {
@@ -298,16 +365,18 @@ pub fn imagine(def: &BodyDef, p: &Performer, c: Choice) -> Option<(i32, i32)> {
     let mut q = p.clone();
     let mut beats = Beats::default();
     for _ in 0..480 {
-        let keys = if matches!(q.phase, Phase::Bed(_)) {
-            let k = c.keys(&q, &beats);
-            beats.count(&q);
-            k
-        } else {
-            Controls::default()
+        let keys = match q.phase {
+            Phase::Bed(_) => {
+                let k = c.keys(&q, &beats);
+                beats.count(&q);
+                k
+            }
+            Phase::Air => c.air_keys(&q),
+            _ => Controls::default(),
         };
         for e in q.step(def, &keys) {
             match e {
-                Event::Peak(h) => return Some((q.com.x, h)),
+                Event::Peak(_) => return Some((q.com.x, pen_height(def, &q))),
                 Event::Crashed(_) => return None,
                 _ => {}
             }
@@ -361,6 +430,9 @@ impl Planner {
 
     /// The keys this tick. `contact` counts landings on the bed so far.
     pub fn keys(&mut self, def: &BodyDef, board: &Board, p: &Performer, contact: u32) -> Controls {
+        if p.phase == Phase::Air {
+            return self.choice.air_keys(p);
+        }
         if !matches!(p.phase, Phase::Bed(Posture::Feet)) || self.done {
             return Controls::default();
         }
@@ -396,6 +468,7 @@ impl Planner {
                 push: -STOP_MAX,
                 lean: 0,
                 marking: false,
+                ..Choice::default()
             };
             // standing still on the bed: the routine is over
             if p.vel.y.abs() < GRAVITY * 2 && p.height() < int(1) + ratio(5, 10) {
@@ -425,6 +498,7 @@ impl Planner {
                     push: u,
                     lean: 0,
                     marking: false,
+                    ..Choice::default()
                 },
             )
             .map(|(_, h)| h)
@@ -493,6 +567,7 @@ impl Planner {
                 push,
                 lean: 0,
                 marking: false,
+                ..Choice::default()
             };
             return;
         }
@@ -513,6 +588,7 @@ impl Planner {
                     push,
                     lean: w,
                     marking: true,
+                    ..Choice::default()
                 },
             )
             .map(|(x, _)| x)
@@ -554,16 +630,100 @@ impl Planner {
                 }
             }
         }
+        let mut choice = Choice {
+            push,
+            lean: bestw.0,
+            marking: true,
+            ..Choice::default()
+        };
+        self.choose_trick(def, p, want_h, &mut choice);
         self.lit.push(Node::Mark);
         self.say(
             "go",
             vec![("push", push.to_string()), ("lean", bestw.0.to_string())],
         );
-        self.choice = Choice {
-            push,
-            lean: bestw.0,
-            marking: true,
-        };
+        self.choice = choice;
+    }
+
+    /// A trick for the marking flight, if it is high enough for one: a
+    /// somersault, its flip beats found by imagining the landing and
+    /// interpolating toward one whole turn, or a tuck jump.
+    fn choose_trick(&mut self, def: &BodyDef, p: &Performer, want_h: i32, choice: &mut Choice) {
+        self.lit.push(Node::Trick);
+        if want_h >= TRICK_FLIP_H {
+            // back somersaults, tucked and piked in turn (a front one off a
+            // forward lean over-rotates in imagination: SECOND-ORDER L6)
+            let dir = 1;
+            let pike = self.marks.len() % 2 == 1;
+            let key = "S";
+            let target = dir * fx::TURN;
+            let mut tried: Vec<(i32, i32, bool)> = Vec::new();
+            let base = *choice;
+            let mut try_flip = |me: &mut Planner, f: i32| -> (i32, bool) {
+                if let Some(&(_, t, ok)) = tried.iter().find(|(b, _, _)| *b == f) {
+                    return (t, ok);
+                }
+                let c = Choice {
+                    flip: dir * f,
+                    tuck: true,
+                    pike,
+                    ..base
+                };
+                let (turn, ok) = imagine_landing(def, p, c).unwrap_or((0, false));
+                let deg = (turn.abs() as i64 * 360 / fx::TURN as i64).to_string();
+                me.say(
+                    "imagine_flip",
+                    vec![("key", key.into()), ("beats", f.to_string()), ("deg", deg)],
+                );
+                tried.push((f, turn, ok));
+                (turn, ok)
+            };
+            let (mut a, mut b) = (4, 18);
+            let (mut ta, _) = try_flip(self, a);
+            let (mut tb, _) = try_flip(self, b);
+            for _ in 0..4 {
+                if b - a <= 1 || tb == ta {
+                    break;
+                }
+                let f = (a + ((b - a) as i64 * (target - ta) as i64 / (tb - ta) as i64) as i32)
+                    .clamp(a + 1, b - 1);
+                self.say("flip_between", vec![("beats", f.to_string())]);
+                let (t, _) = try_flip(self, f);
+                if t == target {
+                    break;
+                }
+                if (t - target) * dir < 0 {
+                    a = f;
+                    ta = t;
+                } else {
+                    b = f;
+                    tb = t;
+                }
+            }
+            let best = tried
+                .iter()
+                .filter(|(_, t, ok)| *ok && *t == target)
+                .min_by_key(|(f, _, _)| *f)
+                .copied();
+            if let Some((f, _, _)) = best {
+                choice.flip = dir * f;
+                choice.tuck = true;
+                choice.pike = pike;
+                let name = if pike { "back pike" } else { "back tuck" };
+                self.say("trick", vec![("trick", name.into())]);
+                return;
+            }
+        }
+        if want_h >= TRICK_JUMP_H {
+            let c = Choice {
+                tuck_jump: true,
+                ..*choice
+            };
+            if let Some((_, true)) = imagine_landing(def, p, c) {
+                choice.tuck_jump = true;
+                self.say("trick", vec![("trick", "tuck jump".into())]);
+            }
+        }
     }
 
     /// The top of a bounce: a mark, if this bounce was meant to make one.
@@ -632,7 +792,8 @@ pub(crate) mod tests {
             for e in p.step(&d, &keys) {
                 match e {
                     Event::Landed(_) => contact += 1,
-                    Event::Peak(h) => {
+                    Event::Peak(_) => {
+                        let h = pen_height(&d, &p);
                         planner.peak(board, p.com.x, h);
                     }
                     _ => {}
@@ -681,6 +842,21 @@ pub(crate) mod tests {
             planner.marks
         );
         assert_eq!(planner.marks.len(), 9);
+        // the high marks get somersaults on the way, and still land
+        let tricks: Vec<&Line> = planner.log.iter().filter(|l| l.key == "trick").collect();
+        let flips: Vec<&Line> = planner
+            .log
+            .iter()
+            .filter(|l| l.key == "imagine_flip" || l.key == "read")
+            .collect();
+        assert!(tricks.len() >= 4, "{:?} {:?}", tricks, flips);
+        assert!(
+            tricks
+                .iter()
+                .any(|l| l.vals[0].1 == "back tuck" || l.vals[0].1 == "back pike"),
+            "{:?}",
+            tricks
+        );
         for m in &planner.marks {
             let i = m.i.unwrap();
             let want_h = board.height(board.ys[i].unwrap());

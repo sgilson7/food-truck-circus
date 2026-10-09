@@ -855,12 +855,7 @@ impl Game {
 
     fn camera_goal(&self) -> (V3, i32, i32, i32) {
         if self.mode == Mode::Lab {
-            return (
-                v3(0, ratio(29, 10), BED_Z),
-                self.cam_yaw,
-                -deg(4) + self.cam_pitch,
-                ratio(105, 10),
-            );
+            return self.lab_camera();
         }
         if self.mode == Mode::Map {
             let a = self.orbit;

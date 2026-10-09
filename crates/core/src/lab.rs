@@ -36,6 +36,12 @@ pub struct LabState {
     pub error: String,
     pub finished: bool,
     pub summary: Option<(i32, i64)>,
+    /// How the marks are joined into the performer's version of f.
+    pub smooth: bool,
+    /// Which lab: 0 plotting, 1 popcorn under a flight, 2 juggling patterns.
+    pub kind: u32,
+    pub fly: Option<crate::labfly::FlyLab>,
+    pub jug: Option<crate::labjuggle::JugLab>,
 }
 
 fn grade_of(off_m: i32) -> i32 {
@@ -58,6 +64,10 @@ impl Game {
             error: String::new(),
             finished: false,
             summary: None,
+            smooth: false,
+            kind: 0,
+            fly: None,
+            jug: None,
         });
         let v = self.tour.venue_index(START_VENUE);
         self.set_stage(v, Fittings::default());
@@ -76,8 +86,65 @@ impl Game {
         }
     }
 
-    /// The performer back at the first column, standing; marks cleared.
+    /// Switches between the labs: 0 plotting, 1 popcorn, 2 juggling.
+    pub fn lab_kind(&mut self, kind: u32) {
+        let Some(l) = self.lab.as_mut() else { return };
+        l.kind = kind.min(2);
+        l.running = false;
+        if l.kind == 1 && l.fly.is_none() {
+            l.fly = Some(crate::labfly::FlyLab::new());
+        }
+        if l.kind == 2 && l.jug.is_none() {
+            l.jug = Some(crate::labjuggle::JugLab::new());
+        }
+        self.lab_reset();
+        self.snap_camera();
+    }
+
+    pub(crate) fn lab_camera(&self) -> (V3, i32, i32, i32) {
+        let kind = self.lab.as_ref().map(|l| l.kind).unwrap_or(0);
+        let (yaw, pitch) = (self.cam_yaw, self.cam_pitch);
+        match kind {
+            1 => (
+                v3(ratio(12, 10), ratio(37, 10), BED_Z + ONE / 2),
+                yaw,
+                -crate::fx::deg(6) + pitch,
+                int(16),
+            ),
+            2 => {
+                let p = crate::game::juggle_spot();
+                (
+                    v3(p.x, ratio(21, 10), p.z),
+                    yaw - crate::fx::deg(8),
+                    crate::fx::deg(3) + pitch,
+                    ratio(68, 10),
+                )
+            }
+            _ => (
+                v3(0, ratio(34, 10), BED_Z),
+                yaw,
+                -crate::fx::deg(4) + pitch,
+                int(12),
+            ),
+        }
+    }
+
+    /// The performer back at the start of the current lab.
     pub fn lab_reset(&mut self) {
+        match self.lab.as_ref().map(|l| l.kind) {
+            Some(1) => {
+                self.fly_reset();
+                if let Some(l) = self.lab.as_mut() {
+                    l.running = false;
+                }
+                return;
+            }
+            Some(2) => {
+                self.jug_reset();
+                return;
+            }
+            _ => {}
+        }
         let Some(l) = self.lab.as_mut() else { return };
         let mut p = Performer::on_bed(&self.def, -QUARTER);
         p.lean_build = true;
@@ -166,6 +233,13 @@ impl Game {
         }
     }
 
+    /// Joins the marks with straight lines, or with a smooth curve.
+    pub fn lab_join(&mut self, smooth: bool) {
+        if let Some(l) = self.lab.as_mut() {
+            l.smooth = smooth;
+        }
+    }
+
     pub fn lab_speed(&mut self, scale: u32) {
         if let Some(l) = self.lab.as_mut() {
             l.scale = (scale as i64).clamp(1, 8);
@@ -179,6 +253,25 @@ impl Game {
     }
 
     pub(crate) fn lab_step(&mut self, bits: u32) {
+        let kind = self.lab.as_ref().map(|l| l.kind).unwrap_or(0);
+        if kind != 0 {
+            if kind == 1 {
+                self.fly_step();
+            } else {
+                self.jug_step();
+            }
+            let lowest = self.perf.body.lowest(&self.def);
+            let centre = self.perf.body.centre(&self.def);
+            let press = if lowest < BED_Y + ONE / 20 && crate::stage::over_bed(centre.x, centre.z) {
+                Some((centre.x, centre.z, (BED_Y - lowest).max(0)))
+            } else {
+                None
+            };
+            self.cloth.step(press);
+            self.crowd.tick();
+            return;
+        }
+        let _ = bits;
         let on = |n: &str| {
             bits & crate::game::ACTIONS
                 .iter()
@@ -203,11 +296,21 @@ impl Game {
         };
         let events = self.perf.step(&self.def, &c);
         let mut said: Vec<(i32, String)> = Vec::new();
+        let mut tricks: Vec<(i32, String)> = Vec::new();
         let l = self.lab.as_mut().expect("lab");
         for e in events {
             match e {
-                Event::Landed(_) => l.contacts += 1,
-                Event::Peak(h) if l.running => {
+                Event::Landed(land) => {
+                    l.contacts += 1;
+                    // the crowd names the tricks done on the way
+                    if l.running {
+                        if let Some(n) = self.book.name(&land).filter(|n| n.value > 0) {
+                            tricks.push((self.book.grade(&land), n.name));
+                        }
+                    }
+                }
+                Event::Peak(_) if l.running => {
+                    let h = plot::pen_height(&self.def, &self.perf);
                     let x = self.perf.com.x;
                     let mark = if l.auto {
                         l.planner.peak(&l.board, x, h)
@@ -272,6 +375,10 @@ impl Game {
             self.crowd.cheer(ONE * g / 300);
             self.sound("boing", 40);
         }
+        for (g, name) in tricks {
+            let w = self.book.word(g, &mut self.rng);
+            self.say(&w, name, 3);
+        }
         if let Some(g) = finished_now {
             let w = self.book.plain_word(g);
             let line = self.copy_str(&["lab", "done_call"]);
@@ -292,6 +399,24 @@ impl Game {
 
     pub(crate) fn lab_draw(&self, b: &mut Batch) {
         let Some(l) = &self.lab else { return };
+        if l.kind != 0 {
+            for (k, p) in l.trail.iter().enumerate() {
+                if k % 2 == 0 {
+                    b.push(
+                        Mesh::Sphere,
+                        &render::boxed(*p, v3(ratio(6, 100), ratio(6, 100), ratio(6, 100))),
+                        rgb("#ffb4a2"),
+                        ONE / 2,
+                    );
+                }
+            }
+            if l.kind == 1 {
+                self.fly_draw(b);
+            } else {
+                self.jug_draw(b);
+            }
+            return;
+        }
         let board = &l.board;
         let z = BED_Z - ratio(3, 100);
         let at = |x: i64, y: i64| v3(board.bed_x(x), BED_Y + board.height(y), z);
@@ -360,8 +485,19 @@ impl Game {
                 );
             }
         }
-        // the marks
+        // the performer's version of f: the marks joined up
         let marks = if l.auto { &l.planner.marks } else { &l.free };
+        let joined = interpolate(marks, l.smooth, 24);
+        for w in joined.windows(2) {
+            b.rod(
+                Mesh::Cube,
+                at(w[0].0, w[0].1),
+                at(w[1].0, w[1].1),
+                ratio(3, 100),
+                rgb("#f77f00"),
+                ONE * 2 / 3,
+            );
+        }
         for m in marks {
             b.push(
                 Mesh::Sphere,
@@ -501,6 +637,25 @@ impl Game {
                 )
             })
             .collect();
+        let marks_now = if l.auto { &l.planner.marks } else { &l.free };
+        let joined = interpolate(marks_now, l.smooth, 24);
+        let interp = if joined.len() >= 2 {
+            let line: Vec<String> = joined
+                .iter()
+                .map(|(x, y)| format!("{},{}", gx(*x), gy((*y).clamp(board.lo - Q, board.hi + Q))))
+                .collect();
+            let gap = gap_of(board, &joined);
+            json!({
+                "curve": line.join(" "),
+                "gap": gap.polygon.iter().map(|(x, y)| format!("{},{}", gx(*x), gy((*y).clamp(board.lo - Q, board.hi + Q)))).collect::<Vec<_>>().join(" "),
+                "text": fill(
+                    &lab(if l.smooth { "error_smooth" } else { "error_lines" }),
+                    &[("max", expr::show(gap.max)), ("at", expr::show(gap.at)), ("mean", expr::show(gap.mean))],
+                ),
+            })
+        } else {
+            Value::Null
+        };
         let summary = l.summary.map(|(cm_off, units)| {
             fill(
                 &lab("summary"),
@@ -512,6 +667,9 @@ impl Game {
             )
         });
         json!({
+            "kind": l.kind,
+            "fly": self.fly_json(),
+            "jug": self.jug_json(),
             "formula": board.formula,
             "drawn": board.drawn,
             "error": l.error,
@@ -526,6 +684,8 @@ impl Game {
             "scale": l.scale,
             "venue": self.venue,
             "venues": self.tour.venues.iter().map(|v| format!("{} · {}", v.name, v.city)).collect::<Vec<_>>(),
+            "interp": interp,
+            "smooth": l.smooth,
             "graph": {
                 "curve": curve,
                 "samples": samples,
@@ -543,6 +703,96 @@ impl Game {
         })
         .to_string()
     }
+}
+
+/// The marks joined up, left to right: straight lines from mark to mark, or
+/// a smooth curve through them (Catmull-Rom: each piece bends toward the
+/// marks either side of it), `steps` points a piece.
+pub fn interpolate(marks: &[Mark], smooth: bool, steps: i64) -> Vec<(i64, i64)> {
+    let mut pts: Vec<(i64, i64)> = marks.iter().map(|m| (m.x, m.y)).collect();
+    pts.sort_by_key(|p| p.0);
+    pts.dedup_by_key(|p| p.0);
+    if pts.len() < 2 {
+        return pts;
+    }
+    if !smooth {
+        return pts;
+    }
+    let n = pts.len();
+    let mut out = Vec::new();
+    for i in 0..n - 1 {
+        let p0 = pts[i.saturating_sub(1)];
+        let (p1, p2) = (pts[i], pts[i + 1]);
+        let p3 = pts[(i + 2).min(n - 1)];
+        for k in 0..steps {
+            let t = k * Q / steps;
+            let t2 = t * t / Q;
+            let t3 = t2 * t / Q;
+            let cr = |a: i64, b: i64, c: i64, d: i64| -> i64 {
+                (2 * b
+                    + (c - a) * t / Q
+                    + (2 * a - 5 * b + 4 * c - d) * t2 / Q
+                    + (3 * b - a - 3 * c + d) * t3 / Q)
+                    / 2
+            };
+            out.push((cr(p0.0, p1.0, p2.0, p3.0), cr(p0.1, p1.1, p2.1, p3.1)));
+        }
+    }
+    out.push(pts[n - 1]);
+    out
+}
+
+/// How far the joined-up marks are from f, between the first mark and the
+/// last: the largest gap and where, the mean gap, and the region between
+/// the two curves as a polygon (f along the top, the join back along the
+/// bottom, whichever is which).
+pub struct Gap {
+    pub max: i64,
+    pub at: i64,
+    pub mean: i64,
+    pub polygon: Vec<(i64, i64)>,
+}
+
+pub fn gap_of(board: &Board, joined: &[(i64, i64)]) -> Gap {
+    let truth = |x: i64| -> Option<i64> {
+        if board.drawn {
+            let pts: Vec<(i64, i64)> = (0..board.n())
+                .filter_map(|i| board.ys[i].as_ref().ok().map(|y| (board.x(i), *y)))
+                .collect();
+            Some(plot::lerp_table(&pts, x))
+        } else {
+            board.eval(x).ok()
+        }
+    };
+    let (x0, x1) = (joined[0].0, joined[joined.len() - 1].0);
+    let steps = 120;
+    let mut gap = Gap {
+        max: 0,
+        at: x0,
+        mean: 0,
+        polygon: Vec::new(),
+    };
+    let mut back = Vec::new();
+    let mut count = 0i64;
+    for k in 0..=steps {
+        let x = x0 + (x1 - x0) * k / steps;
+        let mine = plot::lerp_table(joined, x);
+        if let Some(f) = truth(x) {
+            let d = (mine - f).abs();
+            gap.mean += d;
+            count += 1;
+            if d > gap.max {
+                gap.max = d;
+                gap.at = x;
+            }
+            gap.polygon.push((x, f));
+            back.push((x, mine));
+        }
+    }
+    gap.mean /= count.max(1);
+    back.reverse();
+    gap.polygon.extend(back);
+    gap
 }
 
 /// The column nearest a graph x.
@@ -632,6 +882,32 @@ mod tests {
         assert_eq!(g.lab_formula("2x+1"), "");
         assert_eq!(g.lab_domain("3", "1"), g.copy_str(&["lab", "domain_order"]));
         assert_eq!(g.lab_domain("-pi", "pi"), "");
+    }
+
+    #[test]
+    fn straight_lines_through_three_points_of_x_squared_miss_by_a_known_amount() {
+        use super::{gap_of, interpolate};
+        use crate::plot::{Board, Mark};
+        let q = super::Q;
+        // marks exactly on x² at -2, 0 and 2: straight lines from (−2, 4) to
+        // (0, 0) are y = −2x, and x² − (−2x) is largest at x = −1, where it
+        // is 1; the mean gap over [−2, 2] is 2/3 of that
+        let board = Board::new("x^2", -2 * q, 2 * q, 3).unwrap();
+        let marks: Vec<Mark> = [(-2, 4), (0, 0), (2, 4)]
+            .iter()
+            .map(|&(x, y)| Mark {
+                i: None,
+                x: x * q,
+                y: y * q,
+            })
+            .collect();
+        let g = gap_of(&board, &interpolate(&marks, false, 24));
+        assert!((g.max - q).abs() < q / 100, "{}", g.max);
+        assert_eq!(g.at.abs(), q);
+        assert!((g.mean - q * 2 / 3).abs() < q / 50, "{}", g.mean);
+        // a smooth curve through the same marks bends toward x² and misses less
+        let s = gap_of(&board, &interpolate(&marks, true, 24));
+        assert!(s.mean < g.mean, "{} vs {}", s.mean, g.mean);
     }
 
     #[test]

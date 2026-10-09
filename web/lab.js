@@ -43,6 +43,8 @@ async function start() {
     return;
   }
   game.lab_open();
+  const named = copy.lab.anchors.indexOf(window.location.hash);
+  if (named > 0) game.lab_kind(named);
 
   const canvas = el("view");
   const renderer = makeRenderer(canvas, N, { vertex, fragment }, (id) => mesh(id));
@@ -69,6 +71,75 @@ async function start() {
     el("points").appendChild(o);
   }
   for (const idea of copy.lab.ideas) el("ideas").appendChild(make("li", null, idea));
+  for (const idea of copy.lab.fly_ideas) el("fly-ideas").appendChild(make("li", null, idea));
+  for (const idea of copy.lab.jug_ideas) el("jug-ideas").appendChild(make("li", null, idea));
+
+  // the three labs, as tabs
+  copy.lab.tabs.forEach((name, i) => {
+    const b = make("button", null, name);
+    b.type = "button";
+    b.addEventListener("click", () => {
+      game.lab_kind(i);
+      b.blur();
+      shown = -1;
+    });
+    el("tabs").appendChild(b);
+  });
+
+  // popcorn under a flight
+  for (const [v, label] of copy.lab.fly_strips) {
+    const o = make("option", null, label);
+    o.value = v;
+    el("fly-strip").appendChild(o);
+  }
+  for (const [v, label] of copy.lab.fly_rules) {
+    const o = make("option", null, label);
+    o.value = v;
+    el("fly-rule").appendChild(o);
+  }
+  const flySet = () => {
+    el("fly-error").textContent = game.fly_set(el("fly-ledge").value, el("fly-speed").value, el("fly-angle").value);
+    shown = -1;
+  };
+  for (const id of ["fly-ledge", "fly-speed", "fly-angle"]) el(id).addEventListener("input", flySet);
+  const flyStrips = () => {
+    game.fly_strips(el("fly-strip").value, el("fly-rule").value);
+    shown = -1;
+  };
+  el("fly-strip").addEventListener("change", flyStrips);
+  el("fly-rule").addEventListener("change", flyStrips);
+  el("fly-jump").addEventListener("click", () => {
+    wake(BUILD);
+    game.fly_jump();
+    el("fly-jump").blur();
+    shown = -1;
+  });
+  el("fly-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    el("fly-error").textContent = game.fly_match(el("fly-target").value);
+    shown = -1;
+  });
+
+  // juggling patterns
+  const jugSet = (text) => {
+    wake(BUILD);
+    game.jug_pattern(text);
+    shown = -1;
+  };
+  el("jug-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    jugSet(el("jug-pattern").value);
+  });
+  el("jug-pattern").addEventListener("change", () => jugSet(el("jug-pattern").value));
+  for (const p of copy.lab.jug_presets) {
+    const b = make("button", null, p);
+    b.type = "button";
+    b.addEventListener("click", () => {
+      el("jug-pattern").value = p;
+      jugSet(p);
+    });
+    el("jug-presets").appendChild(b);
+  }
 
   let shown = -1;
   const edited = (message) => {
@@ -97,6 +168,10 @@ async function start() {
     edited("");
   });
   el("speed").addEventListener("change", () => game.lab_speed(el("speed").value));
+  el("join").addEventListener("change", () => {
+    game.lab_join(el("join").value !== "");
+    shown = -1;
+  });
   el("venue").addEventListener("change", () => game.lab_venue(el("venue").value));
   const run = (auto) => () => {
     wake(BUILD);
@@ -143,8 +218,98 @@ async function start() {
     svg.appendChild(l);
   }
 
+  function axisLabels(box, ticksX, ticksY, xAxis, yAt) {
+    for (const t of ticksX) {
+      const sp = make("span", null, t.label);
+      sp.style.left = `${t.at}%`;
+      sp.style.top = `${xAxis}%`;
+      box.appendChild(sp);
+    }
+    for (const t of ticksY) {
+      const sp = make("span", "y", t.label);
+      sp.style.left = `${yAt}%`;
+      sp.style.top = `${t.at}%`;
+      box.appendChild(sp);
+    }
+  }
+
+  function svgEl(svgNode, tag, attrs) {
+    const e = document.createElementNS(svgNode.namespaceURI, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    svgNode.appendChild(e);
+    return e;
+  }
+
+  function drawFly(f) {
+    const g = f.graph;
+    const svgNode = el("fly-graph");
+    const labelBox = el("fly-labels");
+    svgNode.replaceChildren();
+    labelBox.replaceChildren();
+    for (const t of g.ticks_y) svgEl(svgNode, "line", { class: "grid", x1: "0", y1: t.at, x2: "100", y2: t.at });
+    svgEl(svgNode, "line", { class: "axis", x1: "0", y1: g.x_axis, x2: "100", y2: g.x_axis });
+    svgEl(svgNode, "rect", { class: "ledge", x: g.ledge.x, y: g.ledge.y, width: g.ledge.w, height: g.ledge.h });
+    svgEl(svgNode, "line", { class: "bed", x1: g.bed.x, y1: g.bed.y, x2: `${g.bed.x}`, y2: g.bed.y });
+    for (const b of g.bars) svgEl(svgNode, "rect", { class: "bar", x: b.x, y: b.y, width: b.w, height: b.h });
+    if (g.target) svgEl(svgNode, "polyline", { class: "target", points: g.target });
+    if (g.path) svgEl(svgNode, "polyline", { class: "path", points: g.path });
+    axisLabels(labelBox, g.ticks_x, g.ticks_y, g.x_axis, g.ticks_x[0].at);
+    el("fly-ledge").value = f.ledge;
+    el("fly-speed").value = f.speed;
+    el("fly-angle").value = f.angle;
+    el("fly-ledge-v").textContent = f.ledge;
+    el("fly-speed-v").textContent = f.speed;
+    el("fly-angle-v").textContent = f.angle;
+    el("fly-strip").value = f.strip;
+    el("fly-rule").value = f.rule;
+    el("fly-summary").textContent = f.summary || "";
+    const arcs = el("fly-arcs");
+    arcs.replaceChildren();
+    for (const a of f.arcs) {
+      const li = make("li", null, a.standard);
+      li.appendChild(make("span", null, a.top));
+      arcs.appendChild(li);
+    }
+    const log = el("fly-log");
+    log.replaceChildren();
+    for (const t of f.log) log.appendChild(make("li", null, t));
+    if (f.target && document.activeElement !== el("fly-target")) el("fly-target").value = f.target;
+    el("lab-summary").hidden = !f.summary;
+    el("lab-summary").textContent = f.summary || "";
+  }
+
+  function drawJug(j) {
+    const svgNode = el("jug-graph");
+    const labelBox = el("jug-labels");
+    svgNode.replaceChildren();
+    labelBox.replaceChildren();
+    for (const a of j.arcs) {
+      const p = svgEl(svgNode, "path", { d: a.d });
+      p.style.stroke = a.colour;
+      if (a.bad) p.setAttribute("class", "bad");
+    }
+    for (const b of j.beats) {
+      const dot = make("div", `beat h${b.hand}`);
+      dot.style.left = `${b.x}%`;
+      dot.style.top = "82%";
+      labelBox.appendChild(dot);
+      const d = make("div", "digit", b.label);
+      d.style.left = `${b.x}%`;
+      d.style.top = "87%";
+      labelBox.appendChild(d);
+    }
+    el("jug-explain").textContent = j.explain;
+    el("jug-explain").classList.toggle("error", !j.valid);
+    if (document.activeElement !== el("jug-pattern")) el("jug-pattern").value = j.text;
+    el("lab-summary").hidden = true;
+  }
+
   let pen = null;
   function drawPanel(lab) {
+    document.body.dataset.kind = lab.kind;
+    [...el("tabs").children].forEach((b, i) => b.classList.toggle("on", i === lab.kind));
+    if (lab.fly && lab.kind === copy.lab.anchors.indexOf("#popcorn")) return drawFly(lab.fly);
+    if (lab.jug && lab.kind === copy.lab.anchors.indexOf("#juggling")) return drawJug(lab.jug);
     const g = lab.graph;
     svg.replaceChildren();
     labels.replaceChildren();
@@ -164,6 +329,12 @@ async function start() {
     }
     line("axis", "0", g.x_axis, "100", g.x_axis);
     if (g.y_axis) line("axis", g.y_axis, "0", g.y_axis, "100");
+    if (lab.interp) {
+      const gap = document.createElementNS(svg.namespaceURI, "polygon");
+      gap.setAttribute("class", "gap");
+      gap.setAttribute("points", lab.interp.gap);
+      svg.appendChild(gap);
+    }
     for (const pts of g.curve) {
       const p = document.createElementNS(svg.namespaceURI, "polyline");
       p.setAttribute("class", "curve");
@@ -182,6 +353,13 @@ async function start() {
       });
       labels.appendChild(d);
     }
+    if (lab.interp) {
+      const p = document.createElementNS(svg.namespaceURI, "polyline");
+      p.setAttribute("class", "interp");
+      p.setAttribute("points", lab.interp.curve);
+      svg.appendChild(p);
+    }
+    el("interp-error").textContent = lab.interp ? lab.interp.text : "";
     // the marks on top of the dots they were aiming for
     for (const m of g.marks) {
       const d = make("div", "mark");
@@ -233,13 +411,13 @@ async function start() {
     const { bits, dx, dy } = input.read();
     game.advance(now, bits, dx, dy);
     const lab = JSON.parse(game.lab());
-    const key = `${lab.version} ${lab.running} ${lab.finished} ${lab.formula} ${lab.n}`;
+    const key = `${lab.kind} ${lab.version} ${lab.fly && lab.fly.version} ${lab.fly && lab.fly.phase} ${lab.jug && lab.jug.version} ${lab.running} ${lab.finished} ${lab.formula} ${lab.n} ${lab.smooth}`;
     if (key !== lastKey || shown < 0) {
       lastKey = key;
       shown = lab.version;
       drawPanel(lab);
     }
-    if (pen) {
+    if (pen && lab.kind === 0) {
       pen.style.left = `${lab.graph.pen.x}%`;
       pen.style.top = `${lab.graph.pen.y}%`;
     }

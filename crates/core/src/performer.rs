@@ -355,6 +355,17 @@ impl Performer {
         self.flight.base_y = BED_Y;
     }
 
+    /// Leaves a ledge into a free flight (the Popcorn Lab's jump).
+    pub fn launch(&mut self, vel: V3) {
+        let mut ev = Vec::new();
+        self.vel = vel;
+        self.flip_l = 0;
+        self.twist_l = 0;
+        self.hold_frame = None;
+        self.take_off(Posture::Feet, Surface::Ground, &mut ev);
+        self.flight.base_y = 0;
+    }
+
     fn bounce(&mut self, def: &BodyDef, c: &Controls, posture: Posture, events: &mut Vec<Event>) {
         let lowest = self.lowest_in(def, &self.shape);
         let depth = (BED_Y - lowest).clamp(0, BED_MAX_DEPTH);

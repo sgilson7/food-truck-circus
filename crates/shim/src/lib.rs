@@ -175,6 +175,38 @@ impl Game {
         self.inner.lab_reset()
     }
 
+    pub fn lab_kind(&mut self, kind: u32) {
+        self.inner.lab_kind(kind)
+    }
+
+    pub fn fly_set(&mut self, ledge: &str, speed: &str, angle: &str) -> String {
+        self.inner.fly_set(ledge, speed, angle)
+    }
+
+    pub fn fly_strips(&mut self, sixteenths: u32, rule: u32) {
+        self.inner.fly_strips(sixteenths, rule)
+    }
+
+    pub fn fly_jump(&mut self) {
+        self.inner.fly_jump()
+    }
+
+    pub fn fly_match(&mut self, src: &str) -> String {
+        self.inner.fly_match(src)
+    }
+
+    pub fn fly_clear_target(&mut self) {
+        self.inner.fly_clear_target()
+    }
+
+    pub fn jug_pattern(&mut self, src: &str) {
+        self.inner.jug_pattern(src)
+    }
+
+    pub fn lab_join(&mut self, smooth: bool) {
+        self.inner.lab_join(smooth)
+    }
+
     pub fn lab_speed(&mut self, scale: u32) {
         self.inner.lab_speed(scale)
     }
