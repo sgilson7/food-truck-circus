@@ -14,6 +14,7 @@ pub mod acts;
 pub mod balance;
 pub mod body;
 pub mod crowd;
+pub mod expr;
 pub mod fx;
 pub mod game;
 pub mod geom;

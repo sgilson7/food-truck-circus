@@ -138,6 +138,11 @@ pub struct Performer {
     /// The pose the body is held in by an act, and where the act holds it.
     pub held_pose: Pose,
     pub hold_frame: Option<Affine>,
+    /// The Graph Lab's lean: the bed stops all sideways travel on landing,
+    /// and each beat an arrow is held on the bed adds `LEAN_STEP` of speed,
+    /// so how long the key is held sets how far a bounce carries. The
+    /// shows keep the arrow's fixed travel.
+    pub lean_build: bool,
 }
 
 /// The rotation of the body: heading, then flip about the body's left-right
@@ -201,6 +206,7 @@ impl Performer {
             rose_from: shape,
             held_pose: Pose::Stand,
             hold_frame: None,
+            lean_build: false,
         }
     }
 
@@ -367,12 +373,18 @@ impl Performer {
         }
         if c.kill {
             self.vel.y -= fx::mul(self.vel.y, KILL_DAMP);
-            self.vel.x = 0;
-            self.vel.z = 0;
+            if !self.lean_build {
+                self.vel.x = 0;
+                self.vel.z = 0;
+            }
         }
         self.vel.y += ay;
-        // On the bed the turn keys turn the performer; the arrows set travel.
-        if posture == Posture::Feet && depth > 0 {
+        if self.lean_build {
+            let lean = facing(self.heading, 0).scale(LEAN_STEP * c.travel);
+            self.vel.x += lean.x;
+            self.vel.z += lean.z;
+        } else if posture == Posture::Feet && depth > 0 {
+            // On the bed the turn keys turn the performer; the arrows set travel.
             self.heading += c.turn * -TURN_RATE;
             let want = facing(self.heading, 0).scale(TRAVEL * c.travel);
             self.vel.x = want.x;
@@ -544,6 +556,10 @@ impl Performer {
         match l.surface {
             Surface::Bed => {
                 self.phase = Phase::Bed(l.to);
+                if self.lean_build {
+                    self.vel.x = 0;
+                    self.vel.z = 0;
+                }
             }
             s => {
                 self.phase = Phase::Stand(s);

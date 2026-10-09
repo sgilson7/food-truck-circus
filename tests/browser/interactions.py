@@ -26,9 +26,9 @@ COPY = json.loads((ROOT / "data" / "copy.json").read_text())
 
 
 def click(page, selector):
-    # a click from the page's own script: Playwright's pointer click scrolls
-    # the overlay mid-click in some engines (SECOND-ORDER row W2)
-    page.evaluate("s => document.querySelector(s).click()", selector)
+    # a real pointer click: a node that moves under the pointer on press
+    # loses its click, which a scripted click would hide (SECOND-ORDER W5)
+    page.click(selector, timeout=5000)
     page.wait_for_timeout(200)
 
 

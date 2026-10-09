@@ -62,6 +62,10 @@ pub const AIR_TWIST: i32 = 2;
 pub const SHAPE_RATE: i32 = ratio(1, 5);
 /// Travel: the arrow keys give this horizontal speed at takeoff, a tick.
 pub const TRAVEL: i32 = ratio(3, 100);
+/// The Graph Lab's lean: speed added for each beat an arrow is held on the
+/// bed, metres a tick (0.12 m/s a beat). Eighteen beats, a whole contact,
+/// give 2.2 m/s.
+pub const LEAN_STEP: i32 = ratio(2, 1000);
 /// Walking on the ground or the roof, metres a tick (2.4 m/s).
 pub const WALK: i32 = ratio(4, 100);
 /// Turning on the ground, the bed or the roof, turn units a tick.

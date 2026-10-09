@@ -266,7 +266,9 @@ table.controls td:first-child { font-weight: 700; white-space: nowrap; }
 
 .node {
   position: absolute;
-  transform: translate(-50%, -50%);
+  /* centred by margins, not a transform: the shared button:active rule
+     replaces `transform`, and a node that jumps on press loses its click */
+  margin: -21px 0 0 -21px;
   width: 42px; height: 42px;
   border-radius: 50%;
   border: 3px solid var(--ink);
@@ -288,7 +290,9 @@ table.controls td:first-child { font-weight: 700; white-space: nowrap; }
   color: #ffd166;
   -webkit-text-stroke: 1px var(--ink);
 }
-.node.selected { outline: 4px solid var(--truck); outline-offset: 3px; transform: translate(-50%, -50%) scale(1.15); }
+.node.selected { outline: 4px solid var(--truck); outline-offset: 3px; transform: scale(1.15); }
+.node:active { transform: translateY(2px); }
+.node.selected:active { transform: scale(1.15) translateY(2px); }
 .node .label {
   position: absolute;
   top: 100%;
