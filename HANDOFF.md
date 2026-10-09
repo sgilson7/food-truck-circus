@@ -16,6 +16,11 @@ Food Truck Circus is a Builder project built in one session on 2026-10-09 from `
 
 `./scripts/check.sh`: fmt, clippy with warnings as errors, the core tests and 11 boundary tests, the release wasm build, the wasm import audit, and the browser check in Chromium, Firefox and WebKit (`BUILDER CHECK PASSED`). Run `cargo test -p ftc_core 2>&1 | grep "test result"` for the counts.
 
+## Live (2026-10-09)
+
+- Game: https://sgilson7.github.io/food-truck-circus/ (Actions run 37988796320: check and deploy passed). `BUILDER_ORIGIN=https://sgilson7.github.io/food-truck-circus tests/browser/check.py` passed in Chromium, Firefox and WebKit against the live site.
+- Scholar site: https://sgilson7.github.io/projects/food-truck-circus/, commit "Add Food Truck Circus to the games" in `~/Documents/website`; `make check` (56 pages, no findings), `make packet` (44 routes clean), `make gate` and `make gate-live` passed.
+
 ## What remains
 
 - Sam's playtest. Every feel number in `balance.rs` is the agent's guess (SECOND-ORDER T1, T2). Tests show the shows can be passed (the first by holding Space; the roof, the trapeze and a back tuck by scripted inputs), not that they are fun.
