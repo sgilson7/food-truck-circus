@@ -27,11 +27,15 @@ Food Truck Circus is a Builder project built in one session on 2026-10-09 from `
 
 Live at https://sgilson7.github.io/food-truck-circus/lab.html; `./scripts/check.sh` passed in three engines, and the browser check passed against the live site in three engines. The scholar site's page describes the labs (`make gate-live` passed).
 
+## French mode (2026-10-10)
+
+`data/fr/` holds the French words (a whole copy file, and overlays by id for tricks, missions, costumes and venues; `crates/core/src/lang.rs`). `Game::set_french` swaps them in; the pages keep the choice in `localStorage` under `food-truck-circus.lang` and reload on the button. French postcards: `python3 tools/postcards.py --fr` into `web/art/venue/fr/`. Notebook rows F1–F4. Live and checked in three engines against the live site.
+
 ## What remains
 
 - Sam's playtest. Every feel number in `balance.rs` is the agent's guess (SECOND-ORDER T1, T2). Tests show the shows can be passed (the first by holding Space; the roof, the trapeze and a back tuck by scripted inputs), not that they are fun.
 - The routine, double back, rudy and full-in shows have not been passed by a scripted player; they rely on the same flight model as the back tuck.
-- Sam's eye on the high-bounce flicker (T3) and the labs' copy (T4).
+- Sam's eye on the high-bounce flicker (T3) and the labs' copy (T4); a French speaker's read of `data/fr/` (T5).
 - The scenes are sketches built from boxes, cones and spheres. A venue looking like itself is Sam's call.
 
 ## What the next session must not assume
