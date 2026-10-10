@@ -1,8 +1,9 @@
 // Sound, synthesized from data/sounds.json, and the crowd's voice. The core
 // says what happened and which word was called; this file only performs it.
 // The white noise comes from the core's generator, since the page may not
-// draw random numbers. OH NO and DARN are Sam's own recordings (Slushline's);
-// every other word is spoken by the browser's built-in speech voice.
+// draw random numbers. OH NO and DARN are Sam's own recordings (Slushline's),
+// NON and ZUT his mom's; every other word is spoken by the browser's
+// built-in speech voice.
 import { noise } from "./pkg/ftc_shim.js";
 
 let ctx = null;
@@ -11,17 +12,18 @@ let noiseBuffer = null;
 let recipes = null;
 let sayings = null;
 let voiceLang = "";
-let useClips = true;
+let voiceClips = {};
 let muted = false;
 const clips = new Map();
 
-// The crowd's words come from the copy of the language in use: Sam's two
-// recordings in English, the browser's own voice in that language otherwise.
+// The crowd's words come from the copy of the language in use, which also
+// names the recording each word plays (French plays his mom's for OH NO and
+// DARN); a word with no recording is spoken in that language.
 export function setup(sounds, copy) {
   recipes = sounds;
   sayings = copy.say;
   voiceLang = copy.voice_lang;
-  useClips = copy.voice_clips;
+  voiceClips = copy.voice_clips;
 }
 
 async function loadClips(build) {
@@ -102,7 +104,7 @@ export function call(word) {
   if (!ctx || muted) return;
   const crowd = recipes.words[word];
   if (crowd) play(crowd, recipes.percent);
-  const clip = useClips ? clips.get(word) : null;
+  const clip = clips.get(voiceClips[word]);
   if (clip) {
     const src = ctx.createBufferSource();
     const g = ctx.createGain();

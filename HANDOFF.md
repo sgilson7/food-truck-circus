@@ -31,6 +31,8 @@ Live at https://sgilson7.github.io/food-truck-circus/lab.html; `./scripts/check.
 
 `data/fr/` holds the French words (a whole copy file, and overlays by id for tricks, missions, costumes and venues; `crates/core/src/lang.rs`). `Game::set_french` swaps them in; the pages keep the choice in `localStorage` under `food-truck-circus.lang` and reload on the button. French postcards: `python3 tools/postcards.py --fr` into `web/art/venue/fr/`. Notebook rows F1–F4. Live and checked in three engines against the live site.
 
+**The crowd's groans (2026-10-10).** A fall or drop calls one of `groans` in `data/tricks.json` (oh_no, darn, non, zut), each as likely. `voice_clips` in each copy file names the recording a word plays: in English every groan plays its own (Sam's OH NO and DARN, his mom's NON and ZUT), and in French only Mom's play, with OH NO reading NON. Rows F5–F6. `./scripts/check.sh`: BUILDER CHECK PASSED (chromium, firefox, webkit).
+
 ## What remains
 
 - Sam's playtest. Every feel number in `balance.rs` is the agent's guess (SECOND-ORDER T1, T2). Tests show the shows can be passed (the first by holding Space; the roof, the trapeze and a back tuck by scripted inputs), not that they are fun.

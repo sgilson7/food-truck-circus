@@ -7,8 +7,9 @@
     { "at": 45, "word": "ok" },
     { "at": 0, "word": "miss" }
   ],
-  "_judgements": "Slushline's thresholds (data/judgements.json there, lowered at Sam's request on 2026-10-05) and its flair: 30 in a hundred judged landings say the hip word instead. A crash is oh_no, or darn as its flair; both are Sam's own recordings from Slushline.",
-  "flair": { "pct": 30, "words": { "excellent": "groovy", "great": "funky", "nice": "smooth", "ok": "chill", "miss": "darn", "oh_no": "darn" } },
+  "_judgements": "Slushline's thresholds (data/judgements.json there, lowered at Sam's request on 2026-10-05) and its flair: 30 in a hundred judged landings say the hip word instead. A crash or a drop calls one of the groans, each as likely: oh_no and darn are Sam's own recordings from Slushline, non and zut his mom's (2026-10-10). In French, OH NO and DARN read NON and ZUT in her voice (copy voice_clips).",
+  "flair": { "pct": 30, "words": { "excellent": "groovy", "great": "funky", "nice": "smooth", "ok": "chill", "miss": "darn" } },
+  "groans": ["oh_no", "darn", "non", "zut"],
   "freestyle": "Freestyle: {flips} flips, {twists} twists",
   "roof": "{trick} to the truck roof",
   "ground": "{trick}, off the trampoline",

@@ -8,7 +8,12 @@
   "seed": 17,
   "clip_gain": 1.1,
   "voice": { "rate": 1.08, "pitch": 1.25, "volume": 1 },
-  "clips": { "oh_no": "data/voice/oh-no.wav", "darn": "data/voice/darn.wav" },
+  "clips": {
+    "oh_no": "data/voice/oh-no.wav",
+    "darn": "data/voice/darn.wav",
+    "non": "data/voice/non.wav",
+    "zut": "data/voice/zut.wav"
+  },
   "recipes": {
     "boing": [
       { "type": "osc", "wave": "sine", "from": 150, "to": 430, "at": 0, "attack": 0.005, "dur": 0.22, "gain": 0.32 },
@@ -72,6 +77,8 @@
     "chill": "clap",
     "miss": "groan",
     "oh_no": "groan",
-    "darn": "groan"
+    "darn": "groan",
+    "non": "groan",
+    "zut": "groan"
   }
 }

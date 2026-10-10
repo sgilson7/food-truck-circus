@@ -45,6 +45,7 @@ struct Flair {
 struct BookFile {
     judgements: Vec<Judgement>,
     flair: Flair,
+    groans: Vec<String>,
     freestyle: String,
     roof: String,
     ground: String,
@@ -180,6 +181,17 @@ impl TrickBook {
             }
         }
         word
+    }
+
+    /// What the crowd calls when something goes wrong: one of the groans,
+    /// each as likely as the next.
+    pub fn groan(&self, rng: &mut Rng) -> String {
+        let last = self.f.groans.len() as i32 - 1;
+        self.f
+            .groans
+            .get(rng.range(0, last) as usize)
+            .cloned()
+            .unwrap_or_default()
     }
 
     pub fn top_word(&self) -> &str {
@@ -328,6 +340,16 @@ mod tests {
             !g.iter().any(|m| m.0 == "to_feet"),
             "a move between positions is not a trick"
         );
+    }
+
+    #[test]
+    fn a_fall_calls_every_groan_about_as_often() {
+        let b = book();
+        let mut rng = Rng::new(7);
+        for w in ["oh_no", "darn", "non", "zut"] {
+            let n = (0..1000).filter(|_| b.groan(&mut rng) == w).count();
+            assert!((180..320).contains(&n), "{w}: {n} in 1000");
+        }
     }
 
     #[test]

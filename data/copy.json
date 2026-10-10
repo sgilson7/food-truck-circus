@@ -58,7 +58,9 @@
     "funky": "FUNKY",
     "smooth": "SMOOTH",
     "chill": "CHILL",
-    "darn": "DARN"
+    "darn": "DARN",
+    "non": "NON",
+    "zut": "ZUT"
   },
   "say": {
     "excellent": "Excellent!",
@@ -73,7 +75,9 @@
     "bravo": "Bravo!",
     "encore": "Encore!",
     "oh_no": "Oh no!",
-    "darn": "Darn!"
+    "darn": "Darn!",
+    "non": "Non !",
+    "zut": "Zut !"
   },
   "height_called": "{metres} metres",
   "result_pass": "Show done",
@@ -378,5 +382,5 @@
   "postcard_tag": "NEXT STOP ON THE TOUR",
   "lang_switch": "Français",
   "voice_lang": "en-US",
-  "voice_clips": true
+  "voice_clips": { "oh_no": "oh_no", "darn": "darn", "non": "non", "zut": "zut" }
 }

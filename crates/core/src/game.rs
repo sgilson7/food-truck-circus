@@ -797,7 +797,7 @@ impl Game {
                 Event::Crashed(_) => {
                     signals.push(Signal::Crashed);
                     self.sound("crash", 80);
-                    let w = self.book.flair("oh_no".into(), &mut self.rng);
+                    let w = self.book.groan(&mut self.rng);
                     self.say(&w, String::new(), 4);
                     self.crowd.cheer(ONE / 3);
                 }
@@ -874,7 +874,7 @@ impl Game {
                         }
                         None => {
                             self.sound("drop", 60);
-                            let w = self.book.flair("oh_no".into(), &mut self.rng);
+                            let w = self.book.groan(&mut self.rng);
                             self.say(&w, String::new(), 3);
                         }
                     }
@@ -894,7 +894,7 @@ impl Game {
                 }
                 Signal::TowerFell => {
                     self.sound("crash", 100);
-                    let w = self.book.flair("oh_no".into(), &mut self.rng);
+                    let w = self.book.groan(&mut self.rng);
                     self.say(&w, String::new(), 6);
                 }
                 _ => {}
@@ -956,7 +956,7 @@ impl Game {
         let word = if o.passed {
             self.book.plain_word(o.grade)
         } else {
-            self.book.flair("oh_no".into(), &mut self.rng)
+            self.book.groan(&mut self.rng)
         };
         let next = (0..self.tour.missions.len()).find(|&i| {
             i != self.selected

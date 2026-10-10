@@ -107,6 +107,26 @@ mod tests {
     }
 
     #[test]
+    fn every_groan_has_a_word_and_a_recording_and_french_hears_only_french() {
+        let tricks: Value = serde_json::from_str(include_str!("../../../data/tricks.json")).unwrap();
+        let sounds: Value = serde_json::from_str(include_str!("../../../data/sounds.json")).unwrap();
+        let en: Value = serde_json::from_str(include_str!("../../../data/copy.json")).unwrap();
+        let fr: Value = serde_json::from_str(include_str!("../../../data/fr/copy.json")).unwrap();
+        for g in tricks["groans"].as_array().unwrap() {
+            let g = g.as_str().unwrap();
+            for copy in [&en, &fr] {
+                assert!(copy["judge"][g].is_string(), "{g} has no word");
+                let clip = copy["voice_clips"][g].as_str().unwrap_or("");
+                assert!(sounds["clips"][clip].is_string(), "{g} plays no recording");
+            }
+            // in English each groan is its own voice; in French all are Mom's
+            assert_eq!(en["voice_clips"][g], g);
+            let heard = fr["voice_clips"][g].as_str().unwrap();
+            assert!(heard == "non" || heard == "zut", "{g} plays {heard} in French");
+        }
+    }
+
+    #[test]
     fn every_mission_costume_trick_venue_and_leg_has_french_words() {
         let pairs = [
             (
