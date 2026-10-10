@@ -14,6 +14,7 @@ tanks).
 
     python3 tools/postcards.py            # writes web/art/venue/<id>.png and tools/postcards/<id>.tex
     python3 tools/postcards.py rtp        # one venue
+    python3 tools/postcards.py --fr       # the French cards, into .../venue/fr/
 
 Facts each postcard must get right (the skill's list of what an image
 generator gets wrong), and where this file enforces each:
@@ -34,11 +35,18 @@ import json, math, random, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+# `--fr` draws the French cards: the tag from data/fr/copy.json, and each
+# venue's French name and date from data/fr/venues.json laid over the English
+FRENCH = "--fr" in sys.argv
 DATA = json.loads((ROOT / "data" / "venues.json").read_text())
-COPY = json.loads((ROOT / "data" / "copy.json").read_text())
-OUT = ROOT / "web" / "art" / "venue"
+COPY = json.loads((ROOT / "data" / ("fr/copy.json" if FRENCH else "copy.json")).read_text())
+if FRENCH:
+    words = json.loads((ROOT / "data" / "fr" / "venues.json").read_text())["venues"]
+    for v in DATA["venues"]:
+        v.update(words.get(v["id"], {}))
+OUT = ROOT / "web" / "art" / "venue" / ("fr" if FRENCH else "")
 # the TikZ each postcard compiles from, kept beside this script
-SRC = ROOT / "tools" / "postcards"
+SRC = ROOT / "tools" / "postcards" / ("fr" if FRENCH else "")
 
 # The canvas, in cm, and the camera: looking toward the truck from the lawn.
 W, H = 16.0, 9.0
@@ -541,7 +549,7 @@ def postcard(venue):
 
 
 def main():
-    only = set(sys.argv[1:])
+    only = set(a for a in sys.argv[1:] if not a.startswith("--"))
     OUT.mkdir(parents=True, exist_ok=True)
     for v in DATA["venues"]:
         if only and v["id"] not in only:

@@ -1,0 +1,109 @@
+{
+  "_about": "Les mots des missions en français, par id ; tout le reste vient de data/missions.json.",
+  "missions": {
+    "m01": {
+      "name": "Trouve ton rebond",
+      "brief": "Maintiens Espace pour pousser le trampoline quand il te lance. Chaque poussée te fait monter plus haut. Monte à 3 mètres trois fois. Appuie sur C pour arrêter de rebondir."
+    },
+    "m02": {
+      "name": "Chute assise",
+      "brief": "Maintiens K pour carper en redescendant : tu atterris assis, jambes tendues devant toi. Le trampoline te renvoie sur tes pieds. Fais deux chutes assises."
+    },
+    "m03": {
+      "name": "Premier salto",
+      "brief": "Rebondis haut, puis maintiens S pendant que le trampoline te lance pour lancer un salto arrière. Maintiens J pour grouper et tourner plus vite, et lâche pour t'ouvrir avant d'atterrir."
+    },
+    "m04": {
+      "name": "La machine à pop-corn déborde",
+      "brief": "La machine dans la fenêtre du camion répand du pop-corn sur le trampoline. Attrape 12 grains en une minute. N'importe quelle partie du corps compte."
+    },
+    "m05": {
+      "name": "Sur le camion",
+      "brief": "Rebondis haut, puis maintiens la flèche du haut pendant que le trampoline te lance pour aller vers le camion. Atterris sur tes pieds sur le toit."
+    },
+    "m06": {
+      "name": "Échauffement à deux balles",
+      "brief": "Appuie sur A ou D pour lancer la première balle. Puis appuie sur A quand une balle tombe dans la main de gauche de l'écran, et sur D pour la main de droite. Un anneau s'allume sous la main au bon moment. Dix rattrapages."
+    },
+    "m07": {
+      "name": "Finale à Durham",
+      "brief": "Quatre figures sans chute, qui valent 60 points ensemble. Les rebonds entre elles sont permis ; une chute remet le compte à zéro. Chutes assises, chutes dos, saltos et vrilles comptent tous."
+    },
+    "m08": {
+      "name": "Salto avant groupé et barani",
+      "brief": "W lance un salto avant. Un barani est un salto avant avec une demi-vrille : maintiens aussi A ou D pendant la poussée."
+    },
+    "m09": {
+      "name": "Quatre chaises de haut",
+      "brief": "Empile des chaises sur la table, sur le toit du camion, et tiens-toi dessus. La tour penche et le vent la pousse ; WASD ou les flèches ramènent le sommet. Appuie sur Espace pour monter la chaise suivante et, quand il y en a quatre, encore Espace pour l'équilibre sur les mains. Tiens deux secondes."
+    },
+    "m10": {
+      "name": "Cascade à trois balles",
+      "brief": "Une troisième balle et un rythme plus rapide : A pour la main de gauche de l'écran, D pour la droite, quand son anneau s'allume. Douze rattrapages."
+    },
+    "m11": {
+      "name": "Demi-tour assis et berceau",
+      "brief": "Depuis une chute assise, maintiens A ou D en quittant le trampoline pour une demi-vrille vers une autre chute assise : le demi-tour assis. Touche S brièvement pour un quart de tour sur le dos : une chute dos. Depuis le dos, A ou D te fait vriller sur le dos à nouveau : le berceau."
+    },
+    "m12": {
+      "name": "Premier trapèze",
+      "brief": "Le trapèze est un ajout du jeu au spectacle. Maintiens W quand tu balances vers l'avant et S vers l'arrière pour balancer plus haut. Appuie sur Espace pour lâcher, et atterris sur tes pieds sur le trampoline."
+    },
+    "m13": {
+      "name": "Salto arrière depuis le trapèze",
+      "brief": "Lâche à l'avant du balancement : la rotation du balancier lance un salto arrière. Groupe avec J, ouvre-toi, atterris sur tes pieds."
+    },
+    "m14": {
+      "name": "Salto arrière vrillé",
+      "brief": "Un salto arrière avec une vrille complète. Maintiens S et A ou D ensemble pendant la poussée, reste tendu, et la vrille fait le tour."
+    },
+    "m15": {
+      "name": "Tempête de pop-corn",
+      "brief": "Vingt-cinq grains en une minute. Rebondis haut : le pop-corn part près de la fenêtre."
+    },
+    "m16": {
+      "name": "Salto sur le camion",
+      "brief": "N'importe quel salto qui atterrit sur le toit. Un salto arrière groupé avec la flèche du haut maintenue, ou un salto avant vers le camion."
+    },
+    "m17": {
+      "name": "Double salto arrière",
+      "brief": "Deux saltos arrière en un seul vol. Monte haut d'abord, maintiens S pendant tout le contact, et groupe serré."
+    },
+    "m18": {
+      "name": "Huit chaises de haut",
+      "brief": "Huit chaises, puis trois secondes en équilibre sur les mains. Plus la tour est haute, plus elle penche lentement, et plus elle part loin avant qu'on le remarque."
+    },
+    "m19": {
+      "name": "Rudy",
+      "brief": "Un salto avant avec une vrille et demie. W et A ou D pendant la poussée, puis reste tendu."
+    },
+    "m20": {
+      "name": "Cinq d'affilée",
+      "brief": "Cinq figures sans chute, qui valent 160 points. Glisse des saltos."
+    },
+    "m21": {
+      "name": "Double depuis le trapèze",
+      "brief": "Balance haut, lâche à l'avant, maintiens S et groupe serré pour deux saltos arrière jusqu'au trampoline."
+    },
+    "m22": {
+      "name": "Longue cascade",
+      "brief": "Trente rattrapages avec trois balles."
+    },
+    "m23": {
+      "name": "Du pop-corn sur la cour de récré",
+      "brief": "Trente-cinq grains en soixante-quinze secondes. Le toit est près de la fenêtre."
+    },
+    "m24": {
+      "name": "Dix mètres",
+      "brief": "Douze chaises sur la table, sur le camion : environ dix mètres, aussi haut que la tour du vrai spectacle. Puis un équilibre sur les mains."
+    },
+    "m25": {
+      "name": "Full-in",
+      "brief": "Un double salto arrière avec une vrille complète dans le premier salto. Maintiens S et une touche de vrille pendant la poussée."
+    },
+    "m26": {
+      "name": "Grande finale",
+      "brief": "Le dernier spectacle de la tournée. Six figures sans chute, qui valent 300 points."
+    }
+  }
+}

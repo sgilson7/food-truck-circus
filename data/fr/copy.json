@@ -1,0 +1,382 @@
+{
+  "_about": "Chaque texte que lit un joueur, hors lieux, missions, costumes et noms de figures. Le cœur remplit les {accolades}. Les clés suivent data/copy.json ; un test les tient égales.",
+  "title": "Food Truck Circus",
+  "subtitle": "Un jeu d'hommage au spectacle SANTÉ! du Cirque Kikasse, le cirque joué sur un food truck, fait pour son passage à Durham en octobre 2026.",
+  "loading": "Le camion arrive…",
+  "no_webgl": "Ce navigateur n'a pas WebGL 2, avec lequel le jeu dessine.",
+  "about": "Le Cirque Kikasse est une compagnie de cirque du Québec. Dans SANTÉ!, ses artistes rebondissent sur un trampoline à côté de leur food truck, empilent tables et chaises en une tour d'environ dix mètres, jonglent, font le ménage maladroitement exprès et laissent déborder la machine à pop-corn. Ce jeu est un hommage, pas leur spectacle : chaque étape de la carte est un vrai lieu de leur tournée 2025–2026, et le trapèze est un ajout du jeu.",
+  "map_heading": "La tournée",
+  "map_hint": "Choisis un spectacle. Un spectacle s'ouvre quand ceux qui le précèdent sur la carte sont réussis.",
+  "play": "En piste",
+  "locked": "Réussis d'abord les spectacles qui précèdent celui-ci.",
+  "costumes": "Costumes",
+  "costume_locked": "Gagné à « {mission} »",
+  "wearing": "Porté",
+  "best": "Meilleur : {word}",
+  "not_yet": "Pas encore joué",
+  "unlocks": "Fait gagner le costume « {costume} »",
+  "objective": "Objectif",
+  "height_now": "{metres} m",
+  "peak": "Record {metres} m",
+  "time_left": "encore {seconds} s",
+  "progress": "{done} sur {target}",
+  "routine_points": "{points} sur {target} points",
+  "tower_lean": "Penche de {degrees}°",
+  "tower_height": "{metres} m de haut",
+  "handstand": "Équilibre sur les mains ! Tiens bon",
+  "add_chair": "Espace : monter la chaise suivante",
+  "start_handstand": "Espace : passer en équilibre sur les mains",
+  "release": "Espace : lâcher",
+  "climb_back": "Retour à la barre…",
+  "juggle_streak": "Série {streak}",
+  "juggle_start": "Appuie sur A ou D pour lancer la première balle",
+  "juggle_hint": "A : la main de gauche · D : la main de droite · appuie quand son anneau s'allume",
+  "hand_keys": [
+    "A",
+    "D"
+  ],
+  "goals": {
+    "height": "Monter à {metres} m au-dessus du trampoline {times} fois",
+    "tricks": "Réussir : {list}",
+    "routine": "{count} figures sans chute, pour {score} points",
+    "roof": "Atterrir sur le toit du camion",
+    "roof_trick": "Atterrir sur le toit du camion après un salto",
+    "popcorn": "Attraper {count} grains de pop-corn en {seconds} secondes",
+    "tower": "Empiler {chairs} chaises et tenir l'équilibre sur les mains {hold} s",
+    "trapeze": "Lâcher le trapèze et atterrir sur les pieds",
+    "trapeze_trick": "Lâcher le trapèze en {trick}",
+    "juggle": "{catches} rattrapages avec {balls} balles"
+  },
+  "judge": {
+    "excellent": "EXCELLENT",
+    "great": "SUPER",
+    "nice": "BIEN",
+    "ok": "OK",
+    "miss": "RATÉ",
+    "oh_no": "OH NON",
+    "groovy": "GÉNIAL",
+    "funky": "STYLÉ",
+    "smooth": "FLUIDE",
+    "chill": "TRANQUILLE",
+    "darn": "ZUT"
+  },
+  "say": {
+    "excellent": "Excellent !",
+    "great": "Super !",
+    "nice": "Bien !",
+    "ok": "D'accord !",
+    "miss": "Raté !",
+    "groovy": "Génial !",
+    "funky": "Stylé !",
+    "smooth": "Fluide !",
+    "chill": "Tranquille !",
+    "bravo": "Bravo !",
+    "encore": "Encore !",
+    "oh_no": "Oh non !",
+    "darn": "Zut !"
+  },
+  "height_called": "{metres} mètres",
+  "result_pass": "Spectacle réussi",
+  "result_fail": "Le spectacle continue. Essaie encore",
+  "result_unlock": "Nouveau costume : {costume}",
+  "result_grade": "Note : {grade} sur 100",
+  "retry": "Encore",
+  "next": "Spectacle suivant",
+  "to_map": "Carte de la tournée",
+  "resume": "Retour au spectacle",
+  "paused": "Pause",
+  "restart_hint": "R recommence le spectacle · Échap met en pause",
+  "save_note": "Ta tournée est gardée dans ce navigateur.",
+  "reset": "Recommencer la tournée",
+  "reset_confirm": "Appuie encore pour effacer la tournée",
+  "everything": "Ouvrir tous les spectacles (pour essayer)",
+  "controls_heading": "Commandes",
+  "controls": [
+    [
+      "Espace (maintenir)",
+      "Pousser le trampoline : plus haut à chaque rebond. Aussi : lâcher, monter une chaise, équilibre sur les mains"
+    ],
+    [
+      "C",
+      "Arrêter de rebondir"
+    ],
+    [
+      "S / W",
+      "Salto arrière / salto avant : maintenir pendant que le trampoline te lance (clavier AZERTY : S / Z)"
+    ],
+    [
+      "A / D",
+      "Vrille à gauche / à droite ; en jonglage, la main de gauche et celle de droite (AZERTY : Q / D)"
+    ],
+    [
+      "J",
+      "Grouper : tourner plus vite"
+    ],
+    [
+      "K",
+      "Carper : atterrir assis"
+    ],
+    [
+      "Flèches",
+      "Aller vers le camion ou s'en éloigner, tourner ; marcher au sol"
+    ],
+    [
+      "Glisser la souris",
+      "Regarder autour"
+    ],
+    [
+      "R · Échap",
+      "Recommencer · Pause"
+    ]
+  ],
+  "lab": {
+    "title": "Labo de maths du cirque",
+    "subtitle": "Trois labos où un artiste de cirque fait les maths : une fonction tracée en rebondissant, l'aire sous un vol comptée en pop-corn, et des figures de jonglage écrites en nombres.",
+    "back": "Retour à la tournée",
+    "open": "Labo des graphes : tracer une fonction en rebondissant",
+    "draw_heading": "1 · La dessiner",
+    "draw_hint": "Fais glisser un point vers le haut ou le bas. La ligne qui passe par les points, c'est ta fonction.",
+    "table_heading": "2 · La machine à fonction",
+    "table_hint": "On met x, on obtient f(x). Puis regarde de combien f(x) change d'une ligne à la suivante.",
+    "col_x": "x entre",
+    "col_y": "f(x) sort",
+    "col_marked": "marqué",
+    "col_off": "écart",
+    "col_change": "variation",
+    "col_change2": "variation de la variation",
+    "write_heading": "3 · L'écrire",
+    "formula_label": "f(x) =",
+    "formula_hint": "Essaie x^2, 2x+1, |x|, (x-1)(x+1), sin(x), sqrt(x), floor(x). La virgule ou le point pour les décimales : 0,5x.",
+    "drawn_formula": "dessinée à la main",
+    "from": "x de",
+    "to": "à",
+    "points": "points",
+    "presets": [
+      "x^2",
+      "2x+1",
+      "-x^2+4",
+      "|x|",
+      "x^3",
+      "sin(x)",
+      "sqrt(x)",
+      "floor(x)",
+      "4-|x|",
+      "(x-1)(x+1)"
+    ],
+    "run_auto": "Regarder l'artiste la tracer",
+    "run_you": "À toi",
+    "stop": "Recommencer",
+    "you_hint": "Maintiens Espace pour rebondir plus haut, C pour redescendre. Maintiens → pendant que le trampoline te lance pour te pencher à droite, ← à gauche. Chaque sommet que tu atteins est marqué.",
+    "speed": "vitesse",
+    "speeds": [
+      [
+        1,
+        "normale"
+      ],
+      [
+        2,
+        "moitié"
+      ],
+      [
+        4,
+        "un quart"
+      ]
+    ],
+    "venue": "scène",
+    "plan_heading": "Comment l'artiste décide",
+    "plan_hint": "Un arbre de comportement : les nœuds allumés sont en cours. L'artiste n'appuie que sur des touches que tu pourrais presser, et choisit combien de temps en imaginant d'abord ses rebonds.",
+    "thinking_heading": "Ce que pense l'artiste",
+    "ideas_heading": "Pour un cercle de maths",
+    "ideas": [
+      "Regarde les pieds entre deux marques. Quelle forme a chaque vol ? Est-ce que ça dépend de la fonction demandée ?",
+      "Regarde la colonne « variation » pour x². Puis la variation de la variation. Essaie 2x+1, puis x³. Que remarques-tu ?",
+      "Dessine une fonction que l'artiste ne peut pas tracer. Qu'est-ce qui la rend impossible ?",
+      "Trace x² avec 3 points, puis 5, puis 17. À partir de quand la ligne qui passe par les marques ressemble-t-elle à la courbe ?",
+      "Demande |x|. Où l'artiste doit-il travailler le plus dur, et pourquoi là ?",
+      "L'artiste devine une poussée, l'imagine, puis essaie un nombre entre les deux. Comment choisirais-tu l'essai suivant ?",
+      "Relie les marques par des segments, puis par une courbe lisse. Laquelle est la plus proche de x² ? Et pour |x| ?"
+    ],
+    "done_call": "tous les points sont tracés",
+    "summary": "{n} points tracés. En moyenne, chaque marque était à {cm} cm dans les airs, {units} sur le graphe.",
+    "domain_order": "Le premier nombre doit être plus petit que le second.",
+    "tree": {
+      "plot": "Tracer la fonction",
+      "next_point": "Point suivant",
+      "points_left": "Reste-t-il des points ?",
+      "read_machine": "Demander f(x) à la machine",
+      "imagine_push": "Imaginer des poussées, interpoler",
+      "one_bounce": "En un seul rebond ?",
+      "close_enough": "Assez près",
+      "imagine_lean": "Imaginer des élans, interpoler",
+      "mark": "Rebondir et marquer le point",
+      "set_up": "Rebond de préparation",
+      "bow": "Saluer",
+      "trick": "Choisir une figure pour le vol"
+    },
+    "log": {
+      "read": "Suivant : x = {x}. La machine dit f({x}) = {y}.",
+      "imagine_push": "J'imagine une poussée de {beats} temps : le sommet serait à {y}.",
+      "imagine_stop": "J'imagine freiner le trampoline pendant {beats} temps : le sommet serait à {y}.",
+      "between": "{y} est entre {a} temps ({ya}) et {b} temps ({yb}), à {pct} % du chemin. J'essaie {u}.",
+      "set_up": "{y}, c'est trop loin pour un seul rebond. D'abord un rebond de préparation.",
+      "imagine_lean": "J'imagine un élan de {beats} temps : le sommet tombe à x = {x}.",
+      "lean_between": "Je vise x = {x} : j'essaie un élan de {w} temps.",
+      "go": "C'est parti : poussée de {push} temps, élan de {lean}.",
+      "marked": "Marqué ({x} ; {y}). La machine disait f({fx}) = {fy} : écart de {off}.",
+      "no_value": "f({x}) n'a pas de valeur ({why}). Je passe.",
+      "bow": "Tous les points sont marqués. Je redescends et je salue.",
+      "imagine_flip": "J'imagine tenir {key} pendant {beats} temps : {deg}° de salto à l'atterrissage.",
+      "flip_between": "Un salto complet, c'est 360° : j'essaie {beats} temps.",
+      "trick": "Un {trick} à la montée et à la descente. La marque est là où seraient les pieds debout, donc la figure ne la déplace pas."
+    },
+    "expr": {
+      "empty": "Écris une formule en x.",
+      "end": "La formule s'arrête trop tôt. Il manque quelque chose à la fin.",
+      "bracket": "Il manque une parenthèse (au caractère {at}).",
+      "bar": "Il manque une | pour fermer la valeur absolue (au caractère {at}).",
+      "unexpected": "Je ne sais pas lire « {word} » au caractère {at}.",
+      "unknown": "Je ne connais pas le nom « {word} ». Utilise x, et sin, cos, tan, abs, sqrt, floor, round, pi.",
+      "too_big": "Ce nombre est trop long."
+    },
+    "undefined": {
+      "divide_by_zero": "pas de valeur : division par 0",
+      "sqrt_negative": "pas de valeur : √ d'un négatif",
+      "fraction_power": "pas de valeur : seulement des puissances entières et ^0,5",
+      "too_big": "hors du graphe",
+      "drawn": "—"
+    },
+    "join_heading": "La version de l'artiste est-elle proche ?",
+    "join_hint": "La ligne orange relie les marques : c'est la version de f selon l'artiste. La zone ombrée montre l'écart avec f.",
+    "join_lines": "des segments",
+    "join_smooth": "une courbe lisse",
+    "join_label": "Relier les marques par",
+    "error_lines": "Reliée par des segments, la version de l'artiste s'écarte de f d'au plus {max} (en x = {at}), et de {mean} en moyenne.",
+    "error_smooth": "Reliée par une courbe lisse, la version de l'artiste s'écarte de f d'au plus {max} (en x = {at}), et de {mean} en moyenne.",
+    "tabs": [
+      "Tracer une fonction",
+      "Du pop-corn sous un vol",
+      "Figures de jonglage"
+    ],
+    "fly_heading": "Sauter, tracer, semer du pop-corn",
+    "fly_intro": "L'artiste saute de la plateforme, atterrit sur le trampoline et rebondit jusqu'à l'herbe. Le vol trace une courbe. Dans chaque bande de terrain, l'artiste lâche une colonne de pop-corn aussi haute qu'il est haut à ce moment-là : les tas additionnent l'aire sous la courbe.",
+    "fly_ledge": "Hauteur de la plateforme (m)",
+    "fly_speed": "Vitesse du saut (m/s)",
+    "fly_angle": "Angle du saut (°)",
+    "fly_jump": "Saute !",
+    "fly_strip": "Largeur des bandes",
+    "fly_strips": [
+      [
+        16,
+        "1 m"
+      ],
+      [
+        8,
+        "½ m"
+      ],
+      [
+        4,
+        "¼ m"
+      ]
+    ],
+    "fly_rule": "Lâcher le pop-corn",
+    "fly_rules": [
+      [
+        0,
+        "au début de chaque bande"
+      ],
+      [
+        1,
+        "au milieu de chaque bande"
+      ],
+      [
+        2,
+        "à la fin de chaque bande"
+      ]
+    ],
+    "fly_arcs_heading": "Chaque vol est une parabole",
+    "fly_arcs_hint": "D'après l'endroit où il quitte la plateforme ou le trampoline et sa vitesse, chaque arc du vol a une équation. La seconde forme montre le sommet de l'arc.",
+    "fly_arc": "Arc {n}",
+    "fly_kernel": "Un grain, c'est un carré de ¼ m sur ¼ m : 1/16 de mètre carré.",
+    "fly_summary": "{kernels} grains de pop-corn : {popcorn} m². La somme de Riemann (hauteur des tas fois {width} m) vaut {riemann} m². L'aire sous le vol, calculée finement, vaut {fine} m².",
+    "fly_done_call": "le pop-corn est tombé",
+    "fly_numbers": "Les trois doivent être des nombres.",
+    "fly_no_start": "La courbe n'a pas de valeur au bord de la plateforme (x = -4,6).",
+    "fly_ledge_moved": "La plateforme ne va que de 3 à 8 m : elle est mise à {h} m.",
+    "fly_match_heading": "Suivre une courbe",
+    "fly_match_hint": "Écris une courbe en x (en mètres le long du sol, le bord de la plateforme en x = -4,6). L'artiste trouve le saut dont le vol la suit le mieux : il imagine des sauts et fait passer une parabole par l'écart de trois d'entre eux, pour trouver le meilleur.",
+    "fly_match": "Trouver le saut",
+    "fly_log": {
+      "try_speed": "À {speed} m/s, le meilleur angle est d'environ {angle}° : écart de {off} m.",
+      "parabola": "Une parabole par les écarts à {l}° et {r}° : son point le plus bas dit d'essayer {next}°.",
+      "fit": "Le meilleur : {speed} m/s à {angle}°, écart moyen de {off} m."
+    },
+    "fly_ideas": [
+      "Saute à la même vitesse avec un angle plus grand. Que devient le nombre devant (x + 4,6)² ? Pourquoi l'angle ne le change-t-il pas ?",
+      "Rends les bandes plus étroites. Le pop-corn et l'aire sous le vol se rapprochent-ils ?",
+      "Lâche au début, au milieu, puis à la fin de chaque bande. Lequel est le plus proche ? Lequel en donne toujours trop dans la descente ?",
+      "Écris une courbe tournée vers le haut, comme 0,3(x+1)^2+2. Un saut peut-il la tracer ? Pourquoi ?",
+      "Le second arc part du trampoline. Le premier nombre de son équation vaut-il toujours environ 1 ?"
+    ],
+    "jug_heading": "Des figures en nombres",
+    "jug_intro": "Un jongleur lance sur un temps régulier, les mains à tour de rôle. Chaque nombre dit combien de temps une balle reste en l'air : un 3 retombe trois temps plus tard, un 5 cinq temps plus tard et bien plus haut. Un 2 est une balle gardée en main, un 0 une main vide. La figure se répète.",
+    "jug_label": "Figure",
+    "jug_presets": [
+      "3",
+      "441",
+      "531",
+      "51",
+      "423",
+      "4",
+      "720",
+      "52512",
+      "5",
+      "330",
+      "43",
+      "432"
+    ],
+    "jug_ok": "{digits} = {sum}, sur {n} temps : une moyenne de {balls}, donc cette figure demande {balls} balles.",
+    "jug_average": "Les lancers font {sum} sur {n} temps : une moyenne de {avg}. Aucun jongleur n'a {avg} balles.",
+    "jug_collision": "La balle lancée au temps {a} et celle lancée au temps {b} retombent toutes deux au temps {lands} : deux balles dans la même main à la fois.",
+    "jug_digit": "Seulement les chiffres de 0 à 9 : « {ch} » au caractère {at}.",
+    "jug_empty": "Écris une figure en chiffres, comme 441.",
+    "jug_diagram_hint": "Chaque point est un temps. Chaque arc va d'un lancer au temps où la balle retombe, aussi haut que le lancer ; chaque couleur est une balle.",
+    "jug_ideas": [
+      "Pourquoi la moyenne des nombres doit-elle être un nombre entier ? Essaie 43.",
+      "441 et 531 utilisent trois balles. Trouve une autre figure de trois nombres pour trois balles.",
+      "Change un chiffre de 441. Quels changements marchent encore ?",
+      "Que fait un 2 ? Essaie 330 et 423.",
+      "Trouve une figure où une balle monte bien plus haut que les autres.",
+      "Les nombres impairs passent d'une main à l'autre, les pairs reviennent dans la même main. Pourquoi ?"
+    ],
+    "anchors": [
+      "#plot",
+      "#popcorn",
+      "#juggling"
+    ],
+    "plot_intro": "Donne une fonction à l'artiste. Le sommet de chaque rebond marque un point de son graphe.",
+    "point": "({x} ; {y})",
+    "kinds": {
+      "selector": "sélecteur",
+      "sequence": "séquence",
+      "condition": "condition",
+      "action": "action"
+    }
+  },
+  "lab_link": "Labo de maths du cirque : tracer des fonctions, compter du pop-corn, jongler avec des nombres →",
+  "moves": "Figures",
+  "moves_heading": "Les figures, et comment les faire",
+  "moves_intro": "Toutes les figures que le public sait nommer. Une figure se nomme par sa position de départ et d'arrivée (pieds, assis, dos ou ventre), le nombre de saltos, le nombre de vrilles, et la forme tenue : groupée, carpée ou tendue.",
+  "close": "Fermer",
+  "glossary_from_to": "de {from} à {to}",
+  "glossary_points": "{points} points",
+  "positions": {
+    "feet": "pieds",
+    "seat": "assis",
+    "back": "dos",
+    "front": "ventre"
+  },
+  "postcard_tag": "PROCHAINE ÉTAPE DE LA TOURNÉE",
+  "lang_switch": "English",
+  "voice_lang": "fr-FR",
+  "voice_clips": false
+}

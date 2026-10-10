@@ -1,0 +1,103 @@
+{
+  "_about": "Les mots des lieux en français : étapes de la tournée, dates, et noms descriptifs. Les noms propres restent tels quels ; tout le reste vient de data/venues.json.",
+  "legs": {
+    "durham": {
+      "name": "Durham, Caroline du Nord",
+      "note": "Carolina Theatre de Durham, spectacles gratuits du centenaire, du 8 au 17 octobre 2026"
+    },
+    "east": {
+      "name": "La côte Est",
+      "note": "Richmond, New York et Fairfield"
+    },
+    "florida": {
+      "name": "La Floride",
+      "note": "Sarasota, Miami et Miami Beach"
+    },
+    "desert": {
+      "name": "Le désert et les montagnes",
+      "note": "Tucson et Salt Lake City"
+    },
+    "west": {
+      "name": "La côte Ouest",
+      "note": "San Francisco et l'État de Washington"
+    }
+  },
+  "venues": {
+    "rtp": {
+      "when": "jeudi 8 octobre 2026 · 18 h 30"
+    },
+    "golden_belt": {
+      "when": "vendredi 9 octobre 2026 · 19 h 30",
+      "name": "Golden Belt, Green Space et Hi-Wire Brewing"
+    },
+    "woodcrest": {
+      "when": "dimanche 11 octobre 2026 · 15 h",
+      "name": "Ferme Woodcrest"
+    },
+    "the_plant": {
+      "when": "jeudi 15 octobre 2026 · 19 h"
+    },
+    "scrap": {
+      "when": "vendredi 16 octobre 2026 · 19 h"
+    },
+    "garland": {
+      "when": "samedi 17 octobre 2026 · 15 h",
+      "name": "Garland Hall et Salem Street, derrière Claymakers"
+    },
+    "modlin": {
+      "when": "vendredi 18 septembre 2026"
+    },
+    "lincoln": {
+      "when": "25–26 octobre 2025",
+      "name": "Hearst Plaza, Lincoln Center"
+    },
+    "fairfield": {
+      "when": "vendredi 24 octobre 2025"
+    },
+    "ringling": {
+      "when": "27–29 mars 2026",
+      "name": "Bayfront Gardens, The Ringling"
+    },
+    "mdc": {
+      "when": "31 mars – 2 avril 2026",
+      "name": "Miami Dade College, campus Wolfson"
+    },
+    "miami_beach": {
+      "when": "samedi 4 avril 2026",
+      "name": "Pique-nique familial de Miami Beach"
+    },
+    "ua_mall": {
+      "when": "mardi 14 avril 2026",
+      "name": "Campus Mall de l'Université de l'Arizona"
+    },
+    "childrens_museum": {
+      "when": "jeudi 16 avril 2026",
+      "name": "Musée des enfants de Tucson"
+    },
+    "skyline": {
+      "when": "vendredi 17 avril 2026"
+    },
+    "corbetts": {
+      "when": "samedi 18 avril 2026"
+    },
+    "slc": {
+      "when": "22–23 avril 2026",
+      "name": "Marriott Library Plaza et Gallivan Center"
+    },
+    "sf": {
+      "when": "29 avril – 1er mai 2026",
+      "name": "Cour de récréation de l'école élémentaire Cesar Chavez"
+    },
+    "issaquah": {
+      "when": "samedi 6 juin 2026",
+      "name": "Festival Aire Craft"
+    },
+    "clark": {
+      "when": "8–9 juin 2026"
+    },
+    "port_angeles": {
+      "when": "samedi 13 juin 2026",
+      "name": "Centre-ville de Port Angeles"
+    }
+  }
+}

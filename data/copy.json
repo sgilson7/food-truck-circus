@@ -5,7 +5,6 @@
   "loading": "Loading the truck…",
   "no_webgl": "This browser has no WebGL 2, which the game draws with.",
   "about": "Cirque Kikasse is a circus company from Québec. In SANTÉ! its performers bounce off a trampoline beside their food truck, stack tables and chairs into a tower about thirty-five feet high, juggle, clean up badly on purpose, and let the popcorn machine overflow. This game is a tribute, not their show: every stop on the map is a real venue from their 2025–26 tour, and the trapeze is the game's own addition.",
-  "credit": "Made by Sam Gilson in a day. The crowd's OH NO and DARN are Sam's own voice.",
   "map_heading": "The tour",
   "map_hint": "Pick a show. A show opens when the ones before it on the map are done.",
   "play": "Perform",
@@ -37,7 +36,7 @@
     "D"
   ],
   "goals": {
-    "height": "Reach {metres} m above the bed {times} times",
+    "height": "Reach {metres} m above the trampoline {times} times",
     "tricks": "Land: {list}",
     "routine": "{count} tricks without a fall, worth {score} points",
     "roof": "Land on the truck's roof",
@@ -72,7 +71,9 @@
     "smooth": "Smooth!",
     "chill": "Chill!",
     "bravo": "Bravo!",
-    "encore": "Encore!"
+    "encore": "Encore!",
+    "oh_no": "Oh no!",
+    "darn": "Darn!"
   },
   "height_called": "{metres} metres",
   "result_pass": "Show done",
@@ -93,7 +94,7 @@
   "controls": [
     [
       "Space (hold)",
-      "Push the bed: higher each bounce. Also: let go, bring a chair, handstand"
+      "Push the trampoline: higher each bounce. Also: let go, bring a chair, handstand"
     ],
     [
       "C",
@@ -101,7 +102,7 @@
     ],
     [
       "S / W",
-      "Back flip / front flip: hold while the bed throws you up"
+      "Back flip / front flip: hold while the trampoline throws you up"
     ],
     [
       "A / D",
@@ -165,7 +166,7 @@
     "run_auto": "Watch the performer plot it",
     "run_you": "You try",
     "stop": "Start over",
-    "you_hint": "Hold Space to bounce higher, C to come down. Hold → while the bed throws you to lean right, ← to lean left. Every top you reach is marked.",
+    "you_hint": "Hold Space to bounce higher, C to come down. Hold → while the trampoline throws you to lean right, ← to lean left. Every top you reach is marked.",
     "speed": "speed",
     "speeds": [
       [
@@ -196,7 +197,7 @@
       "Join the marks with straight lines, then a smooth curve. Which is closer to x²? Is it closer for |x| too?"
     ],
     "done_call": "every point plotted",
-    "summary": "{n} points plotted. On average each mark was {cm} cm off on the bed, {units} on the graph.",
+    "summary": "{n} points plotted. On average each mark was {cm} cm off in the air, {units} on the graph.",
     "domain_order": "The first number has to be smaller than the second.",
     "tree": {
       "plot": "Plot the function",
@@ -215,7 +216,7 @@
     "log": {
       "read": "Next: x = {x}. The machine says f({x}) = {y}.",
       "imagine_push": "Imagine pushing for {beats} beats: the top would be at {y}.",
-      "imagine_stop": "Imagine stopping the bed for {beats} beats: the top would be at {y}.",
+      "imagine_stop": "Imagine stopping the trampoline for {beats} beats: the top would be at {y}.",
       "between": "{y} is between {a} beats ({ya}) and {b} beats ({yb}), {pct}% of the way. Try {u}.",
       "set_up": "{y} is too far for one bounce. A set-up bounce first.",
       "imagine_lean": "Imagine leaning for {beats} beats: the top lands at x = {x}.",
@@ -257,7 +258,7 @@
       "Juggling patterns"
     ],
     "fly_heading": "Jump, draw, drop popcorn",
-    "fly_intro": "The performer jumps off the ledge, lands on the bed and bounces on to the grass. The flight draws a curve. In every strip of ground the performer drops a column of popcorn as tall as they are high at that moment: the piles add up the area under the curve.",
+    "fly_intro": "The performer jumps off the ledge, lands on the trampoline and bounces on to the grass. The flight draws a curve. In every strip of ground the performer drops a column of popcorn as tall as they are high at that moment: the piles add up the area under the curve.",
     "fly_ledge": "Ledge height (m)",
     "fly_speed": "Jump speed (m/s)",
     "fly_angle": "Jump angle (°)",
@@ -293,7 +294,7 @@
       ]
     ],
     "fly_arcs_heading": "Every flight is a parabola",
-    "fly_arcs_hint": "From where it leaves the ledge or the bed and how fast, each arc of the flight has an equation. The second form shows the top of the arc.",
+    "fly_arcs_hint": "From where it leaves the ledge or the trampoline and how fast, each arc of the flight has an equation. The second form shows the top of the arc.",
     "fly_arc": "Arc {n}",
     "fly_kernel": "One kernel is a square ¼ m by ¼ m: 1/16 of a square metre.",
     "fly_summary": "{kernels} kernels of popcorn: {popcorn} m². The Riemann sum (the piles' heights times {width} m) is {riemann} m². The area under the flight, worked out finely, is {fine} m².",
@@ -314,7 +315,7 @@
       "Make the strips narrower. Do the popcorn and the area under the flight get closer?",
       "Drop at the start, the middle, then the end of each strip. Which comes closest? Which is always too much on the way down?",
       "Type a curve that opens upward, like 0.3(x+1)^2+2. Can any jump draw it? Why not?",
-      "The second arc starts on the bed. Is its equation's first number always about 1?"
+      "The second arc starts on the trampoline. Is its equation's first number always about 1?"
     ],
     "jug_heading": "Patterns as numbers",
     "jug_intro": "A juggler throws on a steady beat, the hands taking turns. Each number says how many beats a ball stays up: a 3 comes down three beats later, a 5 five beats later and much higher. A 2 is a ball held, a 0 an empty hand. The pattern repeats.",
@@ -352,7 +353,14 @@
       "#popcorn",
       "#juggling"
     ],
-    "plot_intro": "Give the performer a function. The top of every bounce marks a point on its graph."
+    "plot_intro": "Give the performer a function. The top of every bounce marks a point on its graph.",
+    "point": "({x}, {y})",
+    "kinds": {
+      "selector": "selector",
+      "sequence": "sequence",
+      "condition": "condition",
+      "action": "action"
+    }
   },
   "lab_link": "Circus Math Lab: plot functions, count popcorn, juggle numbers →",
   "moves": "Moves",
@@ -367,5 +375,8 @@
     "back": "back",
     "front": "front"
   },
-  "postcard_tag": "NEXT STOP ON THE TOUR"
+  "postcard_tag": "NEXT STOP ON THE TOUR",
+  "lang_switch": "Français",
+  "voice_lang": "en-US",
+  "voice_clips": true
 }

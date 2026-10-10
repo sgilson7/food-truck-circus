@@ -6,7 +6,7 @@
 use crate::balance::{BED_Y, BED_Z};
 use crate::expr::{self, ReadError};
 use crate::fx::{int, ratio, ONE, QUARTER};
-use crate::game::{fill, pct, Game, Mode};
+use crate::game::{pct, Game, Mode};
 use crate::geom::{v3, V3};
 use crate::mesh::Mesh;
 use crate::performer::{Controls, Event, Performer};
@@ -163,7 +163,7 @@ impl Game {
     }
 
     fn read_error(&self, e: &ReadError) -> String {
-        fill(
+        self.fill(
             &self.copy_str(&["lab", "expr", e.key]),
             &[("at", e.at.to_string()), ("word", e.word.clone())],
         )
@@ -329,10 +329,7 @@ impl Game {
                         let off = want
                             .map(|w| l.board.height(m.y) - l.board.height(w))
                             .unwrap_or(int(1));
-                        said.push((
-                            grade_of(off),
-                            format!("({}, {})", expr::show(m.x), expr::show(m.y)),
-                        ));
+                        said.push((grade_of(off), format!("{}|{}", m.x, m.y)));
                     }
                 }
                 _ => {}
@@ -369,7 +366,16 @@ impl Game {
             l.summary = Some((mean_m, total / n as i64));
             finished_now = Some(grade);
         }
-        for (g, text) in said {
+        for (g, raw) in said {
+            // the point as the language writes it: (x, y), or (x ; y) in French
+            let (x, y) = raw.split_once('|').unwrap_or(("0", "0"));
+            let text = self.fill(
+                &self.copy_str(&["lab", "point"]),
+                &[
+                    ("x", expr::show(x.parse().unwrap_or(0))),
+                    ("y", expr::show(y.parse().unwrap_or(0))),
+                ],
+            );
             let w = self.book.word(g, &mut self.rng);
             self.say(&w, text, 2);
             self.crowd.cheer(ONE * g / 300);
@@ -527,7 +533,7 @@ impl Game {
         let samples: Vec<Value> = (0..board.n())
             .filter_map(|i| {
                 let y = board.ys[i].as_ref().ok()?;
-                Some(json!({"i": i, "x": gx(board.x(i)), "y": gy(*y), "label": format!("f({}) = {}", expr::show(board.x(i)), expr::show(*y))}))
+                Some(json!({"i": i, "x": gx(board.x(i)), "y": gy(*y), "label": format!("f({}) = {}", self.num(board.x(i)), self.num(*y))}))
             })
             .collect();
         let marks: Vec<Value> = if l.auto { &l.planner.marks } else { &l.free }
@@ -557,11 +563,11 @@ impl Game {
         };
         let tx: Vec<Value> = ticks(board.x0, board.x1)
             .iter()
-            .map(|t| json!({"at": gx(*t), "label": expr::show(*t)}))
+            .map(|t| json!({"at": gx(*t), "label": self.num(*t)}))
             .collect();
         let ty: Vec<Value> = ticks(board.lo, board.hi)
             .iter()
-            .map(|t| json!({"at": gy(*t), "label": expr::show(*t)}))
+            .map(|t| json!({"at": gy(*t), "label": self.num(*t)}))
             .collect();
         let y_axis = (board.x0 <= 0 && board.x1 >= 0).then(|| gx(0));
 
@@ -590,19 +596,19 @@ impl Game {
                 None
             };
             let change = match (y, prev) {
-                (Some(a), Some(b)) => expr::show(a - b),
+                (Some(a), Some(b)) => self.num(a - b),
                 _ => String::new(),
             };
             let change2 = match (y, prev, prev2) {
-                (Some(a), Some(b), Some(c)) => expr::show((a - b) - (b - c)),
+                (Some(a), Some(b), Some(c)) => self.num((a - b) - (b - c)),
                 _ => String::new(),
             };
             let m = marks_for(i);
             rows.push(json!({
-                "x": expr::show(board.x(i)),
-                "y": match &board.ys[i] { Ok(v) => expr::show(*v), Err(why) => self.copy_str(&["lab", "undefined", why]) },
-                "marked": m.map(|m| expr::show(m.y)).unwrap_or_default(),
-                "off": match (m, y) { (Some(m), Some(y)) => expr::show((m.y - y).abs()), _ => String::new() },
+                "x": self.num(board.x(i)),
+                "y": match &board.ys[i] { Ok(v) => self.num(*v), Err(why) => self.copy_str(&["lab", "undefined", why]) },
+                "marked": m.map(|m| self.num(m.y)).unwrap_or_default(),
+                "off": match (m, y) { (Some(m), Some(y)) => self.num((m.y - y).abs()), _ => String::new() },
                 "change": change,
                 "change2": change2,
                 "next": l.auto && l.running && i == l.planner.next,
@@ -617,7 +623,7 @@ impl Game {
                     .unwrap_or_default();
                 json!({
                     "depth": depth,
-                    "kind": kind,
+                    "kind": self.copy_str(&["lab", "kinds", kind]),
                     "label": self.copy_str(&["lab", "tree", &id]),
                     "lit": l.running && l.auto && l.planner.lit.contains(node),
                 })
@@ -631,10 +637,22 @@ impl Game {
             .take(14)
             .rev()
             .map(|line| {
-                fill(
-                    &self.copy_str(&["lab", "log", line.key]),
-                    &line.vals.iter().map(|(k, v)| (*k, v.clone())).collect::<Vec<_>>(),
-                )
+                // a trick is logged by id and named in the language
+                let vals: Vec<(&str, String)> = line
+                    .vals
+                    .iter()
+                    .map(|(k, v)| {
+                        (
+                            *k,
+                            if *k == "trick" {
+                                self.trick_word(v)
+                            } else {
+                                v.clone()
+                            },
+                        )
+                    })
+                    .collect();
+                self.fill(&self.copy_str(&["lab", "log", line.key]), &vals)
             })
             .collect();
         let marks_now = if l.auto { &l.planner.marks } else { &l.free };
@@ -648,7 +666,7 @@ impl Game {
             json!({
                 "curve": line.join(" "),
                 "gap": gap.polygon.iter().map(|(x, y)| format!("{},{}", gx(*x), gy((*y).clamp(board.lo - Q, board.hi + Q)))).collect::<Vec<_>>().join(" "),
-                "text": fill(
+                "text": self.fill(
                     &lab(if l.smooth { "error_smooth" } else { "error_lines" }),
                     &[("max", expr::show(gap.max)), ("at", expr::show(gap.at)), ("mean", expr::show(gap.mean))],
                 ),
@@ -657,7 +675,7 @@ impl Game {
             Value::Null
         };
         let summary = l.summary.map(|(cm_off, units)| {
-            fill(
+            self.fill(
                 &lab("summary"),
                 &[
                     ("cm", (cm_off * 100 / ONE).to_string()),
@@ -673,8 +691,8 @@ impl Game {
             "formula": board.formula,
             "drawn": board.drawn,
             "error": l.error,
-            "from": expr::show(board.x0),
-            "to": expr::show(board.x1),
+            "from": self.num(board.x0),
+            "to": self.num(board.x1),
             "n": board.n(),
             "counts": (MIN_POINTS..=MAX_POINTS).collect::<Vec<_>>(),
             "running": l.running,
@@ -908,6 +926,49 @@ mod tests {
         // a smooth curve through the same marks bends toward x² and misses less
         let s = gap_of(&board, &interpolate(&marks, true, 24));
         assert!(s.mean < g.mean, "{} vs {}", s.mean, g.mean);
+    }
+
+    #[test]
+    fn in_french_the_lab_writes_decimal_commas_and_names_tricks_in_french() {
+        let mut g = game_with("");
+        g.add_french(
+            include_str!("../../../data/fr/copy.json"),
+            include_str!("../../../data/fr/tricks.json"),
+            include_str!("../../../data/fr/missions.json"),
+            include_str!("../../../data/fr/costumes.json"),
+            include_str!("../../../data/fr/venues.json"),
+        )
+        .unwrap();
+        g.set_french(true).unwrap();
+        g.lab_open();
+        let j: Value = serde_json::from_str(&g.lab_json()).unwrap();
+        // x² at -1.5 is 2.25: "2,25" in French; the table's x is "-1,5"
+        assert_eq!(j["rows"][1]["y"], "2,25");
+        assert_eq!(j["rows"][1]["x"], "-1,5");
+        g.lab_run(true);
+        let mut t = 0;
+        for _ in 0..1500 {
+            t += 16_667;
+            g.advance(t, 0, 0, 0);
+        }
+        let j: Value = serde_json::from_str(&g.lab_json()).unwrap();
+        let log: Vec<&str> = j["log"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|l| l.as_str().unwrap())
+            .collect();
+        assert!(log.iter().any(|l| l.starts_with("J'imagine")), "{log:?}");
+        assert!(
+            !log.iter().any(|l| l.contains("back_") || l.contains("tuck_jump")),
+            "{log:?}"
+        );
+        // a formula with a decimal comma reads
+        assert_eq!(g.lab_formula("0,5x+1"), "");
+        // and back to English
+        g.set_french(false).unwrap();
+        let j: Value = serde_json::from_str(&g.lab_json()).unwrap();
+        assert_eq!(j["rows"][1]["y"], "0.25");
     }
 
     #[test]

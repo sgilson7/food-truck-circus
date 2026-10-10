@@ -10,12 +10,18 @@ let master = null;
 let noiseBuffer = null;
 let recipes = null;
 let sayings = null;
+let voiceLang = "";
+let useClips = true;
 let muted = false;
 const clips = new Map();
 
-export function setup(sounds, say) {
+// The crowd's words come from the copy of the language in use: Sam's two
+// recordings in English, the browser's own voice in that language otherwise.
+export function setup(sounds, copy) {
   recipes = sounds;
-  sayings = say;
+  sayings = copy.say;
+  voiceLang = copy.voice_lang;
+  useClips = copy.voice_clips;
 }
 
 async function loadClips(build) {
@@ -96,7 +102,7 @@ export function call(word) {
   if (!ctx || muted) return;
   const crowd = recipes.words[word];
   if (crowd) play(crowd, recipes.percent);
-  const clip = clips.get(word);
+  const clip = useClips ? clips.get(word) : null;
   if (clip) {
     const src = ctx.createBufferSource();
     const g = ctx.createGain();
@@ -113,6 +119,7 @@ export function call(word) {
   u.rate = recipes.voice.rate;
   u.pitch = recipes.voice.pitch;
   u.volume = recipes.voice.volume;
+  u.lang = voiceLang;
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(u);
 }

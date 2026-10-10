@@ -7,7 +7,7 @@ use crate::body::{self, Pose};
 use crate::expr::{self, Expr};
 use crate::fly::{self, Arc, Jump, Kernel, Pile, Rule, Strips, END_X, KERNEL, LEDGE_MAX, LEDGE_MIN, LEDGE_X};
 use crate::fx::{int, ratio, ONE, QUARTER};
-use crate::game::{fill, pct, Game};
+use crate::game::{pct, Game};
 use crate::geom::{v3, Affine, V3};
 use crate::mesh::Mesh;
 use crate::performer::{orientation, Event, Performer, Phase};
@@ -185,7 +185,7 @@ impl Game {
         let e = match expr::parse(src) {
             Ok(e) => e,
             Err(err) => {
-                let m = fill(
+                let m = self.fill(
                     &self.copy_str(&["lab", "expr", err.key]),
                     &[("at", err.at.to_string()), ("word", err.word.clone())],
                 );
@@ -208,7 +208,7 @@ impl Game {
         }
         self.fly_reset();
         if start != ledge {
-            return fill(
+            return self.fill(
                 &self.copy_str(&["lab", "fly_ledge_moved"]),
                 &[("h", expr::show(ledge as i64))],
             );
@@ -476,13 +476,13 @@ impl Game {
             .enumerate()
             .map(|(i, a)| {
                 let (standard, top) = fly::equation(a);
-                json!({"n": i + 1, "standard": standard, "top": top})
+                json!({"n": i + 1, "standard": self.local(standard), "top": self.local(top)})
             })
             .collect();
         let ticks_x: Vec<Value> = (((GX0 / ONE) - 1)..=(END_X / ONE))
             .map(int)
             .filter(|x| *x >= GX0 && *x <= END_X)
-            .map(|x| json!({"at": gx(x), "label": expr::show(x as i64)}))
+            .map(|x| json!({"at": gx(x), "label": self.num(x as i64)}))
             .collect();
         let ticks_y: Vec<Value> = (0..=10)
             .step_by(2)
@@ -490,7 +490,7 @@ impl Game {
             .collect();
         let count: i64 = f.piles.iter().map(|p| p.kernels as i64).sum();
         let summary = f.done.map(|(pop, riemann, fine)| {
-            fill(
+            self.fill(
                 &lab("fly_summary"),
                 &[
                     ("kernels", count.to_string()),
@@ -508,15 +508,18 @@ impl Game {
             .take(12)
             .rev()
             .map(|(k, vals)| {
-                fill(
+                self.fill(
                     &self.copy_str(&["lab", "fly_log", k]),
                     &vals.iter().map(|(a, b)| (*a, b.clone())).collect::<Vec<_>>(),
                 )
             })
             .collect();
         json!({
+            // the sliders' values (always with a point), and as shown
             "ledge": expr::show(f.jump.ledge as i64),
             "speed": expr::show(f.jump.speed as i64),
+            "ledge_shown": self.num(f.jump.ledge as i64),
+            "speed_shown": self.num(f.jump.speed as i64),
             "angle": f.jump.angle.to_string(),
             "strip": (f.strips.width * 16 / ONE),
             "rule": f.strips.rule.index(),

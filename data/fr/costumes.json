@@ -1,0 +1,41 @@
+{
+  "_about": "Les noms des costumes en français, par id.",
+  "costumes": {
+    "cook": {
+      "name": "Commis de cuisine"
+    },
+    "striped": {
+      "name": "Marinière"
+    },
+    "popcorn": {
+      "name": "Stand de pop-corn"
+    },
+    "overalls": {
+      "name": "Équipe de ménage"
+    },
+    "bowtie": {
+      "name": "Serveur"
+    },
+    "tuxedo": {
+      "name": "Soir de première"
+    },
+    "ringmaster": {
+      "name": "Monsieur Loyal"
+    },
+    "flamingo": {
+      "name": "Flamant rose"
+    },
+    "desert": {
+      "name": "Coucher de soleil au désert"
+    },
+    "mural": {
+      "name": "Murale"
+    },
+    "sequins": {
+      "name": "Paillettes"
+    },
+    "gold": {
+      "name": "Or du final"
+    }
+  }
+}

@@ -163,6 +163,20 @@ pub struct Game {
     pub(crate) demo_peak: i32,
     pub(crate) frame: (Vec<i32>, Vec<u32>),
     pub(crate) lab: Option<crate::lab::LabState>,
+    /// The English data as given, and the French words laid over it.
+    pub(crate) sources: Sources,
+    pub(crate) french_words: Option<Sources>,
+    pub(crate) french: bool,
+}
+
+/// The data files whose words change with the language.
+#[derive(Debug, Clone)]
+pub struct Sources {
+    pub tricks: String,
+    pub venues: String,
+    pub missions: String,
+    pub costumes: String,
+    pub copy: String,
 }
 
 pub(crate) fn fill(template: &str, pairs: &[(&str, String)]) -> String {
@@ -207,6 +221,7 @@ impl Game {
         let tour = Tour::parse(venues, missions, costumes)?;
         let def = BodyDef::parse(body)?;
         let book = TrickBook::parse(tricks)?;
+        let copy_text = copy;
         let copy: Value = serde_json::from_str(copy).map_err(|e| format!("copy.json: {e}"))?;
         let mut progress = Progress::load(saved);
         if progress.costume.is_empty() || !tour.costumes.iter().any(|c| c.id == progress.costume) {
@@ -264,6 +279,15 @@ impl Game {
             demo_peak: 0,
             frame: (Vec::new(), Vec::new()),
             lab: None,
+            sources: Sources {
+                tricks: tricks.to_string(),
+                venues: venues.to_string(),
+                missions: missions.to_string(),
+                costumes: costumes.to_string(),
+                copy: copy_text.to_string(),
+            },
+            french_words: None,
+            french: false,
         };
         g.select(selected);
         Ok(g)
@@ -275,6 +299,107 @@ impl Game {
             v = &v[*p];
         }
         v.as_str().unwrap_or("").to_string()
+    }
+
+    // ---- the language ------------------------------------------------------
+
+    /// The French words: the whole copy file, and overlays for the tricks,
+    /// missions, costumes and venues (lang.rs).
+    pub fn add_french(
+        &mut self,
+        copy: &str,
+        tricks: &str,
+        missions: &str,
+        costumes: &str,
+        venues: &str,
+    ) -> Result<(), String> {
+        let words = Sources {
+            tricks: tricks.to_string(),
+            venues: venues.to_string(),
+            missions: missions.to_string(),
+            costumes: costumes.to_string(),
+            copy: copy.to_string(),
+        };
+        self.french_words = Some(words);
+        // a trial run, so a broken file fails here and not at the switch
+        let was = self.french;
+        self.set_french(true)?;
+        self.set_french(was)
+    }
+
+    /// Every word of the game in French, or back in English.
+    pub fn set_french(&mut self, on: bool) -> Result<(), String> {
+        let en = self.sources.clone();
+        let (tricks, venues, missions, costumes, copy) = match (&self.french_words, on) {
+            (Some(fr), true) => (
+                crate::lang::overlay(&en.tricks, &fr.tricks, &["tricks"])?,
+                crate::lang::overlay(&en.venues, &fr.venues, &["legs", "venues"])?,
+                crate::lang::overlay(&en.missions, &fr.missions, &["missions"])?,
+                crate::lang::overlay(&en.costumes, &fr.costumes, &["costumes"])?,
+                fr.copy.clone(),
+            ),
+            _ => (en.tricks, en.venues, en.missions, en.costumes, en.copy),
+        };
+        let tour = Tour::parse(&venues, &missions, &costumes)?;
+        let book = TrickBook::parse(&tricks)?;
+        let copy: Value = serde_json::from_str(&copy).map_err(|e| format!("copy: {e}"))?;
+        self.tour = tour;
+        self.book = book;
+        self.copy = copy;
+        self.french = on && self.french_words.is_some();
+        Ok(())
+    }
+
+    pub fn lang(&self) -> &'static str {
+        if self.french {
+            "fr"
+        } else {
+            "en"
+        }
+    }
+
+    /// A template filled, with numbers written the language's way.
+    pub(crate) fn fill(&self, template: &str, pairs: &[(&str, String)]) -> String {
+        self.local(fill(template, pairs))
+    }
+
+    /// Decimal commas in French.
+    pub(crate) fn local(&self, s: String) -> String {
+        if self.french {
+            crate::lang::decimal_commas(&s)
+        } else {
+            s
+        }
+    }
+
+    /// A number as the language writes it.
+    pub(crate) fn num(&self, v: i64) -> String {
+        self.local(crate::expr::show(v))
+    }
+
+    /// A trick's name by id, starting small, for the middle of a sentence.
+    pub(crate) fn trick_word(&self, id: &str) -> String {
+        let name = self
+            .book
+            .names()
+            .into_iter()
+            .find(|(i, _)| i == id)
+            .map(|(_, n)| n)
+            .unwrap_or_else(|| id.to_string());
+        let mut c = name.chars();
+        match c.next() {
+            Some(f) => f.to_lowercase().collect::<String>() + c.as_str(),
+            None => name,
+        }
+    }
+
+    /// The postcard of a venue, in the language's words.
+    pub(crate) fn card(&self, venue_id: &str) -> String {
+        if self.french {
+            format!("art/venue/fr/{venue_id}.png")
+        } else {
+            postcard(venue_id)
+        }
     }
 
     // ---- the page's calls -------------------------------------------------
@@ -685,7 +810,7 @@ impl Game {
                     }
                     if let Goal::Height { metres: m, .. } = self.run.goal {
                         if playing && h >= int(m) {
-                            let t = fill(&self.copy_str(&["height_called"]), &[("metres", metres(h))]);
+                            let t = self.fill(&self.copy_str(&["height_called"]), &[("metres", metres(h))]);
                             let w = self.book.word(80 + (h - int(m)) * 20 / ONE, &mut self.rng);
                             self.say(&w, t, 2);
                         }
@@ -1175,7 +1300,7 @@ impl Game {
     fn goal_text(&self, goal: &Goal) -> String {
         let g = |k: &str| self.copy_str(&["goals", k]);
         match goal {
-            Goal::Height { metres: m, times } => fill(
+            Goal::Height { metres: m, times } => self.fill(
                 &g("height"),
                 &[("metres", m.to_string()), ("times", times.to_string())],
             ),
@@ -1191,18 +1316,18 @@ impl Game {
                             .unwrap_or_default()
                     })
                     .collect();
-                fill(&g("tricks"), &[("list", names.join(", "))])
+                self.fill(&g("tricks"), &[("list", names.join(", "))])
             }
-            Goal::Routine { count, score } => fill(
+            Goal::Routine { count, score } => self.fill(
                 &g("routine"),
                 &[("count", count.to_string()), ("score", score.to_string())],
             ),
             Goal::Roof { trick } => g(if *trick { "roof_trick" } else { "roof" }),
-            Goal::Popcorn { count, seconds } => fill(
+            Goal::Popcorn { count, seconds } => self.fill(
                 &g("popcorn"),
                 &[("count", count.to_string()), ("seconds", seconds.to_string())],
             ),
-            Goal::Tower { chairs, hold } => fill(
+            Goal::Tower { chairs, hold } => self.fill(
                 &g("tower"),
                 &[("chairs", chairs.to_string()), ("hold", hold.to_string())],
             ),
@@ -1215,9 +1340,9 @@ impl Game {
                     .find(|(i, _)| i == trick)
                     .map(|(_, n)| n)
                     .unwrap_or_default();
-                fill(&g("trapeze_trick"), &[("trick", name)])
+                self.fill(&g("trapeze_trick"), &[("trick", name)])
             }
-            Goal::Juggle { balls, catches } => fill(
+            Goal::Juggle { balls, catches } => self.fill(
                 &g("juggle"),
                 &[("catches", catches.to_string()), ("balls", balls.to_string())],
             ),
@@ -1226,14 +1351,14 @@ impl Game {
 
     fn progress_text(&self) -> String {
         let r = &self.run;
-        let base = fill(
+        let base = self.fill(
             &self.copy_str(&["progress"]),
             &[("done", r.count.to_string()), ("target", r.target().to_string())],
         );
         match &r.goal {
             Goal::Routine { score, .. } => format!(
                 "{base} · {}",
-                fill(
+                self.fill(
                     &self.copy_str(&["routine_points"]),
                     &[
                         ("points", r.chain_score.to_string()),
@@ -1246,8 +1371,11 @@ impl Game {
                     let height = t.height() + balance::TRUCK_ROOF;
                     format!(
                         "{base} · {} · {}",
-                        fill(&self.copy_str(&["tower_height"]), &[("feet", feet(height))]),
-                        fill(
+                        self.fill(
+                            &self.copy_str(&["tower_height"]),
+                            &[("feet", feet(height)), ("metres", metres(height))]
+                        ),
+                        self.fill(
                             &self.copy_str(&["tower_lean"]),
                             &[("degrees", t.lean_degrees().to_string())]
                         )
@@ -1260,7 +1388,7 @@ impl Game {
                 if let Act::Juggle(j) = &self.act {
                     format!(
                         "{base} · {}",
-                        fill(
+                        self.fill(
                             &self.copy_str(&["juggle_streak"]),
                             &[("streak", j.streak.to_string())]
                         )
@@ -1324,17 +1452,18 @@ impl Game {
             "when": v.when,
             "objective": self.goal_text(&m.goal),
             "progress": self.progress_text(),
-            "timer": self.run.seconds_left().map(|s| fill(&self.copy_str(&["time_left"]), &[("seconds", s.to_string())])),
-            "height": fill(&self.copy_str(&["height_now"]), &[("metres", metres(h)), ("feet", feet(h))]),
-            "peak": fill(&self.copy_str(&["peak"]), &[("metres", metres(self.peak))]),
+            "timer": self.run.seconds_left().map(|s| self.fill(&self.copy_str(&["time_left"]), &[("seconds", s.to_string())])),
+            "height": self.fill(&self.copy_str(&["height_now"]), &[("metres", metres(h)), ("feet", feet(h))]),
+            "peak": self.fill(&self.copy_str(&["peak"]), &[("metres", metres(self.peak))]),
             "hint": self.hint(),
             "callouts": self.callouts,
             "sfx": self.sfx,
             "bubbles": bubbles,
             "result": self.result,
             "hands": self.hand_badges(),
-            "art": postcard(&v.id),
-            "next_art": self.result.as_ref().and_then(|r| r.next).map(|i| postcard(&self.tour.missions[i].venue)),
+            "art": self.card(&v.id),
+            "lang": self.lang(),
+            "next_art": self.result.as_ref().and_then(|r| r.next).map(|i| self.card(&self.tour.missions[i].venue)),
             "next_venue": self.result.as_ref().and_then(|r| r.next).map(|i| {
                 let nv = self.tour.venue(&self.tour.missions[i].venue);
                 format!("{} · {}", nv.name, nv.city)
@@ -1378,8 +1507,8 @@ impl Game {
                     "id": id,
                     "name": name,
                     "how": how,
-                    "from_to": fill(&self.copy_str(&["glossary_from_to"]), &[("from", pos(&from)), ("to", pos(&to))]),
-                    "points": fill(&self.copy_str(&["glossary_points"]), &[("points", value.to_string())]),
+                    "from_to": self.fill(&self.copy_str(&["glossary_from_to"]), &[("from", pos(&from)), ("to", pos(&to))]),
+                    "points": self.fill(&self.copy_str(&["glossary_points"]), &[("points", value.to_string())]),
                 })
             })
             .collect();
@@ -1414,7 +1543,7 @@ impl Game {
                     "goal": self.goal_text(&m.goal),
                     "brief": m.brief,
                     "unlock": if m.unlock.is_empty() { String::new() } else { self.tour.costume(&m.unlock).name.clone() },
-                    "art": postcard(&v.id),
+                    "art": self.card(&v.id),
                 })
             })
             .collect();

@@ -11,11 +11,26 @@ import { setup as setupSound, wake, toggleMute } from "./sound.js";
 
 const BUILD = "__BUILD__";
 const SAVE_KEY = "food-truck-circus.tour";
+const LANG_KEY = "food-truck-circus.lang";
 const el = (id) => document.getElementById(id);
 const file = (path) => fetch(`${path}?v=${BUILD}`).then((r) => r.text());
 
 // Browser storage can be missing or refused; the game works without it.
 const storage = {
+  french() {
+    try {
+      return localStorage.getItem(LANG_KEY) === "fr";
+    } catch {
+      return false;
+    }
+  },
+  setFrench(on) {
+    try {
+      localStorage.setItem(LANG_KEY, on ? "fr" : "en");
+    } catch {
+      // the language is simply not remembered
+    }
+  },
   load() {
     try {
       return localStorage.getItem(SAVE_KEY) || "";
@@ -49,23 +64,39 @@ function fillCopy(copy) {
 
 async function start() {
   const names = ["body", "tricks", "venues", "missions", "costumes", "copy", "controls", "sounds"];
+  const french = ["copy", "tricks", "missions", "costumes", "venues"];
   const texts = await Promise.all(
-    names.map((n) => file(`data/${n}.json`)).concat([file("data/shaders/scene.vert"), file("data/shaders/scene.frag")]),
+    names
+      .map((n) => file(`data/${n}.json`))
+      .concat([file("data/shaders/scene.vert"), file("data/shaders/scene.frag")])
+      .concat(french.map((n) => file(`data/fr/${n}.json`))),
   );
-  const [body, tricks, venues, missions, costumes, copyText, controlsText, soundsText, vertex, fragment] = texts;
-  const copy = JSON.parse(copyText);
+  const [body, tricks, venues, missions, costumes, copyText, controlsText, soundsText, vertex, fragment, ...fr] = texts;
+  const [frCopy, frTricks, frMissions, frCostumes, frVenues] = fr;
+  const inFrench = storage.french();
+  const copy = JSON.parse(inFrench ? frCopy : copyText);
+  document.documentElement.lang = inFrench ? "fr" : "en";
   fillCopy(copy);
-  setupSound(JSON.parse(soundsText), copy.say);
+  setupSound(JSON.parse(soundsText), copy);
   await init();
   const N = JSON.parse(numbers());
 
   let game;
   try {
     game = new Game(body, tricks, venues, missions, costumes, copyText, storage.load());
+    game.add_french(frCopy, frTricks, frMissions, frCostumes, frVenues);
+    game.set_french(inFrench);
   } catch (e) {
     el("message").textContent = String(e);
     document.body.dataset.ready = "true";
     return;
+  }
+  // the language button: remembered in this browser, and the page starts over in it
+  for (const b of document.querySelectorAll(".lang-switch")) {
+    b.addEventListener("click", () => {
+      storage.setFrench(!inFrench);
+      window.location.reload();
+    });
   }
 
   const canvas = el("view");

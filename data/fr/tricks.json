@@ -1,0 +1,138 @@
+{
+  "_about": "Les noms et les explications des figures en français, par id, et les modèles de noms. Tout le reste vient de data/tricks.json.",
+  "freestyle": "Figure libre : {flips} saltos, {twists} vrilles",
+  "roof": "{trick} jusqu'au toit du camion",
+  "ground": "{trick}, hors du trampoline",
+  "trapeze": "{trick} depuis le trapèze",
+  "roof_how": "Toute figure peut finir sur le toit du camion : maintiens la flèche du haut pendant que le trampoline te lance, pour aller vers le camion.",
+  "tricks": {
+    "to_feet": {
+      "name": "Retour debout",
+      "how": "Le trampoline te renvoie sur tes pieds après une chute. Rien à presser."
+    },
+    "seat_drop": {
+      "name": "Chute assise",
+      "how": "Atterrir assis, jambes tendues devant. Rebondis, puis maintiens K (carpé) en redescendant ; le trampoline te renvoie sur tes pieds."
+    },
+    "half_to_seat": {
+      "name": "Demi-vrille en chute assise",
+      "how": "Maintiens A ou D pendant la poussée pour un demi-tour, puis K en redescendant pour atterrir assis."
+    },
+    "swivel_hips": {
+      "name": "Demi-tour assis",
+      "how": "Chute assise, demi-vrille en l'air, chute assise encore. Depuis une chute assise, maintiens A ou D pendant que le trampoline te lance."
+    },
+    "back_drop": {
+      "name": "Chute dos",
+      "how": "Atterrir à plat sur le dos. Touche S brièvement pendant la poussée, un quart de tour en arrière, et reste tendu."
+    },
+    "cradle": {
+      "name": "Berceau",
+      "how": "Chute dos, demi-vrille, chute dos. Depuis une chute dos, maintiens A ou D pendant que le trampoline te lance."
+    },
+    "front_drop": {
+      "name": "Chute ventrale",
+      "how": "Atterrir à plat sur le ventre. Touche W brièvement pendant la poussée, un quart de tour en avant, et reste tendu."
+    },
+    "tuck_jump": {
+      "name": "Saut groupé",
+      "how": "Genoux à la poitrine au sommet d'un rebond droit. Rebondis d'au moins 0,8 m et maintiens J en l'air."
+    },
+    "pike_jump": {
+      "name": "Saut carpé",
+      "how": "Jambes tendues devant au sommet. Touche K au sommet et lâche avant d'atterrir ; le garder donne une chute assise."
+    },
+    "half_twist": {
+      "name": "Demi-vrille",
+      "how": "Un demi-tour autour de l'axe du corps, pour atterrir face à l'autre côté. Maintiens A ou D pendant la poussée, sans touche de salto."
+    },
+    "full_twist": {
+      "name": "Saut vrillé",
+      "how": "Un tour complet autour de l'axe du corps. Maintiens A ou D pendant toute la poussée."
+    },
+    "back_tuck": {
+      "name": "Salto arrière groupé",
+      "how": "Un salto en arrière, genoux à la poitrine. Rebondis à environ 3 m, maintiens S pendant que le trampoline te lance, maintiens J en l'air, et lâche J aux trois quarts du tour pour ralentir et atterrir sur tes pieds."
+    },
+    "back_pike": {
+      "name": "Salto arrière carpé",
+      "how": "Un salto arrière jambes tendues, plié aux hanches : comme le groupé, avec K à la place de J. Le carpé tourne moins vite que le groupé."
+    },
+    "back_layout": {
+      "name": "Salto arrière tendu",
+      "how": "Un salto arrière le corps droit. Pas de groupé pour accélérer : rebondis plus haut et maintiens S plus longtemps."
+    },
+    "back_half": {
+      "name": "Salto arrière demi-vrille",
+      "how": "Un salto arrière avec une demi-vrille. Maintiens S et A ou D ensemble pendant la poussée."
+    },
+    "back_full": {
+      "name": "Salto arrière vrillé",
+      "how": "Un salto arrière avec une vrille complète. Maintiens S et A ou D ensemble pendant la poussée et reste tendu : on vrille plus vite le corps allongé."
+    },
+    "double_full": {
+      "name": "Double vrille",
+      "how": "Un salto arrière avec deux vrilles complètes. Monte haut, maintiens S et une touche de vrille pendant tout le contact, reste tendu."
+    },
+    "front_tuck": {
+      "name": "Salto avant groupé",
+      "how": "Un salto en avant, genoux à la poitrine. Maintiens W pendant que le trampoline te lance, groupe avec J, ouvre-toi avant d'atterrir."
+    },
+    "front_pike": {
+      "name": "Salto avant carpé",
+      "how": "Un salto avant plié aux hanches : W, puis K en l'air."
+    },
+    "front_layout": {
+      "name": "Salto avant tendu",
+      "how": "Un salto avant le corps droit. Rebondis haut et maintiens W plus longtemps."
+    },
+    "barani": {
+      "name": "Barani",
+      "how": "Un salto avant avec une demi-vrille, pour atterrir face à l'endroit d'où tu viens. Maintiens W et A ou D pendant la poussée."
+    },
+    "rudy": {
+      "name": "Rudy",
+      "how": "Un salto avant avec une vrille et demie. Maintiens W et une touche de vrille pendant la poussée, et reste tendu."
+    },
+    "randy": {
+      "name": "Randy",
+      "how": "Un salto avant avec deux vrilles et demie. Très haut, W et une touche de vrille maintenus pendant tout le contact."
+    },
+    "back_tuck_to_seat": {
+      "name": "Salto arrière en chute assise",
+      "how": "Un salto arrière groupé qui finit en chute assise : lâche J tôt et maintiens K en redescendant."
+    },
+    "double_back": {
+      "name": "Double salto arrière",
+      "how": "Deux saltos arrière en un seul vol. Rebondis à 5 m ou plus, maintiens S pendant tout le contact, et groupe serré avec J."
+    },
+    "double_back_pike": {
+      "name": "Double salto arrière carpé",
+      "how": "Un double salto arrière plié aux hanches : S pendant le contact, K en l'air."
+    },
+    "double_back_layout": {
+      "name": "Double salto arrière tendu",
+      "how": "Un double salto arrière le corps droit : le plus haut rebond possible, S maintenu jusqu'au bout."
+    },
+    "full_in": {
+      "name": "Full-in",
+      "how": "Un double salto arrière avec une vrille complète. Maintiens S et une touche de vrille pendant la poussée ; la vrille vient dans le premier salto."
+    },
+    "double_front": {
+      "name": "Double salto avant",
+      "how": "Deux saltos avant en un seul vol. Très haut, W pendant le contact, groupé serré."
+    },
+    "ball_out": {
+      "name": "Ball-out barani",
+      "how": "Un double salto avant avec une demi-vrille. Très haut, W et une touche de vrille pendant le contact."
+    },
+    "triple_back": {
+      "name": "Triple salto arrière",
+      "how": "Trois saltos arrière. Toute la hauteur du trampoline, S pendant tout le contact, le groupé le plus serré."
+    },
+    "triple_front": {
+      "name": "Triple salto avant",
+      "how": "Trois saltos avant. Toute la hauteur du trampoline, W pendant tout le contact, le groupé le plus serré."
+    }
+  }
+}

@@ -173,8 +173,7 @@ button:disabled { opacity: 0.45; cursor: default; }
   font-size: 14px;
   white-space: nowrap;
 }
-#help-toggle { position: absolute; bottom: 14px; right: 14px; }
-#moves-hud { position: absolute; bottom: 14px; right: 104px; }
+#hud-buttons { position: absolute; bottom: 14px; right: 14px; display: flex; gap: 6px; pointer-events: auto; }
 #help {
   position: absolute;
   bottom: 54px;

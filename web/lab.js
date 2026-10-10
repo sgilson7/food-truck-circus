@@ -9,6 +9,7 @@ import { makeHud } from "./hud.js";
 import { setup as setupSound, wake, toggleMute } from "./sound.js";
 
 const BUILD = "__BUILD__";
+const LANG_KEY = "food-truck-circus.lang";
 const el = (id) => document.getElementById(id);
 const file = (path) => fetch(`${path}?v=${BUILD}`).then((r) => r.text());
 const at = (copy, path) => path.split(".").reduce((o, k) => (o == null ? o : o[k]), copy);
@@ -22,14 +23,28 @@ function make(tag, cls, text) {
 
 async function start() {
   const names = ["body", "tricks", "venues", "missions", "costumes", "copy", "controls", "sounds"];
+  const french = ["copy", "tricks", "missions", "costumes", "venues"];
   const texts = await Promise.all(
-    names.map((n) => file(`data/${n}.json`)).concat([file("data/shaders/scene.vert"), file("data/shaders/scene.frag")]),
+    names
+      .map((n) => file(`data/${n}.json`))
+      .concat([file("data/shaders/scene.vert"), file("data/shaders/scene.frag")])
+      .concat(french.map((n) => file(`data/fr/${n}.json`))),
   );
-  const [body, tricks, venues, missions, costumes, copyText, controlsText, soundsText, vertex, fragment] = texts;
-  const copy = JSON.parse(copyText);
+  const [body, tricks, venues, missions, costumes, copyText, controlsText, soundsText, vertex, fragment, ...fr] = texts;
+  const [frCopy, frTricks, frMissions, frCostumes, frVenues] = fr;
+  // the language chosen on either page, kept in this browser
+  let inFrench = false;
+  try {
+    inFrench = localStorage.getItem(LANG_KEY) === "fr";
+  } catch {
+    // English, then
+  }
+  const copy = JSON.parse(inFrench ? frCopy : copyText);
+  document.documentElement.lang = inFrench ? "fr" : "en";
   for (const node of document.querySelectorAll("[data-copy]")) node.textContent = at(copy, node.dataset.copy);
+  document.title = copy.lab.title;
   el("build").textContent = BUILD;
-  setupSound(JSON.parse(soundsText), copy.say);
+  setupSound(JSON.parse(soundsText), copy);
   await init();
   const N = JSON.parse(numbers());
 
@@ -37,12 +52,22 @@ async function start() {
   try {
     // the lab keeps no tour: it starts from an empty save every time
     game = new Game(body, tricks, venues, missions, costumes, copyText, "");
+    game.add_french(frCopy, frTricks, frMissions, frCostumes, frVenues);
+    game.set_french(inFrench);
   } catch (e) {
     el("message").textContent = String(e);
     document.body.dataset.ready = "true";
     return;
   }
   game.lab_open();
+  el("lang").addEventListener("click", () => {
+    try {
+      localStorage.setItem(LANG_KEY, inFrench ? "en" : "fr");
+    } catch {
+      // the language is simply not remembered
+    }
+    window.location.reload();
+  });
   const named = copy.lab.anchors.indexOf(window.location.hash);
   if (named > 0) game.lab_kind(named);
 
@@ -257,8 +282,8 @@ async function start() {
     el("fly-ledge").value = f.ledge;
     el("fly-speed").value = f.speed;
     el("fly-angle").value = f.angle;
-    el("fly-ledge-v").textContent = f.ledge;
-    el("fly-speed-v").textContent = f.speed;
+    el("fly-ledge-v").textContent = f.ledge_shown;
+    el("fly-speed-v").textContent = f.speed_shown;
     el("fly-angle-v").textContent = f.angle;
     el("fly-strip").value = f.strip;
     el("fly-rule").value = f.rule;

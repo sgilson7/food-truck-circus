@@ -8,7 +8,7 @@
        form-action 'none' blocks form posts. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>Food Truck Circus</title>
-  <meta name="description" content="A 3D trampoline, tower, trapeze and juggling game on a food truck, played across the real venues of Cirque Kikasse's SANTÉ! tour. A fan game made in a day.">
+  <meta name="description" content="A 3D trampoline, tower, trapeze and juggling game on a food truck, played across the real venues of Cirque Kikasse's SANTÉ! tour. A fan game.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-ready="false" data-mode="loading">
@@ -33,8 +33,10 @@
     <div id="bubbles"></div>
     <div id="hands"></div>
     <div id="hint"></div>
-    <button id="moves-hud" class="small open-moves" data-copy="moves"></button>
-    <button id="help-toggle" class="small" data-copy="controls_heading"></button>
+    <div id="hud-buttons">
+      <button id="moves-hud" class="small open-moves" data-copy="moves"></button>
+      <button id="help-toggle" class="small" data-copy="controls_heading"></button>
+    </div>
     <div id="help" hidden>
       <table class="controls"></table>
     </div>
@@ -45,6 +47,7 @@
       <h1 data-copy="title"></h1>
       <p class="subtitle" data-copy="subtitle"></p>
       <a id="lab-link" href="lab.html" data-copy="lab_link"></a>
+      <button class="lang-switch small" data-copy="lang_switch"></button>
     </header>
     <div class="map-body">
       <section class="tour">
@@ -78,7 +81,6 @@
           <table class="controls"></table>
         </details>
         <p class="about-text" data-copy="about"></p>
-        <p class="credit" data-copy="credit"></p>
         <p class="save-note" data-copy="save_note"></p>
         <div class="tools">
           <button id="everything" class="small" data-copy="everything"></button>
@@ -97,6 +99,7 @@
       <button id="resume" class="big" data-copy="resume"></button>
       <button id="pause-map" data-copy="to_map"></button>
       <button class="open-moves" data-copy="moves"></button>
+      <button class="lang-switch" data-copy="lang_switch"></button>
       <table class="controls"></table>
     </div>
   </div>

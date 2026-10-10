@@ -709,7 +709,7 @@ impl Planner {
                 choice.flip = dir * f;
                 choice.tuck = true;
                 choice.pike = pike;
-                let name = if pike { "back pike" } else { "back tuck" };
+                let name = if pike { "back_pike" } else { "back_tuck" };
                 self.say("trick", vec![("trick", name.into())]);
                 return;
             }
@@ -721,7 +721,7 @@ impl Planner {
             };
             if let Some((_, true)) = imagine_landing(def, p, c) {
                 choice.tuck_jump = true;
-                self.say("trick", vec![("trick", "tuck jump".into())]);
+                self.say("trick", vec![("trick", "tuck_jump".into())]);
             }
         }
     }
@@ -853,7 +853,7 @@ pub(crate) mod tests {
         assert!(
             tricks
                 .iter()
-                .any(|l| l.vals[0].1 == "back tuck" || l.vals[0].1 == "back pike"),
+                .any(|l| l.vals[0].1 == "back_tuck" || l.vals[0].1 == "back_pike"),
             "{:?}",
             tricks
         );

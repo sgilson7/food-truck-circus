@@ -156,3 +156,5 @@ body[data-kind="2"] [data-kind]:not([data-kind="2"]) { display: none !important;
 .beat { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 2px solid var(--ink); background: #fff; }
 .beat.h1 { background: #ddd; }
 .digit { position: absolute; transform: translate(-50%, 0); font: 800 15px ui-monospace, Menlo, monospace; color: var(--ink); }
+
+#panel #lang { margin-left: 10px; }

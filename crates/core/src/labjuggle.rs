@@ -6,7 +6,7 @@ use crate::balance::GRAVITY;
 use crate::body::{self, Pose};
 use crate::expr;
 use crate::fx::{ratio, HALF, ONE};
-use crate::game::{fill, juggle_spot, pct, Game};
+use crate::game::{juggle_spot, pct, Game};
 use crate::geom::{v3, Affine, V3};
 use crate::mesh::Mesh;
 use crate::performer::{orientation, Performer, Phase};
@@ -180,7 +180,7 @@ impl Game {
             None => {
                 let p = j.pattern.as_ref().expect("a valid pattern");
                 let digits: Vec<String> = p.throws.iter().map(|t| t.to_string()).collect();
-                fill(
+                self.fill(
                     &lab("jug_ok"),
                     &[
                         ("digits", digits.join(" + ")),
@@ -192,9 +192,9 @@ impl Game {
             }
             Some(Problem::Empty) => lab("jug_empty"),
             Some(Problem::NotDigit { at, ch }) => {
-                fill(&lab("jug_digit"), &[("at", at.to_string()), ("ch", ch.clone())])
+                self.fill(&lab("jug_digit"), &[("at", at.to_string()), ("ch", ch.clone())])
             }
-            Some(Problem::Average { sum, n }) => fill(
+            Some(Problem::Average { sum, n }) => self.fill(
                 &lab("jug_average"),
                 &[
                     ("sum", sum.to_string()),
@@ -202,7 +202,7 @@ impl Game {
                     ("avg", expr::show(*sum as i64 * ONE as i64 / *n as i64)),
                 ],
             ),
-            Some(Problem::Collision { a, b, lands }) => fill(
+            Some(Problem::Collision { a, b, lands }) => self.fill(
                 &lab("jug_collision"),
                 &[
                     ("a", a.to_string()),

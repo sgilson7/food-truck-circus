@@ -66,15 +66,16 @@ fn lex(src: &str) -> Result<Vec<(Tok, usize)>, ReadError> {
         let at = i + 1;
         match c {
             ' ' | '\t' => {}
-            '0'..='9' | '.' => {
+            // a decimal point or, as French writes it, a decimal comma
+            '0'..='9' | '.' | ',' => {
                 let mut whole: i64 = 0;
                 let mut frac: i64 = 0;
                 let mut scale: i64 = 1;
                 let mut dot = false;
                 let mut digits = 0;
-                while i < chars.len() && (chars[i].is_ascii_digit() || chars[i] == '.') {
+                while i < chars.len() && (chars[i].is_ascii_digit() || chars[i] == '.' || chars[i] == ',') {
                     let d = chars[i];
-                    if d == '.' {
+                    if d == '.' || d == ',' {
                         if dot {
                             return Err(ReadError {
                                 key: "unexpected",
@@ -510,6 +511,7 @@ mod tests {
         assert_eq!(at("x/2", q(3)), q(3) / 2);
         assert_eq!(at("2^3^2", 0), q(512));
         assert_eq!(at("0.5x", q(3)), q(3) / 2);
+        assert_eq!(at("0,5x", q(3)), q(3) / 2);
         assert_eq!(at("xx", q(3)), q(9));
         assert_eq!(at("floor(x/2)", q(3)), q(1));
         assert_eq!(at("sqrt(x+1)", q(3)), q(2));

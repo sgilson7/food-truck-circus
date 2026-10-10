@@ -185,3 +185,33 @@ def run_labs(page, check, base):
     check(len(arcs) >= 2, f"the flight has two arcs, off the ledge and off the bed ({len(arcs)})")
     summary = page.text_content("#fly-summary")
     check("kernels" in summary and "m²" in summary, f"the popcorn is counted ({summary!r})")
+
+    run_french(page, check, base)
+
+
+def run_french(page, check, base):
+    """French: the button on the lab page switches every word, and the
+    choice carries to the game. By hand: x² at -1.5 is 2.25, written 2,25;
+    the first show is "Trouve ton rebond" in data/fr/missions.json."""
+    fr = json.loads((ROOT / "data" / "fr" / "copy.json").read_text())
+    frm = json.loads((ROOT / "data" / "fr" / "missions.json").read_text())
+    click(page, "#lang")
+    page.wait_for_selector("body[data-ready='true']", state="attached", timeout=20000)
+    page.wait_for_timeout(600)
+    check(page.text_content("#panel h1") == fr["lab"]["title"], "the lab's title is in French")
+    click(page, "#tabs button:nth-child(1)")
+    page.wait_for_timeout(400)
+    cell = page.text_content("#machine tbody tr:nth-child(2) td:nth-child(2)")
+    check(cell == "2,25", f"numbers have decimal commas ({cell!r})")
+    page.goto(base + "/index.html")
+    page.wait_for_selector("body[data-ready='true']", state="attached", timeout=20000)
+    page.wait_for_timeout(600)
+    check(page.text_content("#map h2") == fr["map_heading"], "the game remembers French")
+    click(page, "#nodes .node:nth-child(1)")
+    check(page.text_content("#b-name") == frm["missions"]["m01"]["name"], "the first show's name is French")
+    src = page.evaluate("() => document.getElementById('b-art').getAttribute('src')")
+    check("/fr/" in src, f"the postcard is the French one ({src})")
+    click(page, "#map .lang-switch")
+    page.wait_for_selector("body[data-ready='true']", state="attached", timeout=20000)
+    page.wait_for_timeout(400)
+    check(page.text_content("#map h2") == COPY["map_heading"], "and back to English")

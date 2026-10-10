@@ -22,6 +22,7 @@ pub mod geom;
 pub mod lab;
 pub mod labfly;
 pub mod labjuggle;
+pub mod lang;
 pub mod mesh;
 pub mod mission;
 pub mod performer;

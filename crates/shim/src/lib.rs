@@ -139,6 +139,29 @@ impl Game {
         self.inner.open_everything()
     }
 
+    // ---- the language ----
+
+    pub fn add_french(
+        &mut self,
+        copy: &str,
+        tricks: &str,
+        missions: &str,
+        costumes: &str,
+        venues: &str,
+    ) -> Result<(), JsValue> {
+        self.inner
+            .add_french(copy, tricks, missions, costumes, venues)
+            .map_err(|e| JsValue::from_str(&e))
+    }
+
+    pub fn set_french(&mut self, on: bool) -> Result<(), JsValue> {
+        self.inner.set_french(on).map_err(|e| JsValue::from_str(&e))
+    }
+
+    pub fn lang(&self) -> String {
+        self.inner.lang().to_string()
+    }
+
     // ---- the Graph Lab ----
 
     pub fn lab_open(&mut self) {
