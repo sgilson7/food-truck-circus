@@ -43,6 +43,9 @@ From a K-12 classroom feasibility analysis; Sam granted the change and its deplo
 | `python3 scripts/break_tests.py` | 8 of 8 breaks caught (2 CSP, 2 copy, 4 browser) |
 | `./scripts/prove-privacy.sh` | PRIVACY PROOF PASSED: P1 (own file with the formula in the query) by the after-ready check; P2 (formula under a new key) by the storage allowlist; P3, P5 by the CSP (console error and violation); P4 by the boundary test and the browser check |
 | axe audit, local `lab.html`, `#popcorn`, `#juggling` | 0 violations each |
+| Deploy of 147d702 (Actions run 39320022809) | check and deploy: success; live `build.txt` reads 147d702 |
+| `BUILDER_ORIGIN=https://sgilson7.github.io/food-truck-circus tests/browser/check.py` | PASSED in Chromium, Firefox and WebKit against the live site |
+| axe audit, live `lab.html`, `#popcorn`, `#juggling` | 0 violations each |
 
 ## What remains
 
