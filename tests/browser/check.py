@@ -10,7 +10,11 @@ own interactions from tests/browser/interactions.py. The run fails on:
 - any request to another origin, during load, idle or the interactions;
 - a Content-Security-Policy violation (a blocked attempt is still an attempt);
 - a WebSocket, a popup, a worker or a service worker opened by the page;
-- a failed check inside the interactions.
+- a failed check inside the interactions;
+- (privacy kit, D7 tightened) any request after the page reported ready,
+  same-origin included (blob: and data: stay in the browser and are allowed);
+- (privacy kit, D7 tightened) a cookie, sessionStorage, IndexedDB, or any
+  localStorage key other than the ones the brief declares (STORAGE_KEYS).
 
 What a pass establishes is what happened on that path, in those engines, on
 that run. It does not show that no feature can ever reach the network: a
@@ -40,6 +44,89 @@ ENGINES = os.environ.get("BUILDER_ENGINES", "chromium firefox webkit").split()
 IDLE_MS = int(float(os.environ.get("BUILDER_IDLE", "10")) * 1000)
 
 failures = []
+
+# The privacy kit's storage rule, tightened for this project (SECOND-ORDER
+# row K1, BUILDER-SPEC change table): both pages keep the language choice
+# (row F1), and the game page keeps the tour (PLAN), so storage is allowed for
+# exactly these keys and nothing else. This is the one place they are listed.
+STORAGE_KEYS = {
+    "food-truck-circus.lang",  # the language, chosen on either page
+    "food-truck-circus.tour",  # the game page's progress; the lab never writes it
+}
+
+# Pages the after-ready rule covers: the kit is applied to the Circus Math
+# Lab, the page students use in class (TRIAGE T1). The game is unchanged.
+PRIVATE_PAGES = {"lab.html"}
+
+# Reports, as a console.debug line, the moment a document sets
+# <body data-ready="true">, so a page that reloads itself starts a new
+# before-ready phase. (A Playwright binding here made pointer clicks hang in
+# Chromium; a console line is a plain event.)
+READY_MARK = "builder: the page reported ready"
+READY_SCRIPT = (
+    "new MutationObserver(() => {"
+    " if (!window.__builderReadySent && document.body && document.body.dataset.ready === 'true') {"
+    " window.__builderReadySent = true; console.debug('" + READY_MARK + "'); } })"
+    ".observe(document, {subtree: true, attributes: true, attributeFilter: ['data-ready']});"
+)
+
+STORAGE_SCRIPT = """async () => {
+    const keys = (s) => { const out = []; for (let i = 0; i < s.length; i++) out.push(s.key(i)); return out; };
+    const idb = indexedDB.databases ? (await indexedDB.databases()).map((d) => d.name) : [];
+    return {cookie: document.cookie, local: keys(localStorage), session: keys(sessionStorage), idb};
+}"""
+
+
+def page_name(url):
+    path = url.split("#", 1)[0].split("?", 1)[0]
+    name = path.rsplit("/", 1)[-1]
+    return name or "index.html"
+
+
+def private(url):
+    return PRIVATE_PAGES is None or page_name(url) in PRIVATE_PAGES
+
+
+def watch_after_ready(context, page):
+    """Records every request a private page makes after it reported ready.
+
+    A navigation the test starts (goto, reload) opens a new before-ready
+    phase. A navigation the page starts itself is allowed only as a plain
+    reload of the same address with no query string, which carries no data;
+    any other is recorded."""
+    state = {"ready": False, "doc": "", "test_nav": False}
+    after = []
+
+    def on_ready(message):
+        if message.type == "debug" and message.text == READY_MARK:
+            state["ready"] = True
+
+    page.on("console", on_ready)
+    context.add_init_script(READY_SCRIPT)
+
+    def on_request(r):
+        url = r.url
+        if url.startswith(("blob:", "data:")):
+            return
+        main_nav = r.is_navigation_request() and r.frame == page.main_frame
+        if main_nav:
+            plain_reload = "?" not in url and url.split("#", 1)[0] == state["doc"]
+            if state["test_nav"] or not state["ready"] or plain_reload:
+                state.update(ready=False, doc=url.split("#", 1)[0], test_nav=False)
+                return
+        if state["ready"] and private(state["doc"]):
+            after.append(url)
+
+    context.on("request", on_request)
+    for name in ("goto", "reload", "go_back", "go_forward"):
+        original = getattr(page, name)
+
+        def wrapped(*args, _original=original, **kwargs):
+            state["test_nav"] = True
+            return _original(*args, **kwargs)
+
+        setattr(page, name, wrapped)
+    return after
 
 
 def check(ok, what):
@@ -103,6 +190,7 @@ def run_engine(p, engine, base, interactions):
         " e => window.__builderCsp.push(e.violatedDirective + ' ' + e.blockedURI));"
     )
     page = context.new_page()
+    after_ready = watch_after_ready(context, page)
     page.on("console", lambda m: seen["console"].append(m.text) if m.type == "error" else None)
     page.on("pageerror", lambda e: seen["errors"].append(str(e)))
     page.on("websocket", lambda ws: seen["sockets"].append(ws.url))
@@ -126,6 +214,15 @@ def run_engine(p, engine, base, interactions):
     check(not seen["sockets"], f"no WebSocket {seen['sockets']}")
     check(not seen["popups"], f"no popup {seen['popups']}")
     check(not seen["workers"] and sw == 0, f"no worker or service worker {seen['workers']} sw={sw}")
+    check(not after_ready, f"no request of any kind after the page reported ready {after_ready}")
+    stored = page.evaluate(STORAGE_SCRIPT)
+    extra = sorted(set(stored["local"]) - STORAGE_KEYS)
+    check(
+        stored["cookie"] == "" and not stored["session"] and not stored["idb"] and not extra,
+        f"nothing kept in the browser but the declared keys {sorted(STORAGE_KEYS)} {stored}",
+    )
+    if hasattr(interactions, "run_blocked"):
+        interactions.run_blocked(browser, base, check, engine)
     browser.close()
 
 

@@ -64,6 +64,8 @@ The layers:
 python3 scripts/serve.py 8000
 ```
 
+**The lab and privacy.** The Circus Math Lab sends nothing anywhere and keeps one thing in the browser, the language choice (`food-truck-circus.lang`; the game also keeps its tour). The browser check fails on any request after the lab is ready and on any other stored key, and `scripts/prove-privacy.sh` plants five leaks of a typed formula and requires each to be caught. That shows what the page did on the check's path in three engines; it does not show what a browser extension, the operating system or the host does. If a school's device policy blocks WebAssembly or WebGL, the lab says which, and that a school's IT team can allow it for sgilson7.github.io.
+
 A push to `main` runs the same check in Chromium and deploys `dist/` to GitHub Pages if it passes.
 
 ## Credits

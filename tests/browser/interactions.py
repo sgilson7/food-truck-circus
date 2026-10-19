@@ -135,6 +135,7 @@ def run_more(page, check, engine):
     page.wait_for_timeout(500)
     rows = page.query_selector_all("#machine tbody tr")
     check(len(rows) == 9, f"the lab opens on nine rows of x² ({len(rows)})")
+    check(page.is_hidden("#blocked"), "a normal load of the lab shows no blocked-device message")
     page.fill("#formula", "2x+1")
     page.press("#formula", "Enter")
     page.wait_for_timeout(300)
@@ -215,3 +216,42 @@ def run_french(page, check, base):
     page.wait_for_selector("body[data-ready='true']", state="attached", timeout=20000)
     page.wait_for_timeout(400)
     check(page.text_content("#map h2") == COPY["map_heading"], "and back to English")
+
+
+# How a school's device policy can stop the lab, imitated by init scripts:
+# Chrome's DefaultJavaScriptJitSetting=block can leave WebAssembly undefined
+# or leave instantiate refusing; Disable3DAPIs leaves getContext('webgl2')
+# returning null.
+REFUSE_WASM = (
+    "WebAssembly.instantiate = () => Promise.reject(new WebAssembly.CompileError('blocked'));"
+    " WebAssembly.instantiateStreaming = () => Promise.reject(new WebAssembly.CompileError('blocked'));"
+)
+NO_WEBGL2 = (
+    "const original = HTMLCanvasElement.prototype.getContext;"
+    " HTMLCanvasElement.prototype.getContext = function (kind, ...rest) {"
+    " return kind === 'webgl2' ? null : original.call(this, kind, ...rest); };"
+)
+BLOCKS = [
+    ("WebAssembly is undefined", "delete window.WebAssembly;", "blocked_wasm"),
+    ("WebAssembly refuses to instantiate", REFUSE_WASM, "blocked_wasm"),
+    ("WebGL 2 cannot be created", NO_WEBGL2, "blocked_webgl"),
+]
+
+
+def run_blocked(browser, base, check, engine):
+    """A blocked device sees a plain message over the lab's stage, not a blank
+    page. By hand: the message is the copy string word for word; without WebGL
+    the panel still opens on the nine rows of x²."""
+    for how, script, key in BLOCKS:
+        context = browser.new_context()
+        context.add_init_script(script)
+        page = context.new_page()
+        page.goto(base + "/lab.html")
+        page.wait_for_selector("body[data-ready='true']", state="attached", timeout=20000)
+        shown = page.is_visible("#blocked") and page.inner_text("#blocked") == COPY["lab"][key]
+        check(shown, f"when {how}, the lab says what is blocked and who can allow it")
+        if key == "blocked_webgl":
+            page.wait_for_timeout(500)
+            rows = len(page.query_selector_all("#machine tbody tr"))
+            check(rows == 9, f"when {how}, the panel still opens on nine rows of x² ({rows})")
+        context.close()

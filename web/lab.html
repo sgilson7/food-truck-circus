@@ -3,7 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <!-- The privacy kit (kits/privacy, TRIAGE T1): font, frame, worker and
+       manifest 'none', and no referrer. The lab plays no media element (its
+       sounds are Web Audio, fetched under connect-src), so media-src falls
+       back to default-src 'self'. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
   <title>Circus Math Lab · Food Truck Circus</title>
   <meta name="description" content="Give a circus performer a function and watch them plot it on a trampoline, one bounce per point, planning each bounce with a behaviour tree. A math-circle toy.">
   <link rel="stylesheet" href="style.css">
@@ -18,6 +23,8 @@
       <div id="hands"></div>
       <div id="lab-summary" hidden></div>
     </div>
+    <!-- shown only when this device blocks WebAssembly or WebGL (lab.js) -->
+    <p id="blocked" class="blocked" role="alert" hidden></p>
   </div>
 
   <aside id="panel">
@@ -115,9 +122,9 @@
       <h3 data-copy="lab.fly_arcs_heading"></h3>
       <p class="hint" data-copy="lab.fly_arcs_hint"></p>
       <ol id="fly-arcs"></ol>
-      <h3 data-copy="lab.fly_match_heading"></h3>
+      <h3 id="fly-match-heading" data-copy="lab.fly_match_heading"></h3>
       <p class="hint" data-copy="lab.fly_match_hint"></p>
-      <form id="fly-form"><input id="fly-target" autocomplete="off" spellcheck="false"> <button id="fly-match" data-copy="lab.fly_match"></button></form>
+      <form id="fly-form"><input id="fly-target" aria-labelledby="fly-match-heading" autocomplete="off" spellcheck="false"> <button id="fly-match" data-copy="lab.fly_match"></button></form>
       <p id="fly-error" class="error"></p>
       <ol id="fly-log"></ol>
       <h3 data-copy="lab.ideas_heading"></h3>

@@ -48,4 +48,5 @@ These stay with the person and go in `BRIEF.md` or `PLAN.md`:
 
 | Default | Changed to | Reason | Recorded in |
 | --- | --- | --- | --- |
-| | | | |
+| D4, D7 | for `lab.html`: stricter CSP (`font-src`, `frame-src`, `worker-src`, `manifest-src` `'none'`, `no-referrer`); the browser check fails on any request after the lab reports ready, same-origin included | the Circus Math Lab is used by students in class (kits/privacy, TRIAGE T1) | SECOND-ORDER.md K2, K3 |
+| D7 | D7 tightened; storage allowed for the declared keys only (`STORAGE_KEYS` in `tests/browser/check.py`: `food-truck-circus.lang`, `food-truck-circus.tour`), where the kit allows none | both pages keep the language and the game keeps the tour by earlier decisions, so the kit's "nothing stored" rule is narrowed to an allowlist rather than followed | SECOND-ORDER.md K1 |

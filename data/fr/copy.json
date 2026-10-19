@@ -134,6 +134,8 @@
     ]
   ],
   "lab": {
+    "blocked_wasm": "Le Labo de maths du cirque ne peut pas démarrer sur cet appareil : ses réglages bloquent WebAssembly, sur lequel le labo fonctionne. Le service informatique d'une école peut autoriser WebAssembly pour sgilson7.github.io (dans Chrome, le réglage JavaScript JIT).",
+    "blocked_webgl": "Cet appareil bloque WebGL, qui dessine l'artiste, et la scène reste vide. Le service informatique d'une école peut autoriser WebGL pour sgilson7.github.io (dans Chrome, le réglage des API 3D).",
     "title": "Labo de maths du cirque",
     "subtitle": "Trois labos où un artiste de cirque fait les maths : une fonction tracée en rebondissant, l'aire sous un vol comptée en pop-corn, et des figures de jonglage écrites en nombres.",
     "back": "Retour à la tournée",

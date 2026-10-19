@@ -10,6 +10,8 @@ Stage 1. `C1 Frame the problem and set the rules`.
 
 The plan is approved in advance: the request says to keep working until the MVP is deployed. The agent may create the public repository `sgilson7/food-truck-circus`, turn on GitHub Pages for it, push to `main` (which deploys through the checked workflow), and add the game to the scholar site and deploy that site. Where the request is silent, the agent decides using Sam's skills (`shared-technical-setting`, `agent-run-build`, `prove-the-tests`, `sam-gilson-voice`) and records the decision as a notebook row in `SECOND-ORDER.md`. The agent may not publish anything that presents itself as Cirque Kikasse's own work: no logo, no performer likenesses, no copied promotional text.
 
+A later grant (Sam, 2026-10-19), word for word: "ok execute all of the changes you recommend to increase feasabilitiy, i approve make deploy in all builder made repos, and make deploy in the website, keep track of all changes made in the design log here". Scope: this run, for the changes in TRIAGE T1 to the Circus Math Lab; it covers pushing them to `main` (which deploys to Pages through the checked workflow) and the website deploy.
+
 ## Done means
 
 - A third-person 3D game in the browser: the player is a food-truck circus performer.

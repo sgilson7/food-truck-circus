@@ -15,6 +15,7 @@ let voiceLang = "";
 let voiceClips = {};
 let muted = false;
 const clips = new Map();
+const clipBytes = new Map();
 
 // The crowd's words come from the copy of the language in use, which also
 // names the recording each word plays (French plays his mom's for OH NO and
@@ -26,10 +27,24 @@ export function setup(sounds, copy) {
   voiceClips = copy.voice_clips;
 }
 
+// The lab fetches the recordings before it reports ready, since its privacy
+// check fails on any request after ready (kits/privacy); the game fetches
+// them on the first press, as before.
+export async function preloadClips(build) {
+  if (!recipes) return;
+  for (const [word, path] of Object.entries(recipes.clips)) {
+    try {
+      clipBytes.set(word, await fetch(`${path}?v=${build}`).then((r) => r.arrayBuffer()));
+    } catch {
+      // without the clip the word is spoken instead
+    }
+  }
+}
+
 async function loadClips(build) {
   for (const [word, path] of Object.entries(recipes.clips)) {
     try {
-      const bytes = await fetch(`${path}?v=${build}`).then((r) => r.arrayBuffer());
+      const bytes = clipBytes.get(word) || (await fetch(`${path}?v=${build}`).then((r) => r.arrayBuffer()));
       clips.set(word, await ctx.decodeAudioData(bytes));
     } catch {
       // without the clip the word is spoken instead

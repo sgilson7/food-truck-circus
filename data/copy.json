@@ -134,6 +134,8 @@
     ]
   ],
   "lab": {
+    "blocked_wasm": "The Circus Math Lab cannot start on this device: its settings block WebAssembly, which the lab runs on. A school's IT team can allow WebAssembly for sgilson7.github.io (in Chrome, the JavaScript JIT setting).",
+    "blocked_webgl": "This device blocks WebGL, which draws the performer, so the stage stays empty. A school's IT team can allow WebGL for sgilson7.github.io (in Chrome, the 3D APIs setting).",
     "title": "Circus Math Lab",
     "subtitle": "Three labs where a circus performer does the mathematics: a function plotted by bouncing, the area under a flight counted in popcorn, and juggling patterns written as numbers.",
     "back": "Back to the tour",

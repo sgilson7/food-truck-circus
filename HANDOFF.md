@@ -33,10 +33,22 @@ Live at https://sgilson7.github.io/food-truck-circus/lab.html; `./scripts/check.
 
 **The crowd's groans (2026-10-10).** A fall or drop calls one of `groans` in `data/tricks.json` (oh_no, darn, non, zut), each as likely. `voice_clips` in each copy file names the recording a word plays: in English every groan plays its own (Sam's OH NO and DARN, his mom's NON and ZUT), and in French only Mom's play, with OH NO reading NON. Rows F5–F6. `./scripts/check.sh`: BUILDER CHECK PASSED (chromium, firefox, webkit).
 
+## Privacy kit, blocked-device messages and contrast in the lab (2026-10-19, TRIAGE T1)
+
+From a K-12 classroom feasibility analysis; Sam granted the change and its deploy (BRIEF.md). Only the Circus Math Lab changed; the game page is as it was, apart from `sound.js` gaining a `preloadClips()` the game does not call. The lab carries the privacy kit's CSP and `no-referrer` (boundary test `every_private_page_sets_the_strict_privacy_policy`); the browser check fails on any request after the lab reports ready and on any stored key but `food-truck-circus.lang` and `food-truck-circus.tour` (SECOND-ORDER K1–K3). With WebAssembly or WebGL 2 blocked the lab says which over the stage (`lab.blocked_wasm`, `lab.blocked_webgl`, both languages; K4). `#back` and three other lab colours now pass 4.5:1, and `#fly-target` has a label (K5). New: `GLOSSARY.md`, `TONE.md`, `crates/core/tests/copy.rs` (scoped, K6), `scripts/break_tests.py`, `tests/breaks.json`, `scripts/plant_leak.py`, `scripts/prove-privacy.sh`, and `TRIAGE.md`.
+
+| Command | Result |
+| --- | --- |
+| `./scripts/check.sh` | BUILDER CHECK PASSED in Chromium, Firefox and WebKit; 120 cargo tests (99 core, 12 boundary, 8 copy, 1 postcards). Three earlier runs failed on game-page timing under heavy machine load (K3) |
+| `python3 scripts/break_tests.py` | 8 of 8 breaks caught (2 CSP, 2 copy, 4 browser) |
+| `./scripts/prove-privacy.sh` | PRIVACY PROOF PASSED: P1 (own file with the formula in the query) by the after-ready check; P2 (formula under a new key) by the storage allowlist; P3, P5 by the CSP (console error and violation); P4 by the boundary test and the browser check |
+| axe audit, local `lab.html`, `#popcorn`, `#juggling` | 0 violations each |
+
 ## What remains
 
 - Sam's playtest. Every feel number in `balance.rs` is the agent's guess (SECOND-ORDER T1, T2). Tests show the shows can be passed (the first by holding Space; the roof, the trapeze and a back tuck by scripted inputs), not that they are fun.
 - The routine, double back, rudy and full-in shows have not been passed by a scripted player; they rely on the same flight model as the back tuck.
+- Notebook W6: a teacher's read of the blocked messages, a French read of theirs, and a real managed Chrome.
 - Sam's eye on the high-bounce flicker (T3) and the labs' copy (T4); a French speaker's read of `data/fr/` (T5).
 - The scenes are sketches built from boxes, cones and spheres. A venue looking like itself is Sam's call.
 

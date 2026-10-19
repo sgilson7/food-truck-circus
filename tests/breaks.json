@@ -1,0 +1,62 @@
+[
+  {
+    "name": "privacy CSP on the lab: font-src 'none' (T1)",
+    "file": "web/lab.html",
+    "find": "font-src 'none'; ",
+    "replace": "",
+    "test": "every_private_page_sets_the_strict_privacy_policy"
+  },
+  {
+    "name": "privacy CSP on the lab: no-referrer (T1)",
+    "file": "web/lab.html",
+    "find": "  <meta name=\"referrer\" content=\"no-referrer\">\n",
+    "replace": "",
+    "test": "every_private_page_sets_the_strict_privacy_policy"
+  },
+  {
+    "name": "blocked message names the host (T1)",
+    "file": "data/copy.json",
+    "find": "allow WebGL for sgilson7.github.io",
+    "replace": "allow WebGL for this site",
+    "test": "the_blocked_device_messages_exist_and_name_the_host"
+  },
+  {
+    "name": "blocked message keeps to the tone file (T1)",
+    "file": "data/copy.json",
+    "find": "which the lab runs on.",
+    "replace": "which the lab runs on!",
+    "test": "no_scoped_string_uses_a_phrase_the_tone_file_rules_out"
+  },
+  {
+    "name": "privacy check: no request after the lab is ready (T1)",
+    "file": "web/lab.js",
+    "find": "  await preloadClips(BUILD);\n",
+    "replace": "",
+    "test": "browser",
+    "expect": "no request of any kind after the page reported ready"
+  },
+  {
+    "name": "blocked message: shown when WebAssembly is blocked (T1)",
+    "file": "web/lab.js",
+    "find": "    blocked(copy.lab.blocked_wasm);\n",
+    "replace": "",
+    "test": "browser",
+    "expect": "WebAssembly is undefined, the lab says what is blocked"
+  },
+  {
+    "name": "blocked message: shown when WebGL 2 is blocked (T1)",
+    "file": "web/lab.js",
+    "find": "  if (!renderer) blocked(copy.lab.blocked_webgl);",
+    "replace": "  if (!renderer) el(\"message\").textContent = copy.no_webgl;",
+    "test": "browser",
+    "expect": "WebGL 2 cannot be created, the lab says what is blocked"
+  },
+  {
+    "name": "blocked message: hidden on a normal load (T1)",
+    "file": "web/lab.html",
+    "find": "<p id=\"blocked\" class=\"blocked\" role=\"alert\" hidden></p>",
+    "replace": "<p id=\"blocked\" class=\"blocked\" role=\"alert\">.</p>",
+    "test": "browser",
+    "expect": "a normal load of the lab shows no blocked-device message"
+  }
+]

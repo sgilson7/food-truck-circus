@@ -38,15 +38,21 @@ body.lab { overflow: hidden; background: #20202a; }
   text-shadow: 0 3px 0 var(--ink);
 }
 #panel .subtitle { margin: 4px 0; font-size: 14px; }
-#panel #back { font-size: 13px; color: var(--teal); font-weight: 700; }
+/* A darker teal than --teal: 5.4:1 on the paper, where --teal is 3.2:1
+   (WCAG AA needs 4.5:1; axe colour-contrast, TRIAGE T1). */
+#panel #back { font-size: 13px; color: #1d7268; font-weight: 700; }
 #panel section { border-top: 2px dashed rgba(27, 27, 34, 0.2); padding-top: 10px; margin-top: 12px; }
 #panel h2 { margin: 0 0 2px; font: 800 20px var(--display); text-transform: uppercase; }
 #panel h3 { margin: 10px 0 2px; font: 800 15px var(--display); text-transform: uppercase; }
 #panel .hint { font-size: 12.5px; color: #555; margin: 2px 0 6px; }
-#panel .error { color: var(--red); font-weight: 700; font-size: 13px; min-height: 1em; }
+/* #c1121f, not --red: 5.8:1 on the paper, where --red is 3.8:1 (TRIAGE T1). */
+#panel .error { color: #c1121f; font-weight: 700; font-size: 13px; min-height: 1em; }
 
 .runbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.runbar .big { font-size: 17px; padding: 8px 14px; }
+/* White on a darker red than --red: 5.3:1 (4.2:1 on --red), 4.5:1 or better
+   on hover too (TRIAGE T1). The game's buttons are unchanged. */
+.runbar .big { font-size: 17px; padding: 8px 14px; background: #cc2936; }
+.runbar .big:hover { background: #b8232f; }
 .runbar label { font-size: 12px; }
 select { max-width: 100%; }
 select, input { font: 600 14px var(--body); border: 2px solid var(--ink); border-radius: 8px; padding: 3px 6px; background: #fff; }
@@ -120,7 +126,8 @@ select, input { font: 600 14px var(--body); border: 2px solid var(--ink); border
 
 #graph .interp { fill: none; stroke: #f77f00; stroke-width: 2.5; stroke-dasharray: 6 4; vector-effect: non-scaling-stroke; }
 #graph .gap { fill: rgba(230, 57, 70, 0.22); stroke: none; }
-.interp-error { font-size: 13px; font-weight: 700; color: #b5651d; min-height: 1em; }
+/* #9a5418: 5.4:1 on the paper, where #b5651d was 4.1:1 (TRIAGE T1). */
+.interp-error { font-size: 13px; font-weight: 700; color: #9a5418; min-height: 1em; }
 .join { font-size: 13px; }
 
 body[data-kind="0"] [data-kind]:not([data-kind="0"]),
@@ -158,3 +165,20 @@ body[data-kind="2"] [data-kind]:not([data-kind="2"]) { display: none !important;
 .digit { position: absolute; transform: translate(-50%, 0); font: 800 15px ui-monospace, Menlo, monospace; color: var(--ink); }
 
 #panel #lang { margin-left: 10px; }
+
+/* The plain message a blocked device sees over the stage (TRIAGE T1). */
+#stage .blocked {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(32em, 86%);
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 16px;
+  line-height: 1.5;
+  box-shadow: 0 4px 0 var(--shadow);
+}

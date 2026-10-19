@@ -637,6 +637,51 @@ fn every_page_sets_the_content_security_policy() {
     assert!(pages > 0, "no HTML page found in web/");
 }
 
+/// The privacy kit (kits/privacy, D4 tightened): the pages a student uses
+/// carry the stricter policy, and send no referrer. Here the Circus Math Lab
+/// (TRIAGE T1); the game page is unchanged.
+const PRIVATE_PAGES: Option<&[&str]> = Some(&["lab.html"]);
+
+#[test]
+fn every_private_page_sets_the_strict_privacy_policy() {
+    let mut pages = 0;
+    for path in web_files() {
+        let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+        let private = PRIVATE_PAGES.map(|list| list.contains(&name)).unwrap_or(true);
+        if !private || !name.ends_with(".html") {
+            continue;
+        }
+        pages += 1;
+        let text = fs::read_to_string(&path).expect("read html");
+        let csp = csp_of(&text)
+            .unwrap_or_else(|| panic!("{}: no Content-Security-Policy meta element", path.display()));
+        for needed in [
+            "font-src 'none'",
+            "frame-src 'none'",
+            "worker-src 'none'",
+            "manifest-src 'none'",
+            "object-src 'none'",
+            "base-uri 'none'",
+        ] {
+            assert!(
+                csp.contains(needed),
+                "{}: the privacy policy lacks {needed}: {csp}",
+                path.display()
+            );
+        }
+        assert!(
+            text.contains(r#"<meta name="referrer" content="no-referrer">"#),
+            "{}: no <meta name=\"referrer\" content=\"no-referrer\"> element",
+            path.display()
+        );
+    }
+    let wanted = PRIVATE_PAGES.map(|list| list.len()).unwrap_or(1);
+    assert!(
+        pages >= wanted,
+        "found {pages} private page(s), expected at least {wanted}"
+    );
+}
+
 /// The content of the first `<meta http-equiv="Content-Security-Policy" content="...">`.
 fn csp_of(html: &str) -> Option<String> {
     let lower = html.to_ascii_lowercase();

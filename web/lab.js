@@ -6,13 +6,21 @@ import init, { Game, numbers, mesh } from "./pkg/ftc_shim.js";
 import { makeRenderer } from "./gl.js";
 import { makeInput } from "./input.js";
 import { makeHud } from "./hud.js";
-import { setup as setupSound, wake, toggleMute } from "./sound.js";
+import { setup as setupSound, preloadClips, wake, toggleMute } from "./sound.js";
 
 const BUILD = "__BUILD__";
 const LANG_KEY = "food-truck-circus.lang";
 const el = (id) => document.getElementById(id);
 const file = (path) => fetch(`${path}?v=${BUILD}`).then((r) => r.text());
 const at = (copy, path) => path.split(".").reduce((o, k) => (o == null ? o : o[k]), copy);
+
+// A device policy can block what the lab runs on: WebAssembly (Chrome's
+// JavaScript JIT setting set to block) or WebGL (Chrome's Disable3DAPIs).
+// The page then says what is blocked instead of staying blank.
+function blocked(text) {
+  el("blocked").textContent = text;
+  el("blocked").hidden = false;
+}
 
 function make(tag, cls, text) {
   const e = document.createElement(tag);
@@ -45,7 +53,15 @@ async function start() {
   document.title = copy.lab.title;
   el("build").textContent = BUILD;
   setupSound(JSON.parse(soundsText), copy);
-  await init();
+  await preloadClips(BUILD);
+  try {
+    await init();
+  } catch {
+    blocked(copy.lab.blocked_wasm);
+    document.body.dataset.mode = "blocked";
+    document.body.dataset.ready = "true";
+    return;
+  }
   const N = JSON.parse(numbers());
 
   let game;
@@ -73,7 +89,7 @@ async function start() {
 
   const canvas = el("view");
   const renderer = makeRenderer(canvas, N, { vertex, fragment }, (id) => mesh(id));
-  if (!renderer) el("message").textContent = copy.no_webgl;
+  if (!renderer) blocked(copy.lab.blocked_webgl);
   const hud = makeHud();
   const input = makeInput(canvas, JSON.parse(controlsText), N.actions);
 
